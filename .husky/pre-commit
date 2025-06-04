@@ -1,2 +1,3 @@
 # Run lint-staged to format code and run linters
-npx lint-staged
+# Usando cmd.exe para garantir compatibilidade com Windows
+cmd.exe /c "npx lint-staged"
