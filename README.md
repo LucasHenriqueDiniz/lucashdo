@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Website
 
-## Getting Started
+Um site de portfolio moderno e interativo construído com Next.js 15, React 19, TypeScript, e Tailwind CSS 4.
+
+## 🚀 Recursos
+
+- ⚡ **Next.js 15** - Framework React com renderização híbrida, otimização de imagens, e roteamento avançado
+- 🎭 **React 19** - Biblioteca para construção de interfaces de usuário
+- 💙 **TypeScript** - Tipagem estática para JavaScript
+- 🎨 **Tailwind CSS 4** - Framework CSS utilitário para estilização rápida
+- 🌍 **Internacionalização** - Suporte multi-idioma com next-intl
+- 🖼️ **Framer Motion** - Animações fluidas e interativas
+- 📱 **Design Responsivo** - Interface adaptável para todos os dispositivos
+- 🔍 **SEO Otimizado** - Metadados, sitemap, e robots.txt configurados
+
+## 🛠️ Tecnologias
+
+- **Frontend:** React, Next.js, TypeScript, Tailwind CSS
+- **Animações:** Framer Motion
+- **Qualidade de Código:** ESLint, Prettier, Husky
+- **i18n:** next-intl
+
+## 📋 Pré-requisitos
+
+- Node.js 20 ou superior
+- npm ou yarn
+
+## 🚀 Início Rápido
 
 First, run the development server:
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse [http://localhost:3000](http://localhost:3000) para visualizar o site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Você pode começar a editar o site modificando os arquivos em `src/app/`. A página atualiza automaticamente conforme você edita os arquivos.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📝 Scripts Disponíveis
 
-## Learn More
+- `npm run dev` - Inicia o servidor de desenvolvimento com Turbopack
+- `npm run build` - Cria build otimizada para produção
+- `npm run start` - Inicia o servidor de produção
+- `npm run lint` - Executa o linter para verificar problemas
+- `npm run lint:fix` - Corrige automaticamente problemas de linting
+- `npm run type-check` - Executa o verificador de tipos TypeScript
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Estrutura do Projeto
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+.
+├── public/             # Arquivos estáticos
+├── src/
+│   ├── app/            # Rotas do Next.js App Router
+│   ├── components/     # Componentes React reutilizáveis
+│   ├── lib/            # Bibliotecas e utilitários
+│   └── messages/       # Arquivos de tradução i18n
+├── scripts/            # Scripts utilitários
+├── eslint.config.mjs   # Configuração do ESLint
+├── next.config.ts      # Configuração do Next.js
+├── package.json        # Dependências e scripts
+└── tailwind.config.js  # Configuração do Tailwind CSS
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌐 Implantação
 
-## Deploy on Vercel
+Este site está configurado para ser facilmente implantado em plataformas como Vercel, Netlify ou GitHub Pages.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📄 Licença
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Este projeto está licenciado sob a MIT License.
+
+## 👤 Autor
+
+- **Lucas** - [GitHub](https://github.com/LucasHenriqueDiniz)

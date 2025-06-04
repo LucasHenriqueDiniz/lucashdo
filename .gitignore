@@ -42,3 +42,19 @@ next-env.d.ts
 
 # lint local reports
 lint-reports/*
+
+# turbopack
+.turbo
+
+# editors
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# local files
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
