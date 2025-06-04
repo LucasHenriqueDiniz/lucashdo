@@ -1,0 +1,58 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "blog": "Blog",
+    "gallery": "Gallery"
+  },
+  "Footer": {
+    "aboutTitle": "About",
+    "aboutText": "A unique and creative portfolio inspired by modern and non-conventional designs.",
+    "links": "Links",
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "blog": "Blog",
+    "connect": "Connect",
+    "rightsReserved": "All rights reserved."
+  },
+  "Home": {
+    "title": "Hello, I'm Lucas",
+    "subtitle": "Developer & Designer",
+    "description": "Creating unique and memorable digital experiences.",
+    "projects": "Projects",
+    "viewProjects": "View Projects",
+    "latestPosts": "Latest Posts",
+    "viewAll": "View All",
+    "viewProject": "View Project",
+    "readMore": "Read More"
+  },
+  "About": {
+    "title": "About Me",
+    "description": "Learn more about my journey and experience.",
+    "skills": "Skills",
+    "experience": "Experience"
+  },
+  "Projects": {
+    "title": "Projects",
+    "description": "A selection of projects I've worked on.",
+    "viewProject": "View Project",
+    "allProjects": "All Projects"
+  },
+  "Blog": {
+    "title": "Blog",
+    "description": "Thoughts, ideas and tutorials.",
+    "readMore": "Read more",
+    "published": "Published on"
+  },
+  "Gallery": {
+    "title": "Gallery",
+    "description": "A collection of visual works and photography."
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "Sorry, the page you are looking for does not exist or has been moved.",
+    "backHome": "Back to Home"
+  }
+}

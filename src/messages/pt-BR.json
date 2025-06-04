@@ -1,0 +1,58 @@
+{
+  "Navigation": {
+    "home": "Início",
+    "about": "Sobre",
+    "projects": "Projetos",
+    "blog": "Blog",
+    "gallery": "Galeria"
+  },
+  "Footer": {
+    "aboutTitle": "Sobre",
+    "aboutText": "Um portfólio único e criativo inspirado em designs modernos e não-convencionais.",
+    "links": "Links",
+    "home": "Início",
+    "about": "Sobre",
+    "projects": "Projetos",
+    "blog": "Blog",
+    "connect": "Conecte-se",
+    "rightsReserved": "Todos os direitos reservados."
+  },
+  "Home": {
+    "title": "Olá, sou Lucas",
+    "subtitle": "Desenvolvedor & Designer",
+    "description": "Criando experiências digitais únicas e memoráveis.",
+    "projects": "Projetos",
+    "viewProjects": "Ver Projetos",
+    "latestPosts": "Posts Recentes",
+    "viewAll": "Ver todos",
+    "viewProject": "Ver Projeto",
+    "readMore": "Ler mais"
+  },
+  "About": {
+    "title": "Sobre Mim",
+    "description": "Conheça mais sobre minha jornada e experiência.",
+    "skills": "Habilidades",
+    "experience": "Experiência"
+  },
+  "Projects": {
+    "title": "Projetos",
+    "description": "Uma seleção de projetos em que trabalhei.",
+    "viewProject": "Ver Projeto",
+    "allProjects": "Todos os Projetos"
+  },
+  "Blog": {
+    "title": "Blog",
+    "description": "Pensamentos, ideias e tutoriais.",
+    "readMore": "Ler mais",
+    "published": "Publicado em"
+  },
+  "Gallery": {
+    "title": "Galeria",
+    "description": "Uma coletânea de trabalhos visuais e fotografias."
+  },
+  "NotFound": {
+    "title": "Página Não Encontrada",
+    "description": "Desculpe, a página que você está procurando não existe ou foi movida.",
+    "backHome": "Voltar para Início"
+  }
+}
