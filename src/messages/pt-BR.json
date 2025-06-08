@@ -38,7 +38,11 @@
     "title": "Projetos",
     "description": "Uma seleção de projetos em que trabalhei.",
     "viewProject": "Ver Projeto",
-    "allProjects": "Todos os Projetos"
+    "allProjects": "Todos os Projetos",
+    "featured": "Destaque",
+    "viewDemo": "Ver Demo ao Vivo",
+    "viewSource": "Ver Código Fonte",
+    "techStack": "Stack Tecnológica"
   },
   "Blog": {
     "title": "Blog",
