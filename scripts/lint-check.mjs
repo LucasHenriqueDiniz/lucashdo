@@ -21,7 +21,7 @@ if (!fs.existsSync(reportsDir)) {
  */
 function runLintCheck() {
   const timestamp = new Date().toISOString().replace(/:/g, '-');
-  const reportFile = path.join(reportsDir, `lint-report-${timestamp}.txt`);
+  const reportFile = path.join(reportsDir, `lint-report-${timestamp}.sh`);
 
   console.log(`Running lint check at ${new Date().toLocaleString()}...`);
 

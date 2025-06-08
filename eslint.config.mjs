@@ -4,13 +4,14 @@
  * https://eslint.org/docs/latest/use/configure/
  */
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
-import * as tseslint from 'typescript-eslint';
 import prettierConfig from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
-import { FlatCompat } from '@eslint/eslintrc';
+import { ignores } from 'eslint-plugin-prettier/recommended';
+import { dirname } from 'path';
+import * as tseslint from 'typescript-eslint';
+import { fileURLToPath } from 'url';
 
 // Setup proper paths
 const __filename = fileURLToPath(import.meta.url);
@@ -37,6 +38,16 @@ export default [
   // Custom project configuration
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
+    ignores: [
+      ...ignores,
+      '**/node_modules/**',
+      '**/.next/**',
+      '**/out/**',
+      '**/dist/**',
+      '**/coverage/**',
+      '**/build/**',
+      './eslint.config.mjs',
+    ],
 
     linterOptions: {
       reportUnusedDisableDirectives: true,
