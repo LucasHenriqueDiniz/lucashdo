@@ -1,7 +1,6 @@
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-
-import LanguageSwitcherComponent from '@/components/ui/LanguageSwitcher';
+import { LanguageSwitcher } from '../language-switcher';
 
 export default function Header() {
   const t = useTranslations('Navigation');
@@ -39,16 +38,11 @@ export default function Header() {
               </Link>
             </li>
           </ul>
-        </nav>{' '}
+        </nav>
         <div className="flex items-center gap-3">
           <LanguageSwitcher />
         </div>
       </div>
     </header>
   );
-}
-
-// Renomeado para evitar conflito com o componente importado
-function LanguageSwitcher() {
-  return <LanguageSwitcherComponent />;
 }

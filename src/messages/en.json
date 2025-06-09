@@ -36,13 +36,9 @@
   },
   "Projects": {
     "title": "Projects",
-    "description": "A selection of projects I've worked on.",
-    "viewProject": "View Project",
-    "allProjects": "All Projects",
+    "description": "A showcase of my latest and best projects.",
     "featured": "Featured",
-    "viewDemo": "View Live Demo",
-    "viewSource": "View Source Code",
-    "techStack": "Tech Stack"
+    "viewProject": "View Project"
   },
   "Blog": {
     "title": "Blog",
@@ -58,5 +54,11 @@
     "title": "Page Not Found",
     "description": "Sorry, the page you are looking for does not exist or has been moved.",
     "backHome": "Back to Home"
+  },
+  "home": {
+    "greeting": "Hello! I'm",
+    "description": "A passionate developer creating amazing web experiences",
+    "contact": "Contact Me",
+    "support": "Support My Work"
   }
 }

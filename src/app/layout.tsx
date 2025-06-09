@@ -1,60 +1,59 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { Roboto_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { defaultLocale, locales } from '@/lib/i18n/config';
 
-import { getLocaleFromCookies } from '@/lib/i18n/cookies.server';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono' });
 
 export const metadata: Metadata = {
   title: {
-    default: 'Lucas | Portfólio',
-    template: '%s | Lucas',
+    default: 'Lucas Hdo - Portfolio',
+    template: '%s | Lucas Hdo - Portfolio',
   },
-  description: 'Portfólio pessoal com projetos, blog e galeria',
-  applicationName: 'Lucas Portfolio',
-  authors: [{ name: 'Lucas' }],
-  keywords: ['portfolio', 'desenvolvedor', 'designer', 'projetos', 'blog'],
-  creator: 'Lucas',
-  publisher: 'Lucas',
+  description:
+    'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
+  keywords: [
+    'portfolio',
+    'web development',
+    'software engineer',
+    'frontend developer',
+    'fullstack developer',
+  ],
+  authors: [{ name: 'Lucas Hdo' }],
+  creator: 'Lucas Hdo',
+  publisher: 'Lucas Hdo',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      en: '/en',
+      pt: '/pt',
+    },
+  },
   openGraph: {
     type: 'website',
-    locale: 'pt_BR',
-    alternateLocale: 'en_US',
-    title: 'Lucas | Portfólio',
-    description: 'Portfólio pessoal com projetos, blog e galeria',
-    siteName: 'Lucas Portfolio',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Lucas Portfolio',
-      },
-    ],
+    locale: 'en_US',
+    url: '/',
+    title: 'Lucas Hdo - Portfolio',
+    description:
+      'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
+    siteName: 'Lucas Hdo Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Lucas | Portfólio',
-    description: 'Portfólio pessoal com projetos, blog e galeria',
-    creator: '@yourusername',
-    images: ['/og-image.jpg'],
+    title: 'Lucas Hdo - Portfolio',
+    description:
+      'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
+    creator: '@yourtwitterhandle',
   },
   robots: {
     index: true,
@@ -62,29 +61,43 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      'max-video-preview': -1,
       'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-  manifest: '/site.webmanifest',
+  verification: {
+    google: 'your-google-site-verification',
+  },
 };
+
+export function generateStaticParams() {
+  return locales.map(locale => ({ locale }));
+}
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+  params: { locale },
+}: {
   children: React.ReactNode;
-}>) {
-  // Obtém o idioma do cookie ou usa o padrão
-  const locale = await getLocaleFromCookies();
+  params: { locale: string };
+}) {
+  // Use default locale if the provided one is invalid
+  const validLocale = locales.includes(locale as any) ? locale : defaultLocale;
 
-  // Carrega as mensagens para o idioma atual
-  const messages = await getMessages({ locale });
+  let messages;
+  try {
+    messages = (await import(`@/messages/${validLocale}.json`)).default;
+  } catch (error) {
+    // Fallback to default locale messages if the requested ones fail to load
+    messages = (await import(`@/messages/${defaultLocale}.json`)).default;
+  }
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
-      >
-        <NextIntlClientProvider locale={locale} messages={messages}>
+    <html lang={validLocale} suppressHydrationWarning>
+      <head>{/* Add any additional head elements here */}</head>
+      <body className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}>
+        <NextIntlClientProvider locale={validLocale} messages={messages}>
           {children}
         </NextIntlClientProvider>
       </body>

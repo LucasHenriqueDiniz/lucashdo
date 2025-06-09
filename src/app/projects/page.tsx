@@ -1,11 +1,11 @@
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 
 import MainLayout from '@/components/layout/MainLayout';
 import { projects } from '@/constants';
+import { type Locale } from '@/lib/i18n/config';
 
 export const metadata: Metadata = {
   title: 'Projects',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function Projects() {
   const t = useTranslations('Projects');
-  const locale = useTranslations().locale() as 'pt-BR' | 'en';
+  const locale = useLocale() as Locale;
 
   return (
     <MainLayout>

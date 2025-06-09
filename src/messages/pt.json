@@ -36,7 +36,7 @@
   },
   "Projects": {
     "title": "Projetos",
-    "description": "Uma seleção de projetos em que trabalhei.",
+    "description": "Uma mostra dos meus projetos mais recentes e melhores.",
     "viewProject": "Ver Projeto",
     "allProjects": "Todos os Projetos",
     "featured": "Destaque",
@@ -58,5 +58,11 @@
     "title": "Página Não Encontrada",
     "description": "Desculpe, a página que você está procurando não existe ou foi movida.",
     "backHome": "Voltar para Início"
+  },
+  "home": {
+    "greeting": "Olá! Eu sou",
+    "description": "Um desenvolvedor apaixonado criando experiências web incríveis",
+    "contact": "Entre em Contato",
+    "support": "Apoie Meu Trabalho"
   }
 }
