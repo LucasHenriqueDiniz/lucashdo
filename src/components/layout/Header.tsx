@@ -5,7 +5,7 @@ import { LanguageSwitcher } from '../language-switcher';
 export default function Header() {
   const t = useTranslations('Navigation');
   return (
-    <header className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border/50">
+    <header className="fixed top-0 w-full backdrop-blur-md z-50 border-b border-border/50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/" className="font-bold text-xl">
           Lucas

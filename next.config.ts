@@ -66,7 +66,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
-  swcMinify: true,
 
   // Geração de sitemap
   experimental: {

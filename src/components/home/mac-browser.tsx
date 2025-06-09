@@ -39,7 +39,7 @@ export function MacBrowser({ className, children }: MacBrowserProps) {
       </div>
 
       {/* Browser content */}
-      <div className="bg-background min-h-[400px] p-4">{children}</div>
+      <div className=" min-h-[400px] p-4">{children}</div>
     </motion.div>
   );
 }

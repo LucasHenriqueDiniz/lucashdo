@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { defaultLocale, locales } from '@/lib/i18n/config';
 
 import './globals.css';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono' });
@@ -98,7 +99,7 @@ export default async function RootLayout({
       <head>{/* Add any additional head elements here */}</head>
       <body className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider locale={validLocale} messages={messages}>
-          {children}
+          <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,0 +1,264 @@
+* {
+  --marginRight: 20px;
+  --iconSize: 50px;
+  --markerSize: 10px;
+  --borderSize: 2px;
+  --dot-jorge: 1;
+  --sectionBackground: #0c0c0c;
+  --markerSize: 4px;
+  --bg_color: #181818;
+  --border_color: transparent;
+  --distance: 4px;
+  --offsetInside: 24px;
+  --arrow_size: 8px;
+}
+
+.timeline-icon {
+  position: absolute;
+  width: var(--iconSize);
+  height: var(--iconSize);
+  right: calc(0px - var(--marginRight));
+  border-radius: 100%;
+  padding: 4px;
+  background: var(--accent);
+  border: var(--borderSize) solid #0184fc;
+  transform: translateX(calc(50% + var(--borderSize) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: 8px solid var(--color);
+  outline-offset: 1px;
+}
+
+.blank {
+  grid-area: right;
+}
+
+.container {
+  display: grid;
+  grid-template-areas: 'left period_left marker period_right right';
+  grid-template-columns: 1fr auto auto auto 1fr;
+  position: relative;
+  width: 100%;
+}
+
+.period {
+  position: sticky;
+  display: flex;
+  top: 50%;
+  height: fit-content;
+  font-size: 16px;
+  font-weight: bold;
+  color: rgb(1, 132, 252);
+  z-index: 5;
+  margin-right: var(--marginRight);
+  min-width: 100px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.marker {
+  position: relative;
+  width: var(--markerSize);
+  min-width: var(--markerSize);
+  height: auto;
+  background-color: rgb(15, 15, 15);
+  margin: -20px 0px;
+  border-radius: 20px;
+}
+
+.timeline-card {
+  outline: rgb(0, 98, 190) solid 2px;
+  outline-offset: 4px;
+  grid-area: left;
+  border-radius: 25px;
+  padding: 20px;
+  background: var(--bg_color);
+  width: 100%;
+  position: relative;
+}
+
+.top-tags {
+  position: absolute;
+  top: -4px;
+  left: 0px;
+  background: red;
+  width: 100%;
+  height: 0px;
+  display: flex;
+  align-items: center;
+  padding: 0px 40px;
+  gap: 8px;
+}
+.top-tag {
+  font-family: Inter, sans-serif;
+  box-sizing: border-box;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  font-size: 14px;
+  padding: 5px 15px;
+  border-radius: 14px;
+  border: 4px solid rgb(12, 12, 12);
+  background: rgb(1, 244, 252);
+  color: rgb(1, 132, 252);
+  font-weight: bold;
+}
+.tag-title {
+  background: rgb(1, 132, 252);
+  color: rgb(1, 244, 252);
+  font-weight: bold;
+}
+
+.timeline-card-title {
+  font-family: Inter, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-size: 20px;
+  margin: 0px;
+  color: rgb(1, 244, 252);
+}
+
+.timeline-card-tags {
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgb(172, 172, 172);
+  box-sizing: border-box;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  gap: 4px;
+}
+
+.timeline-tags-icon {
+  width: 25px;
+  height: 25px;
+  padding: 4px;
+  margin: 4px 0px;
+  background: rgb(1, 132, 252);
+  fill: rgb(1, 244, 252);
+  color: rgb(1, 244, 252);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-card-description {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+  text-decoration: none;
+  position: relative;
+  width: 100%;
+  flex: 1 1 0%;
+  font-size: 16px;
+  line-height: 22px;
+  white-space: pre-line;
+  margin-bottom: 0px;
+  color: rgb(210, 234, 255);
+}
+
+.timeline-card-description::before {
+  content: '“';
+  margin-right: 10px;
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  transform: scale(2);
+}
+
+.timeline-card-description::after {
+  content: '”';
+  margin-left: 10px;
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  transform: scale(2);
+}
+
+.sticky-arrow {
+  --arrow-size: 12px;
+  --arrow-bg-color: #181818;
+  --arrow-outline-color: #0184fc;
+  --arrow-outline-width: 2px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  z-index: 10;
+}
+
+/* Posicionamento da seta esquerda */
+.sticky-arrow.left {
+  right: 100%;
+  margin-right: -1px; /* Ajuste fino para conexão perfeita */
+}
+
+/* Posicionamento da seta direita */
+.sticky-arrow.right {
+  left: 100%;
+  margin-left: -1px; /* Ajuste fino para conexão perfeita */
+}
+
+/* Seta apontando para a direita (lado esquerdo do timeline) */
+.sticky-arrow.left::before,
+.sticky-arrow.left::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Outline da seta esquerda (maior, atrás) */
+.sticky-arrow.left::before {
+  border-top: calc(var(--arrow-size) + var(--arrow-outline-width)) solid transparent;
+  border-bottom: calc(var(--arrow-size) + var(--arrow-outline-width)) solid transparent;
+  border-left: calc(var(--arrow-size) + var(--arrow-outline-width)) solid var(--arrow-outline-color);
+  right: var(--arrow-outline-width);
+}
+
+/* Preenchimento da seta esquerda (menor, na frente) */
+.sticky-arrow.left::after {
+  border-top: var(--arrow-size) solid transparent;
+  border-bottom: var(--arrow-size) solid transparent;
+  border-left: var(--arrow-size) solid var(--arrow-bg-color);
+  right: 0;
+}
+
+/* Seta apontando para a esquerda (lado direito do timeline) */
+.sticky-arrow.right::before,
+.sticky-arrow.right::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Outline da seta direita (maior, atrás) */
+.sticky-arrow.right::before {
+  border-top: calc(var(--arrow-size) + var(--arrow-outline-width)) solid transparent;
+  border-bottom: calc(var(--arrow-size) + var(--arrow-outline-width)) solid transparent;
+  border-right: calc(var(--arrow-size) + var(--arrow-outline-width)) solid
+    var(--arrow-outline-color);
+  left: var(--arrow-outline-width);
+}
+
+/* Preenchimento da seta direita (menor, na frente) */
+.sticky-arrow.right::after {
+  border-top: var(--arrow-size) solid transparent;
+  border-bottom: var(--arrow-size) solid transparent;
+  border-right: var(--arrow-size) solid var(--arrow-bg-color);
+  left: 0;
+}
