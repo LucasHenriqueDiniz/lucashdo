@@ -101,11 +101,28 @@ function TimelineItem({
   const inView = useInView(ref, { once: true, margin: '-100px' });
   const controls = useAnimation();
 
-  // Framer Motion scroll animation - usando o progress relativo ao item
+  // Framer Motion scroll animation com offset ajustado
   const { scrollYProgress } = useScroll({
     target: itemRef,
     offset: ['start end', 'end start'],
   });
+
+  // Nova abordagem: Transformar o scrollYProgress para criar efeito sticky centralizado na tela
+  // Quando o elemento está no meio da tela: centerProgress = 0.5
+  // Quando o elemento está entrando na tela por baixo: centerProgress próximo de 0
+  // Quando o elemento está saindo da tela por cima: centerProgress próximo de 1
+  const centerProgress = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.5, 0.8, 1], // breakpoints no scroll
+    [0, 0, 0.5, 1, 1] // valores mapeados para criar o efeito sticky
+  );
+
+  // Posição Y do elemento calculada para ficar sticky no centro enquanto o card estiver visível
+  const centerY = useTransform(
+    centerProgress,
+    [0, 0.5, 1], // progress do centro
+    ['50vh', '50vh', '50vh'] // sempre no centro vertical
+  );
 
   useEffect(() => {
     if (inView) controls.start('visible');
@@ -142,11 +159,29 @@ function TimelineItem({
             </div>
             <div className="timeline-card-description">
               <p>{item.description[lang]}</p>
-            </div>{' '}
+            </div>
             {/* Arrows apontando para o centro - lado esquerdo */}
-            <motion.div className="timeline-arrow left"></motion.div>
-            <motion.div className="timeline-arrow left secondary"></motion.div>
-            <motion.div className="timeline-arrow left tertiary"></motion.div>
+            <motion.div
+              className="timeline-arrow left"
+              style={{
+                top: '50%', // Centralizado no card
+                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
+              }}
+            ></motion.div>
+            <motion.div
+              className="timeline-arrow left secondary"
+              style={{
+                top: '50%',
+                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
+              }}
+            ></motion.div>
+            <motion.div
+              className="timeline-arrow left tertiary"
+              style={{
+                top: '50%',
+                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
+              }}
+            ></motion.div>
           </div>
         ) : (
           <div className="timeline-card-blank"></div>
@@ -155,11 +190,35 @@ function TimelineItem({
         {/* Centro da timeline com linha, ícone e data */}
         <div className="timeline-center">
           <div className="timeline-marker"></div>
-          <motion.div className={`items-center ${side}`}>
-            <div className="timeline-icon">
-              <TypeIcon />
-            </div>
-            <div className={`date-pill ${side}`}>{item.date}</div>
+          <motion.div
+            className={`timeline-sticky-wrapper ${side}`}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              pointerEvents: 'none',
+            }}
+          >
+            <motion.div
+              className="timeline-center-content"
+              style={{
+                position: 'sticky',
+                top: centerY,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
+                scale: useTransform(centerProgress, [0, 0.3, 0.5, 0.7, 1], [0.8, 1, 1.1, 1, 0.8]),
+              }}
+            >
+              <div className="timeline-icon">
+                <TypeIcon />
+              </div>
+              <div className={`date-pill ${side}`}>{item.date}</div>
+            </motion.div>
           </motion.div>
         </div>
 
@@ -178,11 +237,29 @@ function TimelineItem({
             </div>
             <div className="timeline-card-description">
               <p>{item.description[lang]}</p>
-            </div>{' '}
+            </div>
             {/* Arrows apontando para o centro - lado direito */}
-            <motion.div className="timeline-arrow right"></motion.div>
-            <motion.div className="timeline-arrow right secondary"></motion.div>
-            <motion.div className="timeline-arrow right tertiary"></motion.div>
+            <motion.div
+              className="timeline-arrow right"
+              style={{
+                top: '50%',
+                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
+              }}
+            ></motion.div>
+            <motion.div
+              className="timeline-arrow right secondary"
+              style={{
+                top: '50%',
+                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
+              }}
+            ></motion.div>
+            <motion.div
+              className="timeline-arrow right tertiary"
+              style={{
+                top: '50%',
+                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
+              }}
+            ></motion.div>
           </div>
         ) : (
           <div className="timeline-card-blank right"></div>

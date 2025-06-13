@@ -3,6 +3,48 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Enhanced smooth scrolling with custom easing */
+html {
+  scroll-behavior: smooth;
+  /* Enhanced easing function for ultra-smooth scrolling */
+  scroll-timeline: --page-scroll block;
+  /* Better scroll padding for anchor links */
+  scroll-padding-top: 2rem;
+}
+
+/* Apply smooth scrolling to all elements */
+*,
+*::before,
+*::after {
+  scroll-behavior: inherit;
+}
+
+/* Enhanced scrollbar styling for better appearance */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* For Firefox */
+* {
+  scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin;
+}
+
 :root {
   --border: oklch(0.922 0 0);
   --primary: oklch(0.205 0 0);
@@ -49,6 +91,11 @@ body {
   background-color: rgb(12, 12, 12);
   font-size: 16px;
   font-weight: 400;
+  /* Advanced scroll settings for super smooth experience */
+  overflow-y: scroll; /* Ensure consistent scrollbar presence */
+  overscroll-behavior-y: none; /* Prevent bouncing on some browsers */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @theme inline {
