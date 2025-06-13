@@ -107,6 +107,10 @@ function TimelineItem({
     offset: ['start end', 'end start'],
   });
 
+  // Transformando o scroll em animações sutis - range maior de movimento (50-100px)
+  const animationY = useTransform(scrollYProgress, [0, 0.5, 1], [-50, 0, 50]);
+  const arrowScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.85]);
+
   useEffect(() => {
     if (inView) controls.start('visible');
   }, [inView, controls]);
@@ -144,7 +148,13 @@ function TimelineItem({
               <p>{item.description[lang]}</p>
             </div>
             {/* Arrow apontando para o centro - lado esquerdo */}
-            <motion.div className="timeline-arrow left"></motion.div>
+            <motion.div
+              className="timeline-arrow left"
+              style={{
+                scale: arrowScale,
+                transformOrigin: 'right center',
+              }}
+            ></motion.div>
           </div>
         ) : (
           <div className="timeline-card-blank"></div>
@@ -153,11 +163,16 @@ function TimelineItem({
         {/* Centro da timeline com linha, ícone e data */}
         <div className="timeline-center">
           <div className="timeline-marker"></div>
-          <motion.div className={`items-center ${side}`}>
+          <motion.div
+            className={`items-center ${side}`}
+            style={{
+              translateY: animationY,
+            }}
+          >
             <div className="timeline-icon">
               <TypeIcon />
             </div>
-            <div className={`date-pill ${side}`}>{item.date}</div>
+            <div className="date-pill">{item.date}</div>
           </motion.div>
         </div>
 
@@ -178,7 +193,13 @@ function TimelineItem({
               <p>{item.description[lang]}</p>
             </div>
             {/* Arrow apontando para o centro - lado direito */}
-            <motion.div className="timeline-arrow right"></motion.div>
+            <motion.div
+              className="timeline-arrow right"
+              style={{
+                scale: arrowScale,
+                transformOrigin: 'left center',
+              }}
+            ></motion.div>
           </div>
         ) : (
           <div className="timeline-card-blank right"></div>
