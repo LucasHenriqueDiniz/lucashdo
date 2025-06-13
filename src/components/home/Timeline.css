@@ -17,7 +17,6 @@
   width: 100%;
   position: relative;
   min-height: 240px;
-  margin: 30px 0;
 }
 
 /* Central marker line */
@@ -85,12 +84,40 @@
   border-left: 20px solid var(--card-outline-color);
 }
 
+/* Secondary left arrow with different color */
+.timeline-arrow.left.secondary {
+  z-index: 6; /* Lower z-index to appear behind the primary arrow */
+  right: -22px; /* Small offset to create a visible border effect */
+  border-left: 20px solid var(--sectionBackground);
+}
+
+/* Tertiary left arrow with background color */
+.timeline-arrow.left.tertiary {
+  z-index: 7; /* Lowest z-index to appear behind the other arrows */
+  right: -18px; /* Additional offset for third layer */
+  border-left: 20px solid var(--bg_color);
+}
+
 /* Right arrow (points to center) */
 .timeline-arrow.right {
   left: -25px;
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
   border-right: 20px solid var(--card-outline-color);
+}
+
+/* Secondary right arrow with different color */
+.timeline-arrow.right.secondary {
+  z-index: 6; /* Lower z-index to appear behind the primary arrow */
+  left: -22px; /* Small offset to create a visible border effect */
+  border-right: 20px solid var(--sectionBackground);
+}
+
+/* Tertiary right arrow with background color */
+.timeline-arrow.right.tertiary {
+  z-index: 7; /* Lowest z-index to appear behind the other arrows */
+  left: -18px; /* Additional offset for third layer */
+  border-right: 20px solid var(--bg_color);
 }
 
 /* Timeline center icon */

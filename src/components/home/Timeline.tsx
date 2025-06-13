@@ -142,9 +142,11 @@ function TimelineItem({
             </div>
             <div className="timeline-card-description">
               <p>{item.description[lang]}</p>
-            </div>
-            {/* Arrow apontando para o centro - lado esquerdo */}
+            </div>{' '}
+            {/* Arrows apontando para o centro - lado esquerdo */}
             <motion.div className="timeline-arrow left"></motion.div>
+            <motion.div className="timeline-arrow left secondary"></motion.div>
+            <motion.div className="timeline-arrow left tertiary"></motion.div>
           </div>
         ) : (
           <div className="timeline-card-blank"></div>
@@ -176,9 +178,11 @@ function TimelineItem({
             </div>
             <div className="timeline-card-description">
               <p>{item.description[lang]}</p>
-            </div>
-            {/* Arrow apontando para o centro - lado direito */}
+            </div>{' '}
+            {/* Arrows apontando para o centro - lado direito */}
             <motion.div className="timeline-arrow right"></motion.div>
+            <motion.div className="timeline-arrow right secondary"></motion.div>
+            <motion.div className="timeline-arrow right tertiary"></motion.div>
           </div>
         ) : (
           <div className="timeline-card-blank right"></div>
