@@ -68,7 +68,7 @@
 
 /* Timeline arrow styling */
 .timeline-arrow {
-  position: absolute;
+  position: sticky;
   z-index: 5;
   top: 50%;
   width: 0;
@@ -315,7 +315,7 @@
   z-index: 5;
   transform: translateY(-50%);
   transition: opacity 0.3s ease;
-  will-change: opacity;
+  will-change: top, opacity;
 }
 
 /* Ajustes para responsividade do scroll */

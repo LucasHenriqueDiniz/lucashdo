@@ -98,8 +98,17 @@ function TimelineItem({
 }) {
   const ref = useRef(null);
   const itemRef = useRef(null);
+  const leftTagsRef = useRef(null);
+  const rightTagsRef = useRef(null);
+
+  // useInView hooks para diferentes elementos
   const inView = useInView(ref, { once: true, margin: '-100px' });
+  const leftTagsInView = useInView(leftTagsRef, { once: false, margin: '-50px' });
+  const rightTagsInView = useInView(rightTagsRef, { once: false, margin: '-50px' });
+
   const controls = useAnimation();
+  const leftTagsControls = useAnimation();
+  const rightTagsControls = useAnimation();
 
   // Framer Motion scroll animation com offset ajustado
   const { scrollYProgress } = useScroll({
@@ -126,7 +135,9 @@ function TimelineItem({
 
   useEffect(() => {
     if (inView) controls.start('visible');
-  }, [inView, controls]);
+    if (leftTagsInView) leftTagsControls.start('visible');
+    if (rightTagsInView) rightTagsControls.start('visible');
+  }, [inView, leftTagsInView, rightTagsInView, controls, leftTagsControls, rightTagsControls]);
 
   // Determinar o tipo de experiência para escolher o ícone
   const isAcademic = jobExperiences.findIndex(exp => exp.id === item.id) === -1;
@@ -147,10 +158,27 @@ function TimelineItem({
         {/* Card do lado esquerdo (ou placeholder) */}
         {side === 'left' ? (
           <div className="timeline-card left">
-            <div className="top-tags">
+            <motion.div
+              ref={leftTagsRef}
+              className="top-tags"
+              initial="hidden"
+              animate={leftTagsControls}
+              variants={{
+                hidden: { x: -50, opacity: 0 },
+                visible: {
+                  x: 0,
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
+                    type: 'spring',
+                    stiffness: 100,
+                  },
+                },
+              }}
+            >
               <div className="top-tag">{isAcademic ? 'Education' : 'Job'}</div>
               <div className="top-tag tag-title">{item.institution}</div>
-            </div>
+            </motion.div>
             <h2 className="timeline-card-title">{item.title}</h2>
             <div className="timeline-card-tags">
               {item.tags?.map((tag: TimelineTagProps, index: number) => (
@@ -159,26 +187,37 @@ function TimelineItem({
             </div>
             <div className="timeline-card-description">
               <p>{item.description[lang]}</p>
-            </div>
-            {/* Arrows apontando para o centro - lado esquerdo */}
-            <motion.div
+            </div>{' '}
+            {/* Arrows apontando para o centro - lado esquerdo */}            <motion.div
               className="timeline-arrow left"
               style={{
-                top: '50%', // Centralizado no card
+                top: useTransform(
+                  centerProgress, 
+                  [0, 0.5, 1], 
+                  ['80%', '50%', '20%']
+                ), // Move verticalmente dentro do card para acompanhar o ícone
                 opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
               }}
             ></motion.div>
             <motion.div
               className="timeline-arrow left secondary"
               style={{
-                top: '50%',
+                top: useTransform(
+                  centerProgress, 
+                  [0, 0.5, 1], 
+                  ['80%', '50%', '20%']
+                ),
                 opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
               }}
             ></motion.div>
             <motion.div
               className="timeline-arrow left tertiary"
               style={{
-                top: '50%',
+                top: useTransform(
+                  centerProgress, 
+                  [0, 0.5, 1], 
+                  ['80%', '50%', '20%']
+                ),
                 opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
               }}
             ></motion.div>
@@ -225,10 +264,27 @@ function TimelineItem({
         {/* Card do lado direito (ou placeholder) */}
         {side === 'right' ? (
           <div className="timeline-card right">
-            <div className="top-tags">
+            <motion.div
+              ref={rightTagsRef}
+              className="top-tags"
+              initial="hidden"
+              animate={rightTagsControls}
+              variants={{
+                hidden: { x: 50, opacity: 0 },
+                visible: {
+                  x: 0,
+                  opacity: 1,
+                  transition: {
+                    duration: 0.5,
+                    type: 'spring',
+                    stiffness: 100,
+                  },
+                },
+              }}
+            >
               <div className="top-tag">{isAcademic ? 'Education' : 'Job'}</div>
               <div className="top-tag tag-title">{item.institution}</div>
-            </div>
+            </motion.div>
             <h2 className="timeline-card-title">{item.title}</h2>
             <div className="timeline-card-tags">
               {item.tags?.map((tag: TimelineTagProps, index: number) => (
@@ -237,26 +293,37 @@ function TimelineItem({
             </div>
             <div className="timeline-card-description">
               <p>{item.description[lang]}</p>
-            </div>
-            {/* Arrows apontando para o centro - lado direito */}
-            <motion.div
+            </div>{' '}
+            {/* Arrows apontando para o centro - lado direito */}            <motion.div
               className="timeline-arrow right"
               style={{
-                top: '50%',
+                top: useTransform(
+                  centerProgress, 
+                  [0, 0.5, 1], 
+                  ['80%', '50%', '20%']
+                ), // Move verticalmente dentro do card para acompanhar o ícone
                 opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
               }}
             ></motion.div>
             <motion.div
               className="timeline-arrow right secondary"
               style={{
-                top: '50%',
+                top: useTransform(
+                  centerProgress, 
+                  [0, 0.5, 1], 
+                  ['80%', '50%', '20%']
+                ),
                 opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
               }}
             ></motion.div>
             <motion.div
               className="timeline-arrow right tertiary"
               style={{
-                top: '50%',
+                top: useTransform(
+                  centerProgress, 
+                  [0, 0.5, 1], 
+                  ['80%', '50%', '20%']
+                ),
                 opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
               }}
             ></motion.div>
