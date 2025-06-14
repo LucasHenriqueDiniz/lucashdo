@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
-import { motion, useAnimation, useInView, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { academicExperiences } from '@/constants/academicExperiences';
 import { jobExperiences } from '@/constants/jobExperiences';
 import Image from 'next/image';
@@ -24,24 +24,96 @@ const timelineItems = [
 
 export default function Timeline() {
   const lang = getLang();
+
   return (
     <section className="w-full flex flex-col items-center py-24 bg-slate">
       <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center">
-        <span className="text-muted-foreground block text-lg font-normal mb-2">
+        <motion.span
+          className="text-muted-foreground block text-lg font-normal mb-2"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+        >
           First things first
-        </span>
-        <span className="inline-block align-middle">
-          <span className="inline-block mr-2 align-middle text-blue-400">
+        </motion.span>
+        <motion.span
+          className="inline-block align-middle"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 1.0, delay: 0.7 }}
+        >
+          <motion.span
+            className="inline-block mr-2 align-middle text-blue-400"
+            initial={{ rotate: -180, scale: 0.3 }}
+            whileInView={{ rotate: 0, scale: 1 }}
+            viewport={{ once: false }}
+            transition={{
+              type: 'spring',
+              stiffness: 260,
+              damping: 20,
+              delay: 1.0,
+            }}
+          >
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <rect x="2" y="2" width="12" height="12" rx="2" fill="#0ea5e9" />
-              <rect x="18" y="2" width="12" height="12" rx="2" fill="#0ea5e9" />
-              <rect x="2" y="18" width="12" height="12" rx="2" fill="#0ea5e9" />
+              <motion.rect
+                x="2"
+                y="2"
+                width="12"
+                height="12"
+                rx="2"
+                fill="#0ea5e9"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: false }}
+                transition={{ duration: 0.5, delay: 1.2 }}
+              />
+              <motion.rect
+                x="18"
+                y="2"
+                width="12"
+                height="12"
+                rx="2"
+                fill="#0ea5e9"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: false }}
+                transition={{ duration: 0.5, delay: 1.4 }}
+              />
+              <motion.rect
+                x="2"
+                y="18"
+                width="12"
+                height="12"
+                rx="2"
+                fill="#0ea5e9"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: false }}
+                transition={{ duration: 0.5, delay: 1.6 }}
+              />
             </svg>
-          </span>
-          <span className="font-extrabold text-white">
-            My <span className="text-cyan-400">career</span>
-          </span>
-        </span>
+          </motion.span>
+          <motion.span
+            className="font-extrabold text-white"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.7, delay: 1.0 }}
+          >
+            My{' '}
+            <motion.span
+              className="text-cyan-400"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.5, delay: 1.4 }}
+            >
+              career
+            </motion.span>
+          </motion.span>
+        </motion.span>
       </h2>
       <div className="relative w-full max-w-7xl flex flex-col min-h-[700px]">
         {timelineItems.map((item, idx) => (
@@ -60,9 +132,11 @@ export default function Timeline() {
 const TimelineCardIcon = ({
   icon,
   title,
+  index = 0,
 }: {
   icon: LucideIcon | string;
   title?: TranslatedField;
+  index?: number;
 }) => {
   function getIcon(icon: string | LucideIcon) {
     if (typeof icon === 'string') {
@@ -78,7 +152,28 @@ const TimelineCardIcon = ({
   return (
     <Tooltip>
       <TooltipTrigger>
-        <div className="timeline-tags-icon">{getIcon(icon)}</div>
+        <motion.div
+          className="timeline-tags-icon"
+          variants={{
+            hidden: { opacity: 0, scale: 0.2 },
+            visible: {
+              opacity: 1,
+              scale: 1,
+              transition: {
+                duration: 0.4,
+                type: 'spring',
+                stiffness: 300,
+                damping: 15,
+              },
+            },
+          }}
+          whileHover={{
+            scale: 1.15,
+            transition: { duration: 0.1 },
+          }}
+        >
+          {getIcon(icon)}
+        </motion.div>
       </TooltipTrigger>
       <TooltipContent>
         <p>{getLang() === 'pt' ? title?.pt : title?.en}</p>
@@ -98,17 +193,6 @@ function TimelineItem({
 }) {
   const ref = useRef(null);
   const itemRef = useRef(null);
-  const leftTagsRef = useRef(null);
-  const rightTagsRef = useRef(null);
-
-  // useInView hooks para diferentes elementos
-  const inView = useInView(ref, { once: true, margin: '-100px' });
-  const leftTagsInView = useInView(leftTagsRef, { once: false, margin: '-50px' });
-  const rightTagsInView = useInView(rightTagsRef, { once: false, margin: '-50px' });
-
-  const controls = useAnimation();
-  const leftTagsControls = useAnimation();
-  const rightTagsControls = useAnimation();
 
   // Framer Motion scroll animation com offset ajustado
   const { scrollYProgress } = useScroll({
@@ -133,46 +217,73 @@ function TimelineItem({
     ['50vh', '50vh', '50vh'] // sempre no centro vertical
   );
 
-  useEffect(() => {
-    if (inView) controls.start('visible');
-    if (leftTagsInView) leftTagsControls.start('visible');
-    if (rightTagsInView) rightTagsControls.start('visible');
-  }, [inView, leftTagsInView, rightTagsInView, controls, leftTagsControls, rightTagsControls]);
-
   // Determinar o tipo de experiência para escolher o ícone
   const isAcademic = jobExperiences.findIndex(exp => exp.id === item.id) === -1;
   const TypeIcon = isAcademic ? GraduationCap : BriefcaseBusiness;
-
   return (
     <motion.div
       ref={ref}
       className={`relative flex w-full min-h-[240px]`}
       initial="hidden"
-      animate={controls}
+      whileInView="visible"
+      viewport={{ once: false, margin: '-100px' }}
       variants={{
-        hidden: { opacity: 0, y: 40 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.7, type: 'spring' } },
+        hidden: { opacity: 0, y: 40, scale: 0.95 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          transition: {
+            duration: 0.8,
+            type: 'spring',
+            stiffness: 100,
+            damping: 12,
+          },
+        },
       }}
     >
       <div ref={itemRef} className="timeline-container">
         {' '}
-        {/* Card do lado esquerdo (ou placeholder) */}
+        {/* Card do lado esquerdo */}
         {side === 'left' ? (
-          <div className="timeline-card left">
+          <motion.div
+            className="timeline-card left"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false }}
+            whileHover={{
+              boxShadow: '0 10px 25px rgba(14, 165, 233, 0.2)',
+              outlineColor: 'var(--text-cyan)',
+            }}
+            variants={{
+              hidden: { scale: 0.97 },
+              visible: {
+                scale: 1,
+                opacity: 1,
+                transition: {
+                  duration: 0.5,
+                  type: 'spring',
+                  stiffness: 100,
+                  damping: 12,
+                  staggerChildren: 0.15,
+                  delayChildren: 0.1,
+                },
+              },
+            }}
+          >
             <motion.div
-              ref={leftTagsRef}
               className="top-tags"
-              initial="hidden"
-              animate={leftTagsControls}
               variants={{
-                hidden: { x: -50, opacity: 0 },
+                hidden: { x: -30, opacity: 0, scale: 0.8 },
                 visible: {
                   x: 0,
                   opacity: 1,
+                  scale: 1,
                   transition: {
-                    duration: 0.5,
+                    duration: 0.6,
                     type: 'spring',
-                    stiffness: 100,
+                    stiffness: 120,
+                    damping: 9,
                   },
                 },
               }}
@@ -180,23 +291,70 @@ function TimelineItem({
               <div className="top-tag">{isAcademic ? 'Education' : 'Job'}</div>
               <div className="top-tag tag-title">{item.institution}</div>
             </motion.div>
-            <h2 className="timeline-card-title">{item.title}</h2>
-            <div className="timeline-card-tags">
+            <motion.h2
+              className="timeline-card-title"
+              variants={{
+                hidden: { opacity: 0, x: -20 },
+                visible: {
+                  opacity: 1,
+                  x: 0,
+                  transition: {
+                    duration: 0.5,
+                    ease: [0.25, 0.1, 0.25, 1.0],
+                  },
+                },
+              }}
+            >
+              {item.title}
+            </motion.h2>
+            <motion.div
+              className="timeline-card-tags"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1,
+                  },
+                },
+              }}
+            >
               {item.tags?.map((tag: TimelineTagProps, index: number) => (
-                <TimelineCardIcon key={index} icon={tag.icon} title={tag.labels} />
+                <TimelineCardIcon key={index} icon={tag.icon} title={tag.labels} index={index} />
               ))}
-            </div>
-            <div className="timeline-card-description">
+            </motion.div>
+            <motion.div
+              className="timeline-card-description"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.7,
+                    ease: [0.25, 0.1, 0.25, 1.0],
+                  },
+                },
+              }}
+            >
               <p>{item.description[lang]}</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ) : (
           <div className="timeline-card-blank"></div>
-        )}{' '}
-        {/* Centro da timeline com linha, ícone e data */}{' '}
+        )}
         <div className="timeline-center">
-          <div className="timeline-marker"></div>
-          {/* Container único para ícone, data e setas - sticky */}
+          <motion.div
+            className="timeline-marker"
+            initial={{ height: 0 }}
+            whileInView={{ height: '100%' }}
+            viewport={{ once: false }}
+            transition={{
+              duration: 1.0,
+              ease: 'easeInOut',
+            }}
+          ></motion.div>
+          {/* ícone, data e setas*/}
           <motion.div
             className={`timeline-sticky-wrapper ${side}`}
             style={{
@@ -233,10 +391,42 @@ function TimelineItem({
               )}
 
               {/* Ícone central */}
-              <div className="timeline-icon">
+              <motion.div
+                className="timeline-icon"
+                whileInView={{
+                  scale: [1, 1.1, 1],
+                  boxShadow: [
+                    '0 0 0 0 rgba(1, 132, 252, 0)',
+                    '0 0 0 8px rgba(1, 132, 252, 0.3)',
+                    '0 0 0 0 rgba(1, 132, 252, 0)',
+                  ],
+                }}
+                viewport={{ once: false }}
+                transition={{
+                  duration: 2,
+                  ease: 'easeInOut',
+                  times: [0, 0.5, 1],
+                  repeat: Infinity,
+                  repeatDelay: 1,
+                }}
+              >
                 <TypeIcon />
-              </div>
-              <div className={`date-pill ${side}`}>{item.date}</div>
+              </motion.div>
+              <motion.div
+                className={`date-pill ${side}`}
+                initial={{ opacity: 0, x: side === 'left' ? 20 : -20, y: 0 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: false }}
+                transition={{
+                  delay: 0.2,
+                  duration: 0.3,
+                  type: 'spring',
+                  stiffness: 120,
+                  damping: 9,
+                }}
+              >
+                {item.date}
+              </motion.div>
 
               {/* Seta direita */}
               {side === 'right' && (
@@ -253,21 +443,41 @@ function TimelineItem({
         </div>
         {/* Card do lado direito (ou placeholder) */}
         {side === 'right' ? (
-          <div className="timeline-card right">
+          <motion.div
+            className="timeline-card right"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false }}
+            variants={{
+              hidden: { opacity: 1, x: 0, scale: 0.97 },
+              visible: {
+                opacity: 1,
+                x: 0,
+                scale: 1,
+                transition: {
+                  duration: 0.5,
+                  type: 'spring',
+                  stiffness: 100,
+                  damping: 12,
+                  staggerChildren: 0.15,
+                  delayChildren: 0.1,
+                },
+              },
+            }}
+          >
             <motion.div
-              ref={rightTagsRef}
               className="top-tags"
-              initial="hidden"
-              animate={rightTagsControls}
               variants={{
-                hidden: { x: 50, opacity: 0 },
+                hidden: { x: 30, opacity: 0, scale: 0.8 },
                 visible: {
                   x: 0,
                   opacity: 1,
+                  scale: 1,
                   transition: {
-                    duration: 0.5,
+                    duration: 0.6,
                     type: 'spring',
-                    stiffness: 100,
+                    stiffness: 120,
+                    damping: 9,
                   },
                 },
               }}
@@ -275,16 +485,55 @@ function TimelineItem({
               <div className="top-tag">{isAcademic ? 'Education' : 'Job'}</div>
               <div className="top-tag tag-title">{item.institution}</div>
             </motion.div>
-            <h2 className="timeline-card-title">{item.title}</h2>
-            <div className="timeline-card-tags">
+            <motion.h2
+              className="timeline-card-title"
+              variants={{
+                hidden: { opacity: 0, x: 20 },
+                visible: {
+                  opacity: 1,
+                  x: 0,
+                  transition: {
+                    duration: 0.5,
+                    ease: [0.25, 0.1, 0.25, 1.0],
+                  },
+                },
+              }}
+            >
+              {item.title}
+            </motion.h2>
+            <motion.div
+              className="timeline-card-tags"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1,
+                  },
+                },
+              }}
+            >
               {item.tags?.map((tag: TimelineTagProps, index: number) => (
-                <TimelineCardIcon key={index} icon={tag.icon} title={tag.labels} />
+                <TimelineCardIcon key={index} icon={tag.icon} title={tag.labels} index={index} />
               ))}
-            </div>
-            <div className="timeline-card-description">
+            </motion.div>
+            <motion.div
+              className="timeline-card-description"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.7,
+                    ease: [0.25, 0.1, 0.25, 1.0],
+                  },
+                },
+              }}
+            >
               <p>{item.description[lang]}</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ) : (
           <div className="timeline-card-blank right"></div>
         )}

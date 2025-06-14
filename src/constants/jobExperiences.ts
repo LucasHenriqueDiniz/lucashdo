@@ -39,7 +39,7 @@ export const jobExperiences: ExperienceProps[] = [
       { labels: { pt: 'Node.js', en: 'Node.js' }, icon: '/icons/nodejs.svg' },
       { labels: { pt: 'AWS', en: 'AWS' }, icon: '/icons/aws.svg' },
       { labels: { pt: 'Prisma', en: 'Prisma' }, icon: '/icons/prisma.svg' },
-      { labels: { pt: 'Zustand', en: 'Zustand' }, icon: '/icons/zustand.svg' },
+      { labels: { pt: 'Zustand', en: 'Zustand' }, icon: '/icons/zustand.png' },
       { labels: { pt: 'Typescript', en: 'Typescript' }, icon: '/icons/typescript.svg' },
     ],
     description: {
