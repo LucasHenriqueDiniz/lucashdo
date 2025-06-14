@@ -155,6 +155,7 @@ function TimelineItem({
       }}
     >
       <div ref={itemRef} className="timeline-container">
+        {' '}
         {/* Card do lado esquerdo (ou placeholder) */}
         {side === 'left' ? (
           <div className="timeline-card left">
@@ -187,48 +188,15 @@ function TimelineItem({
             </div>
             <div className="timeline-card-description">
               <p>{item.description[lang]}</p>
-            </div>{' '}
-            {/* Arrows apontando para o centro - lado esquerdo */}            <motion.div
-              className="timeline-arrow left"
-              style={{
-                top: useTransform(
-                  centerProgress, 
-                  [0, 0.5, 1], 
-                  ['80%', '50%', '20%']
-                ), // Move verticalmente dentro do card para acompanhar o ícone
-                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
-              }}
-            ></motion.div>
-            <motion.div
-              className="timeline-arrow left secondary"
-              style={{
-                top: useTransform(
-                  centerProgress, 
-                  [0, 0.5, 1], 
-                  ['80%', '50%', '20%']
-                ),
-                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
-              }}
-            ></motion.div>
-            <motion.div
-              className="timeline-arrow left tertiary"
-              style={{
-                top: useTransform(
-                  centerProgress, 
-                  [0, 0.5, 1], 
-                  ['80%', '50%', '20%']
-                ),
-                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
-              }}
-            ></motion.div>
+            </div>
           </div>
         ) : (
           <div className="timeline-card-blank"></div>
-        )}
-
-        {/* Centro da timeline com linha, ícone e data */}
+        )}{' '}
+        {/* Centro da timeline com linha, ícone e data */}{' '}
         <div className="timeline-center">
           <div className="timeline-marker"></div>
+          {/* Container único para ícone, data e setas - sticky */}
           <motion.div
             className={`timeline-sticky-wrapper ${side}`}
             style={{
@@ -249,18 +217,40 @@ function TimelineItem({
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
-                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
-                scale: useTransform(centerProgress, [0, 0.3, 0.5, 0.7, 1], [0.8, 1, 1.1, 1, 0.8]),
+                height: '50px',
+                marginTop: '35px', // Centraliza verticalmente
               }}
             >
+              {/* Seta esquerda */}
+              {side === 'left' && (
+                <div className="timeline-arrows-container left">
+                  <div className="timeline-arrows-group left">
+                    <div className="timeline-arrow left"></div>
+                    <div className="timeline-arrow left secondary"></div>
+                    <div className="timeline-arrow left tertiary"></div>
+                  </div>
+                </div>
+              )}
+
+              {/* Ícone central */}
               <div className="timeline-icon">
                 <TypeIcon />
               </div>
               <div className={`date-pill ${side}`}>{item.date}</div>
+
+              {/* Seta direita */}
+              {side === 'right' && (
+                <div className="timeline-arrows-container right">
+                  <div className="timeline-arrows-group right">
+                    <div className="timeline-arrow right"></div>
+                    <div className="timeline-arrow right secondary"></div>
+                    <div className="timeline-arrow right tertiary"></div>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         </div>
-
         {/* Card do lado direito (ou placeholder) */}
         {side === 'right' ? (
           <div className="timeline-card right">
@@ -293,40 +283,7 @@ function TimelineItem({
             </div>
             <div className="timeline-card-description">
               <p>{item.description[lang]}</p>
-            </div>{' '}
-            {/* Arrows apontando para o centro - lado direito */}            <motion.div
-              className="timeline-arrow right"
-              style={{
-                top: useTransform(
-                  centerProgress, 
-                  [0, 0.5, 1], 
-                  ['80%', '50%', '20%']
-                ), // Move verticalmente dentro do card para acompanhar o ícone
-                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
-              }}
-            ></motion.div>
-            <motion.div
-              className="timeline-arrow right secondary"
-              style={{
-                top: useTransform(
-                  centerProgress, 
-                  [0, 0.5, 1], 
-                  ['80%', '50%', '20%']
-                ),
-                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
-              }}
-            ></motion.div>
-            <motion.div
-              className="timeline-arrow right tertiary"
-              style={{
-                top: useTransform(
-                  centerProgress, 
-                  [0, 0.5, 1], 
-                  ['80%', '50%', '20%']
-                ),
-                opacity: useTransform(centerProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]),
-              }}
-            ></motion.div>
+            </div>
           </div>
         ) : (
           <div className="timeline-card-blank right"></div>

@@ -68,17 +68,17 @@
 
 /* Timeline arrow styling */
 .timeline-arrow {
-  position: sticky;
+  position: absolute;
   z-index: 5;
-  top: 50%;
   width: 0;
   height: 0;
+  top: 50%;
   transform: translateY(-50%);
 }
 
 /* Left arrow (points to center) */
 .timeline-arrow.left {
-  right: -25px;
+  right: 0;
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
   border-left: 20px solid var(--card-outline-color);
@@ -87,20 +87,20 @@
 /* Secondary left arrow with different color */
 .timeline-arrow.left.secondary {
   z-index: 6; /* Lower z-index to appear behind the primary arrow */
-  right: -22px; /* Small offset to create a visible border effect */
+  right: 3px; /* Small offset to create a visible border effect */
   border-left: 20px solid var(--sectionBackground);
 }
 
 /* Tertiary left arrow with background color */
 .timeline-arrow.left.tertiary {
   z-index: 7; /* Lowest z-index to appear behind the other arrows */
-  right: -18px; /* Additional offset for third layer */
+  right: 7px; /* Additional offset for third layer */
   border-left: 20px solid var(--bg_color);
 }
 
 /* Right arrow (points to center) */
 .timeline-arrow.right {
-  left: -25px;
+  left: 0;
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
   border-right: 20px solid var(--card-outline-color);
@@ -109,15 +109,34 @@
 /* Secondary right arrow with different color */
 .timeline-arrow.right.secondary {
   z-index: 6; /* Lower z-index to appear behind the primary arrow */
-  left: -22px; /* Small offset to create a visible border effect */
+  left: 3px; /* Small offset to create a visible border effect */
   border-right: 20px solid var(--sectionBackground);
 }
 
 /* Tertiary right arrow with background color */
 .timeline-arrow.right.tertiary {
   z-index: 7; /* Lowest z-index to appear behind the other arrows */
-  left: -18px; /* Additional offset for third layer */
+  left: 7px; /* Additional offset for third layer */
   border-right: 20px solid var(--bg_color);
+}
+
+/* Arrow container groups */
+.timeline-arrows-group {
+  position: relative;
+  height: 40px; /* To ensure it has some height */
+  width: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-arrows-group.left {
+  position: absolute;
+  right: 0;
+}
+
+.timeline-arrows-group.right {
+  position: absolute;
+  left: 0;
 }
 
 /* Timeline center icon */
@@ -264,7 +283,7 @@
 }
 
 .timeline-card-description::before {
-  content: '“';
+  content: '"';
   margin-right: 10px;
   color: rgba(255, 255, 255, 0.1);
   font-size: 14px;
@@ -274,7 +293,7 @@
 }
 
 .timeline-card-description::after {
-  content: '”';
+  content: '"';
   margin-left: 10px;
   color: rgba(255, 255, 255, 0.1);
   font-size: 14px;
@@ -300,6 +319,14 @@
   pointer-events: none;
 }
 
+.timeline-sticky-wrapper.arrows-left {
+  z-index: 19;
+}
+
+.timeline-sticky-wrapper.arrows-right {
+  z-index: 19;
+}
+
 .timeline-center-content {
   position: sticky;
   display: flex;
@@ -308,14 +335,25 @@
   transform: translateY(-50%);
   width: 100%;
   height: 100px;
+  position: relative; /* Added to ensure absolute positioned children work correctly */
 }
 
-.timeline-arrow {
+/* Ajustes para o container de setas */
+.timeline-arrows-container {
   position: absolute;
-  z-index: 5;
-  transform: translateY(-50%);
-  transition: opacity 0.3s ease;
-  will-change: top, opacity;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  width: 30px;
+  height: 40px;
+}
+
+.timeline-arrows-container.left {
+  right: 80px;
+}
+
+.timeline-arrows-container.right {
+  left: 80px;
 }
 
 /* Ajustes para responsividade do scroll */
