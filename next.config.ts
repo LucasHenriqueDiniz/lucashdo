@@ -12,6 +12,22 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'placeholdr.ai',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lastfm.freetls.fastly.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'randomuser.me',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.last.fm',
+      },
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

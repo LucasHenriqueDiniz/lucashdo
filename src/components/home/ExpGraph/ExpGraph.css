@@ -1,0 +1,362 @@
+:root {
+  /* Layout properties */
+  --chart-bar-height: 40px;
+  --chart-bar-spacing: 30px;
+  --chart-max-years: 4;
+  --chart-year-marker-1: 25%; /* 1 year mark */
+  --chart-year-marker-2: 50%; /* 2 year mark */
+  --chart-year-marker-3: 75%; /* 3 year mark */
+
+  /* Chart-specific colors */
+  --color-pro-exp: var(--blue, #0084fc);
+  --color-favorite: var(--cyan, #00c8cf);
+  --color-total-exp: oklch(0.25 0 0);
+  --color-text: var(--color-foreground);
+  --color-text-hovered: var(--blue, #0084fc);
+  --color-grid-line: oklch(0.3 0 0);
+}
+
+.skills-chart-gradient {
+  background: linear-gradient(
+    90deg,
+    var(--color-chart-2),
+    var(--color-chart-1),
+    var(--color-chart-3)
+  );
+}
+
+/* Skill name styles */
+.skill-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  paint-order: stroke fill;
+  stroke: rgba(0, 0, 0, 0.7);
+  stroke-width: 1px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.3));
+  fill: var(--color-foreground);
+  /* Removed complex shadow for performance */
+}
+
+.skill-name.highlighted {
+  stroke: rgba(0, 0, 0, 0.9);
+  stroke-width: 1.2px;
+  font-weight: 700;
+}
+
+/* Hover effect for experience year labels */
+.exp-year-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  fill: var(--foreground);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+g:hover .exp-year-label {
+  opacity: 1;
+}
+
+.skill-icon-card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease; /* Faster, targeted transition */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Lighter shadow */
+  /* Removed backdrop-filter for better performance */
+}
+
+.skill-icon-card:hover {
+  transform: translateY(-3px); /* Reduced movement */
+  box-shadow: 0 4px 12px rgba(0, 60, 255, 0.1); /* Lighter shadow */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(5px); /* Reduced movement distance */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Simplified icon animation */
+@keyframes rotateIcon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-flip {
+  animation: rotateIcon 0.8s ease-in-out; /* Faster, simpler animation */
+}
+
+.skill-text-animation {
+  display: inline-block;
+  position: relative;
+}
+
+.skill-text-animation span {
+  animation: fadeIn 0.3s forwards; /* Faster animation */
+}
+
+/* Simplified tooltip styles */
+.exp-tooltip {
+  position: absolute;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); /* Lighter shadow */
+  border: 1px solid rgba(0, 156, 255, 0.3);
+  /* Removed backdrop-filter for better performance */
+}
+
+.tooltip-enhanced {
+  background-color: var(--color-card) !important;
+  border: 1px solid var(--color-chart-2) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important; /* Simplified shadow */
+  /* Removed backdrop-filter for better performance */
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  color: var(--color-foreground) !important;
+}
+
+/* Simplified highlight effect for active bars - removed drop-shadow */
+@keyframes highlight {
+  0% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+.bar-glow {
+  animation: highlight 2s infinite ease-in-out;
+  /* Removed drop-shadow filter for better performance */
+}
+
+/* Better text spacing and alignment - simplified */
+.svg-text {
+  letter-spacing: 0.5px;
+  /* Removed paint-order and complex stroke styles for better performance */
+}
+
+/* Enhanced SVG text styles for better visibility */
+.svg-text-enhanced {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Category pills styling */
+.category-pill {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.category-pill:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.category-pill.frontend {
+  background-color: rgba(14, 165, 233, 0.15);
+  color: rgb(14, 165, 233);
+  border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+.category-pill.backend {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: rgb(34, 197, 94);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.category-pill.mobile {
+  background-color: rgba(249, 115, 22, 0.15);
+  color: rgb(249, 115, 22);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.category-pill.design {
+  background-color: rgba(168, 85, 247, 0.15);
+  color: rgb(168, 85, 247);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.category-pill.devops {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: rgb(239, 68, 68);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.category-pill.other {
+  background-color: rgba(100, 116, 139, 0.15);
+  color: rgb(100, 116, 139);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+/* Star indicators for favorites */
+.star-indicator {
+  fill: var(--color-favorite);
+  font-size: 0.8em;
+}
+
+/* Simplified particle animation for skills background */
+@keyframes simpleFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* Simplified motion path */
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.skill-particle {
+  position: absolute;
+  animation: simpleFloat 8s infinite ease-in-out; /* Simpler animation */
+  opacity: 0.05; /* Slightly reduced opacity */
+  z-index: 0;
+  /* Removed blur filter for performance */
+}
+
+/* Skill sorting buttons */
+.sort-button {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: rgba(30, 30, 30, 0.5);
+  border: 1px solid rgba(100, 100, 100, 0.3);
+  color: rgb(200, 200, 200);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sort-button:hover,
+.sort-button.active {
+  background-color: rgba(14, 165, 233, 0.15);
+  border-color: rgba(14, 165, 233, 0.4);
+  color: rgb(14, 165, 233);
+}
+
+/* Simplified bar animations - using opacity instead of filter for better performance */
+@keyframes pulse-opacity {
+  0% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+.pulse-animation {
+  animation: pulse-opacity 2s infinite ease-in-out;
+  /* Removed expensive drop-shadow filter */
+}
+
+/* Focus states for accessibility */
+.skill-icon-card:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+/* Skill name background style - new addition */
+.skill-name-bg {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+g:hover .skill-name-bg {
+  opacity: 1;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.04;
+  }
+  50% {
+    transform: translate(-50%, -52%) scale(1.05);
+    opacity: 0.06;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.04;
+  }
+}
+
+@keyframes verticalLineGrow {
+  0% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+    opacity: 0;
+  }
+  70% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+    opacity: 0.6;
+  }
+  100% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+    opacity: 0.7;
+  }
+}
+
+@keyframes yearLabelFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grid-line {
+  animation: verticalLineGrow 1.2s ease-out forwards;
+  stroke: var(--color-grid-line);
+  stroke-dasharray: 4, 4;
+  stroke-width: 1px;
+  opacity: 0;
+  transform-origin: bottom;
+}
+
+.year-label {
+  fill: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+  animation: yearLabelFadeIn 1.5s ease-out forwards;
+  text-anchor: middle;
+  opacity: 0.8;
+}

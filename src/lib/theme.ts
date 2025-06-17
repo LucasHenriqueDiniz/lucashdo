@@ -5,39 +5,39 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Theme object - Used as reference but CSS variables from globals.css are the source of truth
+// Dark mode only theme for portfolio
 export const theme = {
   colors: {
-    primary: {
-      DEFAULT: '#7C3AED', // Vibrant purple
-      foreground: '#FFFFFF',
-    },
-    secondary: {
-      DEFAULT: '#10B981', // Emerald green
-      foreground: '#FFFFFF',
-    },
-    accent: {
-      DEFAULT: '#F59E0B', // Amber
-      foreground: '#FFFFFF',
-    },
-    background: {
-      DEFAULT: '#FFFFFF',
-      dark: '#0F172A',
-    },
-    foreground: {
-      DEFAULT: '#0F172A',
-      dark: '#F8FAFC',
-    },
-    muted: {
-      DEFAULT: '#F1F5F9',
-      dark: '#1E293B',
-    },
-    card: {
-      DEFAULT: '#FFFFFF',
-      dark: '#1E293B',
-    },
-    border: {
-      DEFAULT: '#E2E8F0',
-      dark: '#334155',
+    // Core UI colors
+    primary: 'var(--primary)',
+    'primary-foreground': 'var(--primary-foreground)',
+    secondary: 'var(--secondary)',
+    'secondary-foreground': 'var(--secondary-foreground)',
+    accent: 'var(--accent)',
+    'accent-foreground': 'var(--accent-foreground)',
+    background: 'var(--background)',
+    foreground: 'var(--foreground)',
+    muted: 'var(--muted)',
+    'muted-foreground': 'var(--muted-foreground)',
+    card: 'var(--card)',
+    'card-foreground': 'var(--card-foreground)',
+    border: 'var(--border)',
+
+    // Brand accent colors
+    blue: 'var(--blue)',
+    cyan: 'var(--cyan)',
+    green: 'var(--green)',
+    amber: 'var(--amber)',
+    pink: 'var(--pink)',
+
+    // Chart colors
+    chart: {
+      1: 'var(--chart-1)',
+      2: 'var(--chart-2)',
+      3: 'var(--chart-3)',
+      4: 'var(--chart-4)',
+      5: 'var(--chart-5)',
     },
   },
   borderRadius: {

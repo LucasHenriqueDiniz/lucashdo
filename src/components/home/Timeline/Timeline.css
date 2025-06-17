@@ -1,12 +1,15 @@
 * {
+  /* Layout properties */
   --iconSize: 50px;
   --markerSize: 4px;
   --borderSize: 2px;
-  --sectionBackground: #0c0c0c;
-  --bg_color: #181818;
-  --card-outline-color: rgb(0, 98, 190);
-  --text-cyan: rgb(1, 244, 252);
-  --text-blue: rgb(1, 132, 252);
+
+  /* Timeline component colors - connected to theme */
+  --sectionBackground: var(--background, #0c0c0c);
+  --bg_color: var(--card, #181818);
+  --card-outline-color: var(--blue, rgb(0, 98, 190));
+  --text-cyan: var(--cyan, rgb(1, 244, 252));
+  --text-blue: var(--blue, rgb(1, 132, 252));
 }
 
 /* Timeline container */
@@ -23,12 +26,7 @@
 .timeline-marker {
   grid-area: center;
   width: var(--markerSize);
-  background: linear-gradient(
-    180deg,
-    rgba(15, 15, 15, 0.5) 0%,
-    var(--text-blue) 50%,
-    rgba(15, 15, 15, 0.5) 100%
-  );
+  background: var(--text-blue);
   height: 100%;
   position: relative;
   z-index: 5;
@@ -52,6 +50,7 @@
     transform 0.3s ease,
     box-shadow 0.3s ease,
     outline-color 0.3s ease;
+  will-change: transform, box-shadow;
 }
 
 .timeline-card.left {
@@ -84,6 +83,8 @@
   height: 0;
   top: 50%;
   transform: translateY(-50%);
+  transition: border-color 0.3s ease;
+  will-change: border-color;
 }
 
 /* Left arrow (points to center) */
@@ -172,8 +173,11 @@
   z-index: 10;
   position: relative;
   pointer-events: all;
-  will-change: transform;
-  transition: transform 0.3s ease;
+  will-change: transform, box-shadow;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
   box-sizing: border-box;
   min-width: var(--iconSize);
   min-height: var(--iconSize);
@@ -184,6 +188,18 @@
   width: 24px;
   height: 24px;
   flex-shrink: 0;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.timeline-icon:hover {
+  border-color: var(--text-cyan);
+  box-shadow: 0 0 15px rgba(1, 244, 252, 0.2);
+}
+
+.timeline-icon:hover svg {
+  transform: scale(1.1);
 }
 
 .items-center {
@@ -206,8 +222,10 @@
   white-space: nowrap;
   box-shadow: 0 0 0 4px var(--sectionBackground);
   pointer-events: all;
-  will-change: transform;
-  transition: transform 0.3s ease;
+  will-change: transform, opacity;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
 }
 
 .date-pill.left {
@@ -220,18 +238,35 @@
   left: auto;
 }
 
+.date-pill:hover {
+  transform: translateY(-2px);
+  background: var(--text-cyan);
+  color: var(--text-blue);
+}
+
 /* Card content styling */
 .timeline-card-title {
   font-family: Inter, sans-serif;
   font-size: 20px;
   margin: 0px;
   color: var(--text-cyan);
+  transition: transform 0.3s ease;
+}
+
+.timeline-card:hover .timeline-card-title {
+  transform: translateY(-2px);
+}
+
+.timeline-card:hover {
+  box-shadow: 0 10px 25px rgba(1, 244, 252, 0.2) !important;
+  outline-color: var(--text-cyan) !important;
 }
 
 .timeline-card-tags {
   display: flex;
   gap: 4px;
   margin: 8px 0;
+  flex-wrap: wrap;
 }
 
 .timeline-tags-icon {
@@ -245,6 +280,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.timeline-tags-icon:hover {
+  transform: scale(1.15);
+  background: var(--text-cyan);
+  color: var(--text-blue);
 }
 
 /* Top tags */
@@ -268,12 +312,29 @@
   background: var(--text-cyan);
   color: var(--text-blue);
   font-weight: bold;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease;
 }
 
 .tag-title {
   background: var(--text-blue);
   color: var(--text-cyan);
   font-weight: bold;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.timeline-card:hover .top-tag {
+  transform: translateY(-3px);
+}
+
+.timeline-card:hover .tag-title {
+  background: var(--text-cyan);
+  color: var(--text-blue);
 }
 
 .timeline-card-description {
@@ -290,6 +351,11 @@
   white-space: pre-line;
   margin-bottom: 0px;
   color: rgb(210, 234, 255);
+  transition: color 0.3s ease;
+}
+
+.timeline-card:hover .timeline-card-description {
+  color: rgb(235, 245, 255);
 }
 
 .timeline-card-description::before {
@@ -300,6 +366,7 @@
   font-weight: bold;
   display: inline-block;
   transform: scale(2);
+  transition: color 0.3s ease;
 }
 
 .timeline-card-description::after {
@@ -310,6 +377,12 @@
   font-weight: bold;
   display: inline-block;
   transform: scale(2);
+  transition: color 0.3s ease;
+}
+
+.timeline-card:hover .timeline-card-description::before,
+.timeline-card:hover .timeline-card-description::after {
+  color: rgba(255, 255, 255, 0.2);
 }
 
 /* Classes inativas removidas para limpar o CSS */
@@ -356,6 +429,7 @@
   align-items: center;
   width: 30px;
   height: 40px;
+  transition: transform 0.3s ease;
 }
 
 .timeline-arrows-container.left {
@@ -371,4 +445,27 @@
   .timeline-sticky-container {
     top: 40vh;
   }
+}
+
+/* Novos estilos para setas com hover */
+.timeline-card:hover ~ .timeline-center .timeline-arrow:not(.secondary):not(.tertiary) {
+  border-left-color: var(--text-cyan) !important;
+  border-right-color: var(--text-cyan) !important;
+}
+
+.timeline-card.left:hover ~ .timeline-center .timeline-arrow.left:not(.secondary):not(.tertiary) {
+  border-left-color: var(--text-cyan) !important;
+}
+
+.timeline-card.right:hover ~ .timeline-center .timeline-arrow.right:not(.secondary):not(.tertiary) {
+  border-right-color: var(--text-cyan) !important;
+}
+
+/* Animação para os arrows containers */
+.timeline-card:hover ~ .timeline-center .timeline-arrows-container.left {
+  transform: translateX(-5px);
+}
+
+.timeline-card:hover ~ .timeline-center .timeline-arrows-container.right {
+  transform: translateX(5px);
 }

@@ -6,6 +6,8 @@ import { defaultLocale, locales } from '@/lib/i18n/config';
 
 import './globals.css';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono' });
@@ -99,7 +101,11 @@ export default async function RootLayout({
       <head>{/* Add any additional head elements here */}</head>
       <body className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider locale={validLocale} messages={messages}>
-          <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
+          <TooltipProvider delayDuration={100}>
+            <Header />
+            {children}
+            <Footer />
+          </TooltipProvider>
         </NextIntlClientProvider>
       </body>
     </html>

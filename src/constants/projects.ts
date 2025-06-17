@@ -1,4 +1,7 @@
+import { IconType } from 'react-icons/lib';
+
 export interface Project {
+  icon?: IconType;
   id: string;
   title: string;
   description: {
@@ -22,7 +25,7 @@ export const projects: Project[] = [
       pt: 'Recriação do Windows XP com React em um servidor em tempo real para várias pessoas usarem simultaneamente.',
       en: 'Windows XP recreation with React in a real-time server for multiple users to use simultaneously.',
     },
-    image: 'https://images.unsplash.com/photo-1659594939826-1e0a65f85e08?q=80&w=800',
+    image: 'https://placeholdr.ai/3b68acdd-7a6e-4ee5-a793-db5efbacff51/600/400',
     tags: ['React', 'Real-time', 'Socket.io', 'Node.js'],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/windowx-xp-online',
     demoUrl: '', // To be added later

@@ -1,0 +1,210 @@
+/* Hero component styles */
+
+@keyframes cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor {
+  animation: cursor-blink 1s step-end infinite;
+}
+
+/* Estilos para os botões */
+.projects-button-wrapper,
+.contact-button-wrapper {
+  isolation: isolate;
+}
+
+.projects-button-wrapper:hover,
+.contact-button-wrapper:hover {
+  z-index: 10;
+}
+
+/* Gradient animations */
+.hero-bg-animate {
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Shine effect for buttons */
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::after {
+  content: '';
+  top: 0;
+  transform: translateX(100%);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  animation: shine 5s infinite;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  20%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Improved focus styles for accessibility */
+.hero-focus-ring:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+}
+
+/* Role animation container styling */
+.role-container {
+  position: relative;
+}
+
+.role-text-wrapper {
+  display: inline-flex;
+  align-items: center;
+  min-width: 160px; /* Adjust based on your longest role */
+}
+
+.role-text-wrapper span {
+  display: inline-block;
+}
+
+/* Glowing border animation for Projects button */
+@keyframes border-glow {
+  0% {
+    background-position: 0% 50%;
+    opacity: 0.5;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.8;
+  }
+  100% {
+    background-position: 0% 50%;
+    opacity: 0.5;
+  }
+}
+
+.glowing-border {
+  background: linear-gradient(
+    rgba(56, 189, 248, 0),
+    var(--cyan),
+    var(--blue),
+    rgba(56, 189, 248, 0)
+  );
+  background-size: 400% 100%;
+  animation: border-glow 3s ease infinite;
+  z-index: -1;
+}
+
+/* Animated glowing effect for the Projects button border */
+.animated-border-glow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cyan),
+    var(--blue),
+    color-mix(in oklch, var(--cyan), transparent 60%),
+    transparent
+  );
+  animation: border-slide 3s linear infinite;
+  z-index: 5;
+  filter: blur(3px);
+  transform: skewX(-15deg);
+  pointer-events: none; /* Ensure it doesn't interfere with button clicks */
+}
+
+@keyframes border-slide {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+/* Circular glow effects for Projects button */
+.glow-circle-clockwise {
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent,
+    transparent 50%,
+    var(--cyan) 60%,
+    color-mix(in oklch, var(--cyan), transparent 70%) 65%,
+    transparent 70%,
+    transparent
+  );
+  animation: rotate-clockwise 4s linear infinite;
+  pointer-events: none;
+  filter: blur(8px);
+}
+
+.glow-circle-counterclockwise {
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    transparent,
+    transparent 50%,
+    var(--blue) 60%,
+    color-mix(in oklch, var(--blue), transparent 70%) 65%,
+    transparent 70%,
+    transparent
+  );
+  animation: rotate-counterclockwise 5s linear infinite;
+  pointer-events: none;
+  filter: blur(10px);
+}
+
+@keyframes rotate-clockwise {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-counterclockwise {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}

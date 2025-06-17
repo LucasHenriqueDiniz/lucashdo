@@ -19,3 +19,4 @@ export { default as Docker } from './docker.svg';
 export { default as Git } from './git.svg';
 export { default as Redux } from './redux.svg';
 export { default as Figma } from './figma.svg';
+export { default as WordPress } from './wordpress.svg';

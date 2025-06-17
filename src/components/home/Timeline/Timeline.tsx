@@ -251,12 +251,8 @@ function TimelineItem({
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false }}
-            whileHover={{
-              boxShadow: '0 10px 25px rgba(14, 165, 233, 0.2)',
-              outlineColor: 'var(--text-cyan)',
-            }}
             variants={{
-              hidden: { scale: 0.97 },
+              hidden: { scale: 0.97, opacity: 0.7 },
               visible: {
                 scale: 1,
                 opacity: 1,
@@ -381,13 +377,24 @@ function TimelineItem({
             >
               {/* Seta esquerda */}
               {side === 'left' && (
-                <div className="timeline-arrows-container left">
+                <motion.div
+                  className="timeline-arrows-container left"
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: false }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                >
                   <div className="timeline-arrows-group left">
                     <div className="timeline-arrow left"></div>
                     <div className="timeline-arrow left secondary"></div>
                     <div className="timeline-arrow left tertiary"></div>
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* Ícone central */}
@@ -430,13 +437,24 @@ function TimelineItem({
 
               {/* Seta direita */}
               {side === 'right' && (
-                <div className="timeline-arrows-container right">
+                <motion.div
+                  className="timeline-arrows-container right"
+                  initial={{ opacity: 0, x: 10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: false }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                >
                   <div className="timeline-arrows-group right">
                     <div className="timeline-arrow right"></div>
                     <div className="timeline-arrow right secondary"></div>
                     <div className="timeline-arrow right tertiary"></div>
                   </div>
-                </div>
+                </motion.div>
               )}
             </motion.div>
           </motion.div>
@@ -449,10 +467,9 @@ function TimelineItem({
             whileInView="visible"
             viewport={{ once: false }}
             variants={{
-              hidden: { opacity: 1, x: 0, scale: 0.97 },
+              hidden: { opacity: 0.7, scale: 0.97 },
               visible: {
                 opacity: 1,
-                x: 0,
                 scale: 1,
                 transition: {
                   duration: 0.5,

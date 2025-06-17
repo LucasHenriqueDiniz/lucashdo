@@ -64,5 +64,18 @@
     "description": "Um desenvolvedor apaixonado criando experiências web incríveis",
     "contact": "Entre em Contato",
     "support": "Apoie Meu Trabalho"
+  },
+  "GuestBook": {
+    "locale": "pt",
+    "title": "Livro de Visitas",
+    "description": "Deixe uma mensagem ou comentário.",
+    "name": "Nome",
+    "email": "E-mail",
+    "message": "Mensagem",
+    "submit": "Enviar",
+    "messages": {
+      "success": "Mensagem enviada com sucesso!",
+      "error": "Erro ao enviar a mensagem. Tente novamente."
+    }
   }
 }

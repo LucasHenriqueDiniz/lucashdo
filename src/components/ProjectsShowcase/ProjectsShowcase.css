@@ -1,0 +1,761 @@
+/* ProjectsShowcase.css */
+.project-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 1rem;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-card-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: 1rem;
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow:
+    0 10px 30px -15px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.project-card-container.mouse-over {
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Image layer for enhanced 3D effect */
+.project-card-image-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.75s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Content layer for enhanced 3D effect */
+.project-card-content-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  transform-style: preserve-3d;
+  transform: translateZ(40px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-card:hover .project-card-image {
+  transform: scale(1.1);
+}
+
+.project-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  opacity: 0.6;
+  transition: opacity 0.5s ease;
+}
+
+.project-card:hover .project-card-overlay {
+  opacity: 0.9;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.7) 60%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+.project-card-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition:
+    transform 0.5s ease,
+    opacity 0.4s ease;
+  z-index: 2;
+}
+
+.project-card:hover .project-card-top {
+  transform: translateY(-5px);
+  opacity: 0;
+}
+
+.project-card-title {
+  color: white;
+  font-weight: 600;
+  font-size: 1.25rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  max-width: 70%;
+}
+
+.project-card-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.project-card-expand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6) translateZ(20px);
+  opacity: 0;
+  color: white;
+  font-size: 1.75rem;
+  padding: 1rem;
+  border-radius: 50%;
+  background-color: rgba(59, 130, 246, 0.3);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 5;
+}
+
+.project-card:hover .project-card-expand {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) translateZ(20px);
+}
+
+/* Modal Styles */
+.project-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-modal {
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  perspective: 1000px;
+}
+
+/* Steam card style 3D effect */
+.project-modal-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: perspective(1200px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Background image layer with enhanced depth */
+.project-modal-image-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transform: translateZ(-40px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-modal-image {
+  object-fit: cover;
+  transform-origin: center;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-modal-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.6) 50%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  z-index: 2;
+}
+
+/* Content layer with enhanced elevation */
+.project-modal-content-layer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  transform-style: preserve-3d;
+  transform: translateZ(60px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow-y: auto;
+  max-height: 90vh;
+  padding-top: 30vh; /* Space for the image to show */
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 10, 1) 30%,
+    rgba(10, 10, 10, 0.95) 60%,
+    rgba(10, 10, 10, 0) 100%
+  );
+}
+
+.project-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateZ(80px);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.project-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateZ(80px) rotate(90deg);
+  box-shadow:
+    0 12px 20px rgba(0, 0, 0, 0.7),
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.project-modal-featured {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(59, 130, 246, 0.3);
+  color: rgb(147, 197, 253);
+  padding: 0.5rem 1.2rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(8px);
+  transform: translateZ(75px);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+.project-modal-details {
+  padding: 2rem;
+  transform-style: preserve-3d;
+}
+
+.project-modal-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(90deg, #fff, #a1a1aa);
+  background-clip: text; /* Standard property for compatibility */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transform: translateZ(10px);
+}
+
+.project-modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  transform: translateZ(15px);
+}
+
+.project-modal-tag {
+  padding: 0.5rem 1rem;
+  background: rgba(59, 130, 246, 0.15);
+  color: rgb(96, 165, 250);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateZ(25px);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.project-modal-tag:hover {
+  background: rgba(59, 130, 246, 0.3);
+  transform: translateZ(35px) scale(1.1);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2);
+  color: rgb(147, 197, 253);
+}
+
+.project-modal-description {
+  margin-bottom: 2rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  transform: translateZ(20px);
+  max-width: 800px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.project-modal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  transform: translateZ(30px);
+}
+
+.project-modal-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.35),
+    0 4px 8px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.modal-btn-primary {
+  background: rgb(59, 130, 246);
+  color: white;
+  transform: translateZ(40px);
+}
+
+.modal-btn-primary:hover {
+  background: rgb(37, 99, 235);
+  transform: translateZ(50px) scale(1.05);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.4),
+    0 6px 12px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.modal-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  transform: translateZ(35px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateZ(45px) scale(1.05);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.35),
+    0 6px 12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Featured Project Card 3D Effect */
+.featured-project-card {
+  transform-style: preserve-3d;
+  transform: perspective(1500px);
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.featured-project-card.mouse-over {
+  box-shadow:
+    0 30px 60px -15px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.featured-project-image-layer {
+  position: relative;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+
+.featured-project-image-layer img {
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.featured-project-content-layer {
+  position: relative;
+  z-index: 2;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.featured-project-card h4 {
+  transform: translateZ(20px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.featured-project-card p {
+  transform: translateZ(15px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.featured-project-card span {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.featured-project-card .bg-blue-500\/20 {
+  transform: translateZ(25px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.featured-project-card button,
+.featured-project-card a {
+  transform: translateZ(30px);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.featured-project-card button:hover,
+.featured-project-card a:hover {
+  transform: translateZ(40px) scale(1.05);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.4),
+    0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Tag animation effects for all project cards */
+.project-card-tags span,
+.featured-project-content-layer span {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-card-tags span:hover,
+.featured-project-content-layer span:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Performance optimizations */
+.project-card-container,
+.featured-project-card,
+.project-modal_card {
+  will-change: transform;
+}
+
+.project-card-image-layer,
+.project-card-content-layer,
+.featured-project-image-layer,
+.featured-project-content-layer,
+.project-modal-image-layer,
+.project-modal-content-layer {
+  will-change: transform;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .project-card-container,
+  .featured-project-card,
+  .project-modal_card,
+  .project-card-image-layer,
+  .project-card-content-layer,
+  .featured-project-image-layer,
+  .featured-project-content-layer,
+  .project-modal-image-layer,
+  .project-modal-content-layer,
+  .project-card-image,
+  .project-modal-tag,
+  .project-modal-button,
+  .modal-btn-primary,
+  .modal-btn-secondary {
+    transition-duration: 0.1s !important;
+    transform: none !important;
+  }
+
+  .project-card:hover .project-card-image,
+  .featured-project-image-layer:hover .object-cover {
+    transform: scale(1.03) !important;
+  }
+
+  .project-card-top {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .project-card-expand {
+    transition-duration: 0.1s !important;
+  }
+}
+
+/* Focus styles for accessibility */
+.project-card:focus-visible,
+.featured-project-card:focus-visible,
+.project-modal-close:focus-visible,
+.project-modal-button:focus-visible {
+  outline: 2px solid rgb(59, 130, 246);
+  outline-offset: 2px;
+}
+
+/* Mobile landscape orientation optimizations */
+@media (max-width: 768px) and (orientation: landscape) {
+  .project-modal-content-layer {
+    padding-top: 15vh;
+  }
+
+  .project-modal-title {
+    font-size: 1.75rem;
+  }
+
+  .project-modal-description {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-modal-buttons {
+    flex-direction: row;
+  }
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+  .project-card {
+    border-radius: 0.5rem;
+  }
+
+  .project-card-title {
+    font-size: 1.125rem;
+  }
+
+  .project-card-tags {
+    justify-content: center;
+  }
+
+  .project-card-expand {
+    padding: 0.75rem;
+    font-size: 1.5rem;
+  }
+
+  .project-modal {
+    width: 95%;
+    max-width: 100%;
+    border-radius: 0.5rem;
+  }
+
+  .project-modal-close {
+    width: 35px;
+    height: 35px;
+  }
+
+  .project-modal-title {
+    font-size: 2rem;
+  }
+
+  .project-modal-tag {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8125rem;
+  }
+
+  .project-modal-description {
+    font-size: 1rem;
+  }
+
+  .project-modal-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  /* Reduzir efeito 3D em dispositivos móveis */
+  .project-card-container,
+  .project-modal-card,
+  .featured-project-card {
+    transform: perspective(1000px) !important;
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .project-card-content-layer {
+    transform: translateZ(20px) !important;
+  }
+
+  .project-modal-content-layer {
+    transform: translateZ(30px) !important;
+    padding-top: 20vh;
+  }
+
+  .project-card-image-layer,
+  .project-modal-image-layer,
+  .featured-project-image-layer {
+    transform: translateZ(-10px) !important;
+  }
+
+  .project-modal-close,
+  .project-modal-featured {
+    transform: translateZ(40px) !important;
+  }
+
+  .project-modal-title {
+    font-size: 2rem;
+    transform: translateZ(5px) !important;
+  }
+
+  .project-modal-tag {
+    transform: translateZ(15px) !important;
+  }
+
+  .project-modal-description {
+    font-size: 1rem;
+    transform: translateZ(10px) !important;
+  }
+
+  .modal-btn-primary,
+  .modal-btn-secondary {
+    transform: translateZ(25px) !important;
+  }
+
+  .modal-btn-primary:hover,
+  .modal-btn-secondary:hover {
+    transform: translateZ(30px) scale(1.03) !important;
+  }
+}
+
+/* Enable enhanced 3D effects only on devices that support hover */
+@media (hover: hover) {
+  .project-card-container,
+  .project-modal-card,
+  .featured-project-card {
+    transform-style: preserve-3d;
+  }
+
+  .project-card-image-layer,
+  .project-card-content-layer,
+  .project-modal_image-layer,
+  .project-modal-content-layer,
+  .featured-project-image-layer,
+  .featured-project-content-layer {
+    transform-style: preserve-3d;
+  }
+
+  /* Adicionar reflexo sutil tipo Steam */
+  .project-card-container::after,
+  .project-modal-card::after,
+  .featured-project-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 60%);
+    z-index: 4;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .project-card:hover .project-card-container::after,
+  .featured-project-card.mouse-over::after {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.03) 40%,
+      rgba(255, 255, 255, 0) 60%
+    );
+  }
+}
+
+/* Use efeitos mais simples para dispositivos touch */
+@media (hover: none) {
+  .project-card-container,
+  .steam-card-container,
+  .featured-project-card {
+    transform: none !important;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .project-card-container:active,
+  .steam-card-container:active,
+  .featured-project-card:active {
+    box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.7);
+  }
+
+  .project-card-image-layer,
+  .project-card-content-layer,
+  .steam-card-background,
+  .steam-card-content,
+  .featured-project-image-layer,
+  .featured-project-content-layer {
+    transform: none !important;
+  }
+
+  /* Keep some elevation effect for buttons */
+  .steam-card-trigger,
+  .featured-project-card button,
+  .featured-project-card a {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  .steam-card-trigger:active,
+  .featured-project-card button:active,
+  .featured-project-card a:active {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px) !important;
+  }
+}

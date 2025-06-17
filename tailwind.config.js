@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ['class'],
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -17,31 +16,32 @@ module.exports = {
     },
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: '#7C3AED',
-          foreground: '#FFFFFF',
-        },
-        secondary: {
-          DEFAULT: '#10B981',
-          foreground: '#FFFFFF',
-        },
-        accent: {
-          DEFAULT: '#F59E0B',
-          foreground: '#FFFFFF',
-        },
-        muted: {
-          DEFAULT: '#F1F5F9',
-          dark: '#1E293B',
-        },
-        card: {
-          DEFAULT: '#FFFFFF',
-          dark: '#1E293B',
-        },
+        // Core UI colors from CSS variables
+        border: 'var(--border)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        primary: 'var(--primary)',
+        'primary-foreground': 'var(--primary-foreground)',
+        secondary: 'var(--secondary)',
+        'secondary-foreground': 'var(--secondary-foreground)',
+        accent: 'var(--accent)',
+        'accent-foreground': 'var(--accent-foreground)',
+        muted: 'var(--muted)',
+        'muted-foreground': 'var(--muted-foreground)',
+        card: 'var(--card)',
+        'card-foreground': 'var(--card-foreground)',
+        popover: 'var(--popover)',
+        'popover-foreground': 'var(--popover-foreground)',
+        destructive: 'var(--destructive)',
+
+        // Brand accent colors
+        blue: 'var(--blue)',
+        cyan: 'var(--cyan)',
+        green: 'var(--green)',
+        amber: 'var(--amber)',
+        pink: 'var(--pink)',
       },
       borderRadius: {
         lg: 'var(--radius)',
