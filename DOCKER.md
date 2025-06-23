@@ -16,6 +16,7 @@ This project includes Docker configuration for easy deployment and consistent bu
 #### Using the Helper Scripts
 
 **On Linux/macOS:**
+
 ```bash
 # Make the script executable
 chmod +x build-and-run.sh
@@ -25,6 +26,7 @@ chmod +x build-and-run.sh
 ```
 
 **On Windows:**
+
 ```
 # Double-click the batch file or run in Command Prompt
 build-and-run.bat
@@ -35,11 +37,13 @@ build-and-run.bat
 1. Create a `.env` file with your API keys (see `.env.example` for reference)
 
 2. Build the Docker image:
+
 ```bash
 docker compose build
 ```
 
 3. Run the container:
+
 ```bash
 docker compose up -d
 ```
