@@ -1,5 +1,7 @@
 // https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 
+import { projects } from '@/constants/projects';
+
 export default async function sitemap() {
   const baseUrl = process.env.SITE_URL || 'http://localhost:3000';
 
@@ -11,15 +13,13 @@ export default async function sitemap() {
     priority: route === '' ? 1 : 0.8,
   }));
 
-  // Aqui você pode adicionar páginas dinâmicas de projetos, blog posts, etc.
-  // Exemplo:
-  // const posts = await getPosts();
-  // const postUrls = posts.map(post => ({
-  //   url: `${baseUrl}/blog/${post.slug}`,
-  //   lastModified: post.updatedAt,
-  //   changeFrequency: 'monthly',
-  //   priority: 0.6,
-  // }));
+  // Adiciona páginas dinâmicas de projetos
+  const projectRoutes = projects.map(project => ({
+    url: `${baseUrl}/projects/${project.id}`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }));
 
-  return [...routes];
+  return [...routes, ...projectRoutes];
 }
