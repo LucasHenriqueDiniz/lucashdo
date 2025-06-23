@@ -4,9 +4,10 @@ import { projects } from '@/constants/projects';
 
 export default async function sitemap() {
   const baseUrl = process.env.SITE_URL || 'http://localhost:3000';
+  const pages = ['about', 'blog', 'projects', 'contact', 'about/games', 'about/music'];
 
   // Data estática para as páginas principais
-  const routes = ['', 'about', 'projects', 'blog', 'gallery'].map(route => ({
+  const routes = pages.map(route => ({
     url: `${baseUrl}/${route}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'weekly',
