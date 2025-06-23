@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  portfolio:
+    container_name: lucas-portfolio
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_LASTFM_API_KEY=${NEXT_PUBLIC_LASTFM_API_KEY}
+      - NEXT_PUBLIC_STEAM_API_KEY=${NEXT_PUBLIC_STEAM_API_KEY}
+      - NEXT_PUBLIC_STEAM_ID=${NEXT_PUBLIC_STEAM_ID}
+      - NEXT_PUBLIC_LYFTA_API_KEY=${NEXT_PUBLIC_LYFTA_API_KEY}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
