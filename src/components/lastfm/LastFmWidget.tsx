@@ -1,6 +1,6 @@
-import { getRecentTracks, LastFmTrack } from '@/services/lastfm';
 import Image from 'next/image';
 import React from 'react';
+import { getRecentTracks, LastFmTrack } from '@/services/lastfm';
 
 interface LastFmWidgetProps {
   username: string;

@@ -18,6 +18,10 @@
 .projects-button-wrapper,
 .contact-button-wrapper {
   isolation: isolate;
+  transition:
+    transform 0.3s ease,
+    z-index 0.1s;
+  will-change: transform;
 }
 
 .projects-button-wrapper:hover,
@@ -85,16 +89,24 @@
 /* Role animation container styling */
 .role-container {
   position: relative;
+  height: 36px; /* Fixed height to prevent layout shifts */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
 }
 
 .role-text-wrapper {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-width: 160px; /* Adjust based on your longest role */
+  height: 100%;
 }
 
 .role-text-wrapper span {
   display: inline-block;
+  text-align: center;
 }
 
 /* Glowing border animation for Projects button */
@@ -206,5 +218,17 @@
   }
   100% {
     transform: rotate(-360deg);
+  }
+}
+
+/* Responsive container styling */
+@media (max-width: 640px) {
+  .role-text-wrapper {
+    min-width: 140px;
+  }
+
+  .role-container {
+    height: auto;
+    min-height: 36px;
   }
 }

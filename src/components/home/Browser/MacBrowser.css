@@ -1,0 +1,1083 @@
+/* Tab styling */
+.browser-container .tab {
+  background: linear-gradient(to bottom, #2d2d35, #23232a);
+  border: 1px solid #27272a;
+  border-radius: 8px 8px 0 0;
+  padding: 8px 16px;
+  color: #a1a1aa;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  min-width: 150px;
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  margin-right: 4px;
+  margin-bottom: -1px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.browser-container .tab.active {
+  background: #18181b;
+  color: #e4e4e7;
+  border-bottom-color: #18181b;
+  z-index: 10;
+  font-weight: 600;
+  border-top: 2px solid #0077ff;
+  padding-top: 7px; /* Compensate for the thicker top border */
+}
+
+.browser-container .tab:hover:not(.active) {
+  background: #2d2d35;
+  color: #e4e4e7;
+}
+
+/* Estilo específico para a aba Home */
+.browser-container .tab[data-tab-id='home-tab'] {
+  background: linear-gradient(to bottom, #3b4da0, #334180);
+  border-top-color: #4c60b8;
+  position: relative;
+  overflow: hidden;
+}
+
+.browser-container .tab[data-tab-id='home-tab'] .tab-icon {
+  background: #4c60b8;
+  position: relative;
+  background: linear-gradient(135deg, #4c60b8, #334180);
+  box-shadow: 0 2px 8px rgba(76, 96, 184, 0.3);
+  transition: all 0.3s ease;
+}
+
+.browser-container .tab[data-tab-id='home-tab'].active {
+  background: #18181b;
+  border-top-color: #4c60b8;
+}
+
+.browser-container .tab[data-tab-id='home-tab']:hover:not(.active) {
+  background: #3b4da0;
+}
+
+.browser-container .tab[data-tab-id='home-tab'].active .tab-icon {
+  transform: scale(1.15);
+  box-shadow: 0 3px 12px rgba(76, 96, 184, 0.5);
+}
+
+.browser-container .tab[data-tab-id='home-tab'] .tab-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.browser-container .tab[data-tab-id='home-tab']:hover .tab-icon::after {
+  opacity: 1;
+}
+
+/* Efeito visual quando a aba Home é selecionada */
+.browser-container .tab.tab-highlight {
+  animation: pulse-glow 0.6s ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(76, 96, 184, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(76, 96, 184, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 96, 184, 0);
+  }
+}
+
+/* Indicador de "início" para melhor identificação visual */
+.browser-container .tab[data-tab-id='home-tab']::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4c60b8, transparent);
+  opacity: 0.7;
+}
+
+/* Tab icon styling */
+.browser-container .tab-icon {
+  width: 16px;
+  height: 16px;
+  background: #fb542b;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: white;
+  font-weight: bold;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.browser-container .tab.active .tab-icon {
+  transform: scale(1.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.browser-container .tab-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Tab title styling */
+.browser-container .tab-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Fix for tab container */
+.browser-container .tab-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-right: 10px;
+  padding-bottom: 0;
+  position: relative;
+  z-index: 5;
+}
+
+/* Enhanced MacBrowser project content styling */
+.mac-project-browser-content {
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #18181b;
+  color: #e4e4e7;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.mac-project-browser-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mac-project-browser-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mac-project-browser-content::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.mac-project-header {
+  position: relative;
+  height: 350px;
+  overflow: hidden;
+}
+
+.mac-project-cover-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.mac-project-cover-image:hover {
+  transform: scale(1.05);
+}
+
+.mac-project-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.8) 30%,
+    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.1) 80%,
+    transparent 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 40px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mac-project-title {
+  color: white;
+  margin: 0 0 14px 0;
+  font-size: 36px;
+  font-weight: 800;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #ffffff, #dfdfdf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: titleSlideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: left bottom;
+}
+
+@keyframes titleSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mac-project-featured {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 204, 0, 0.2);
+  border: 1px solid rgba(255, 204, 0, 0.4);
+  color: #ffcc00;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mac-project-details {
+  padding: 30px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.mac-project-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #e4e4e7;
+  margin: 0 0 18px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.mac-project-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #0077ff, transparent);
+  border-radius: 3px;
+}
+
+.mac-project-description {
+  color: #a1a1aa;
+  font-size: 17px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+.mac-project-description p {
+  margin: 0;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.mac-project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.mac-project-tag {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.mac-project-tag:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.2));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mac-project-tag:hover {
+  background: rgba(59, 130, 246, 0.2);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  color: #90c2ff;
+}
+
+.mac-project-tag:hover:before {
+  opacity: 1;
+}
+
+.mac-project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.mac-project-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.mac-project-link:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mac-project-link.repo-link {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e4e4e7;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.mac-project-link.repo-link:before {
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+}
+
+.mac-project-link.repo-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  color: white;
+}
+
+.mac-project-link.repo-link:hover:before {
+  opacity: 1;
+}
+
+.mac-project-link.demo-link {
+  background: rgba(251, 84, 43, 0.12);
+  color: #fb542b;
+  border: 1px solid rgba(251, 84, 43, 0.25);
+}
+
+.mac-project-link.demo-link:before {
+  background: linear-gradient(45deg, rgba(251, 84, 43, 0.15), rgba(251, 84, 43, 0.25));
+}
+
+.mac-project-link.demo-link:hover {
+  background: rgba(251, 84, 43, 0.18);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  color: #ff6b4a;
+}
+
+.mac-project-link.demo-link:hover:before {
+  opacity: 1;
+}
+
+.mac-project-link svg {
+  transition: transform 0.3s ease;
+}
+
+.mac-project-link:hover svg {
+  transform: translateX(3px);
+}
+
+/* MacBrowser Homescreen Styling */
+.mac-browser-home {
+  padding: 35px;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #18181b;
+  color: #e4e4e7;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.mac-browser-home::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mac-browser-home::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mac-browser-home::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.mac-browser-home-header {
+  text-align: center;
+  margin-bottom: 45px;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mac-browser-home-title {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  background: linear-gradient(45deg, #0077ff, #fb542b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: -0.03em;
+  text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.mac-browser-home-subtitle {
+  font-size: 17px;
+  color: #a1a1aa;
+  margin-bottom: 30px;
+  line-height: 1.5;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mac-browser-search {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.mac-browser-search:before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 33px;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 119, 255, 0.2),
+    rgba(251, 84, 43, 0.2),
+    rgba(0, 119, 255, 0.2)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.mac-browser-search:focus-within:before {
+  opacity: 1;
+}
+
+.mac-browser-search-icon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #71717a;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.mac-browser-search:focus-within .mac-browser-search-icon {
+  color: #60a5fa;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.mac-browser-search-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 30px;
+  padding: 16px 20px 16px 50px;
+  color: #e4e4e7;
+  font-size: 17px;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.mac-browser-search-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.25),
+    0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: scale(1.01);
+  letter-spacing: 0.01em;
+}
+
+.mac-browser-search-input::placeholder {
+  color: #71717a;
+  transition: all 0.3s ease;
+}
+
+.mac-browser-search-input:focus::placeholder {
+  opacity: 0.6;
+}
+
+.mac-browser-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  color: #e4e4e7;
+  position: relative;
+  padding-left: 5px;
+  letter-spacing: -0.01em;
+}
+
+.mac-browser-section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: linear-gradient(to bottom, #0077ff, #fb542b);
+  border-radius: 3px;
+}
+
+.mac-browser-section-icon {
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 6px;
+  border-radius: 10px;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.mac-browser-section-title:hover .mac-browser-section-icon {
+  transform: rotate(10deg);
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.mac-browser-featured-section {
+  margin-bottom: 60px;
+  position: relative;
+  padding: 10px 0;
+  animation: fadeIn 0.8s ease-out 0.1s;
+}
+
+.mac-browser-featured-section::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  right: -20px;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(59, 130, 246, 0.05) 0%,
+    rgba(59, 130, 246, 0) 70%
+  );
+  border-radius: 20px;
+  z-index: -1;
+}
+
+.mac-browser-featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  perspective: 1000px;
+}
+
+.mac-browser-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.mac-browser-project-card {
+  background: rgba(39, 39, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  animation: fadeIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.mac-browser-project-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.mac-browser-project-card:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mac-browser-project-card:hover:before {
+  opacity: 1;
+}
+
+.mac-browser-featured-card {
+  grid-column: span 2;
+  animation: slideInFromRight 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.mac-browser-featured-card:nth-child(even) {
+  animation: slideInFromLeft 0.6s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+@media (max-width: 768px) {
+  .mac-browser-featured-card {
+    grid-column: span 1;
+  }
+
+  .mac-browser-home {
+    padding: 25px;
+  }
+
+  .mac-browser-home-title {
+    font-size: 28px;
+  }
+
+  .mac-browser-home-subtitle {
+    font-size: 15px;
+  }
+
+  .mac-browser-search-input {
+    padding: 14px 18px 14px 45px;
+    font-size: 15px;
+  }
+
+  .mac-browser-section-title {
+    font-size: 20px;
+  }
+
+  .mac-browser-featured-grid,
+  .mac-browser-projects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+  }
+
+  .mac-project-header {
+    height: 250px;
+  }
+
+  .mac-project-title {
+    font-size: 28px;
+  }
+
+  .mac-project-details {
+    padding: 20px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mac-browser-home {
+    padding: 20px;
+  }
+
+  .mac-browser-home-title {
+    font-size: 24px;
+  }
+
+  .mac-browser-featured-grid,
+  .mac-browser-projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mac-project-header {
+    height: 200px;
+  }
+
+  .mac-project-title {
+    font-size: 24px;
+  }
+
+  .mac-project-links {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mac-project-link {
+    width: 100%;
+  }
+}
+
+.mac-browser-project-card-image {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  transition: all 0.5s ease;
+  overflow: hidden;
+}
+
+.mac-browser-project-card-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.6));
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.mac-browser-project-card:hover .mac-browser-project-card-image {
+  transform: scale(1.05);
+}
+
+.mac-browser-project-card:hover .mac-browser-project-card-image::after {
+  opacity: 0.4;
+}
+
+.mac-browser-featured-card .mac-browser-project-card-image {
+  height: 220px;
+}
+
+.mac-browser-project-card-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 204, 0, 0.3);
+  color: #ffcc00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 204, 0, 0.4);
+}
+
+.mac-browser-project-card-featured-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 204, 0, 0.3);
+  color: #ffcc00;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 204, 0, 0.4);
+}
+
+.mac-browser-project-card-content {
+  padding: 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.mac-browser-project-card:hover .mac-browser-project-card-content {
+  transform: translateY(-4px);
+}
+
+.mac-browser-project-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: #e4e4e7;
+  transition: color 0.3s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.mac-browser-project-card-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #0077ff, #fb542b);
+  transition: width 0.3s ease;
+}
+
+.mac-browser-project-card:hover .mac-browser-project-card-title::after {
+  width: 100%;
+}
+
+.mac-browser-project-card-description {
+  font-size: 15px;
+  color: #a1a1aa;
+  margin: 0 0 18px 0;
+  line-height: 1.6;
+  flex: 1;
+  transition: color 0.3s ease;
+}
+
+.mac-browser-project-card:hover .mac-browser-project-card-description {
+  color: #d1d1d6;
+}
+
+.mac-browser-project-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.mac-browser-project-card-tag {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.mac-browser-project-card-tag:hover {
+  background: rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mac-browser-project-card-more-tags {
+  font-size: 12px;
+  color: #71717a;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.mac-browser-project-card-more-tags:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e4e4e7;
+}
+
+.mac-browser-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 70px 0;
+  color: #71717a;
+  text-align: center;
+  grid-column: 1 / -1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.mac-browser-no-results svg {
+  margin-bottom: 18px;
+  opacity: 0.5;
+  font-size: 36px;
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 15px;
+  border-radius: 50%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.mac-browser-no-results p {
+  font-size: 17px;
+  max-width: 300px;
+  line-height: 1.6;
+}
+
+.mac-browser-all-projects {
+  padding-bottom: 30px;
+  animation: fadeIn 0.8s ease-out 0.3s both;
+}
+
+/* Animation keyframes for transitions */
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* Animações para transição entre abas */
+.tab-content-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Melhoria na indicação visual de qual aba está ativa */
+.browser-container .tab.active {
+  position: relative;
+  z-index: 5;
+}
+
+.browser-container .tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #18181b;
+  z-index: 10;
+}
+
+/* Staggered entrance for project cards */
+.mac-browser-project-card {
+  animation: fadeIn 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.mac-browser-projects-grid .mac-browser-project-card:nth-child(2n) {
+  animation-delay: 0.1s;
+}
+
+.mac-browser-projects-grid .mac-browser-project-card:nth-child(3n) {
+  animation-delay: 0.2s;
+}
+
+.mac-browser-projects-grid .mac-browser-project-card:nth-child(4n) {
+  animation-delay: 0.3s;
+}
+
+/* Tab animation */
+.browser-container .tab.active {
+  animation: pulseGlow 2s infinite;
+}
+
+/* Add smooth transition when switching between tabs */
+.mac-project-browser-content {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Extra enhancements for featured badge */
+.mac-browser-project-card-featured-badge,
+.mac-browser-project-card-badge {
+  animation: pulseGlow 3s infinite;
+}

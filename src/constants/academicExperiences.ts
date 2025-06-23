@@ -1,23 +1,14 @@
-import { ExperienceProps } from '@/types/experience.types';
 import {
-  LucideIcon,
-  Skull,
-  Cpu,
   Code,
-  Heart,
+  Cpu,
   FolderKanban,
-  Stethoscope,
-  Waves,
-  GraduationCap,
-  BookOpen,
-  Laptop,
-  Award,
   HandHelping,
-  Dna,
-  FlaskConical,
-  Scissors,
-  School,
+  Heart,
+  Laptop,
+  Skull,
+  Stethoscope,
 } from 'lucide-react';
+import { ExperienceProps } from '@/types/experience.types';
 
 export const academicExperiences: ExperienceProps[] = [
   {
@@ -30,6 +21,8 @@ export const academicExperiences: ExperienceProps[] = [
     institution: 'UERGS - Universidade Estadual do Rio Grande do Sul',
     url: 'https://www.uergs.edu.br/',
     date: '2023 - 2027',
+    sortDate: '2023-02-01',
+    years: '2023 ~ 2027',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'C', en: 'C' }, icon: '/icons/c.svg' },
@@ -54,6 +47,8 @@ export const academicExperiences: ExperienceProps[] = [
     institution: 'UNICV - Centro Universitário Cidade Verde',
     url: 'https://www.unicv.edu.br/',
     date: '2025 - 2027',
+    sortDate: '2025-03-01',
+    years: '2025 ~ 2027',
     showInTimeline: true,
     tags: [
       {
@@ -76,6 +71,8 @@ export const academicExperiences: ExperienceProps[] = [
     institution: 'UERGS',
     url: 'https://www.uergs.edu.br/',
     date: '2024',
+    sortDate: '2024-01-01',
+    years: '2024',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'Inclusão', en: 'Inclusion' }, icon: Heart },
@@ -97,6 +94,8 @@ export const academicExperiences: ExperienceProps[] = [
     image: '/images/uniritter.png',
     url: 'https://www.uniritter.edu.br/',
     date: '2020 - 2023',
+    sortDate: '2020-02-01',
+    years: '2020 ~ 2023',
     showInTimeline: false,
     tags: [{ labels: { pt: 'Veterinária', en: 'Veterinary' }, icon: Stethoscope }],
     description: {
@@ -115,6 +114,8 @@ export const academicExperiences: ExperienceProps[] = [
     image: '/images/belart.png',
     url: '',
     date: '2021 - 2022',
+    years: '2021 ~ 2022',
+    sortDate: '2021-02-01',
     showInTimeline: false,
     tags: [
       {
@@ -134,6 +135,8 @@ export const academicExperiences: ExperienceProps[] = [
     image: '/images/jovem-profissional.png',
     url: '',
     date: '2020 - 2022',
+    sortDate: '2020-02-01',
+    years: '2020 ~ 2022',
     showInTimeline: false,
     topTags: [
       { labels: { pt: 'Técnico', en: 'Technical' } },

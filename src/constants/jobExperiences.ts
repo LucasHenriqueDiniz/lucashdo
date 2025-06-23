@@ -1,5 +1,5 @@
-import { ExperienceProps } from '@/types/experience.types';
 import { Box, CircuitBoard, Database, FileCode, PackageCheck, PenTool } from 'lucide-react';
+import { ExperienceProps } from '@/types/experience.types';
 
 export const jobExperiences: ExperienceProps[] = [
   {
@@ -11,7 +11,9 @@ export const jobExperiences: ExperienceProps[] = [
     title: 'Desenvolvedor Full Stack',
     institution: 'Engenharia do Futuro',
     url: 'https://engenhariadofuturo.com/',
-    date: 'mar 2025 - atual',
+    date: 'mar 2025 - /today/',
+    sortDate: '2025-03-01',
+    years: '2025 ~ /today/',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'React', en: 'React' }, icon: '/icons/react.svg' },
@@ -33,6 +35,8 @@ export const jobExperiences: ExperienceProps[] = [
     institution: 'Bots Channel',
     url: 'https://botschannel.com/',
     date: 'fev 2024 - jul 2024',
+    sortDate: '2024-02-01',
+    years: '2024',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'React', en: 'React' }, icon: '/icons/react.svg' },
@@ -57,6 +61,8 @@ export const jobExperiences: ExperienceProps[] = [
     institution: 'Engenharia do Futuro',
     url: 'https://engenhariadofuturo.com/',
     date: 'mai 2023 - fev 2024',
+    sortDate: '2023-05-01',
+    years: '2023 ~ 2024',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'React', en: 'React' }, icon: '/icons/react.svg' },
@@ -83,6 +89,8 @@ export const jobExperiences: ExperienceProps[] = [
     institution: 'Freelance',
     url: '',
     date: '2019 - 2020',
+    sortDate: '2019-01-01',
+    years: '2019 ~ 2020',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'Photoshop', en: 'Photoshop' }, icon: '/icons/photoshop.svg' },
@@ -102,6 +110,8 @@ export const jobExperiences: ExperienceProps[] = [
     image: '/images/vix-logistica.png',
     url: '',
     date: 'fev 2017 - fev 2019',
+    sortDate: '2017-02-01',
+    years: '2017 ~ 2019',
     showInTimeline: false,
     topTags: [
       { labels: { pt: 'Trabalho', en: 'Job' } },

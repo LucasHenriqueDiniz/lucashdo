@@ -21,6 +21,8 @@ export interface ExperienceProps {
   institution: string;
   url: string;
   date: string;
+  sortDate?: string; // Data em formato YYYY-MM-DD para ordenação
+  years: string; // Ex: "2023 - 2024"
   showInTimeline: boolean;
   tags: TimelineTagProps[];
   description: TranslatedField;

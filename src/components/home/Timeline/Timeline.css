@@ -1,81 +1,3 @@
-* {
-  /* Layout properties */
-  --iconSize: 50px;
-  --markerSize: 4px;
-  --borderSize: 2px;
-
-  /* Timeline component colors - connected to theme */
-  --sectionBackground: var(--background, #0c0c0c);
-  --bg_color: var(--card, #181818);
-  --card-outline-color: var(--blue, rgb(0, 98, 190));
-  --text-cyan: var(--cyan, rgb(1, 244, 252));
-  --text-blue: var(--blue, rgb(1, 132, 252));
-}
-
-/* Timeline container */
-.timeline-container {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-areas: 'left center right';
-  width: 100%;
-  position: relative;
-  min-height: 240px;
-}
-
-/* Central marker line */
-.timeline-marker {
-  grid-area: center;
-  width: var(--markerSize);
-  background: var(--text-blue);
-  height: 100%;
-  position: relative;
-  z-index: 5;
-  box-shadow: 0 0 15px rgba(1, 132, 252, 0.4);
-}
-
-/* Card styling */
-.timeline-card {
-  border-radius: 25px;
-  padding: 25px;
-  background: var(--bg_color);
-  outline: var(--card-outline-color) solid 2px;
-  outline-offset: 4px;
-  position: relative;
-  min-height: 180px;
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  max-width: 500px;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    outline-color 0.3s ease;
-  will-change: transform, box-shadow;
-}
-
-.timeline-card.left {
-  grid-area: left;
-  margin-left: auto;
-  margin-right: 100px;
-}
-
-.timeline-card.right {
-  grid-area: right;
-  margin-left: 100px;
-  margin-right: auto;
-}
-
-.timeline-card-blank {
-  grid-area: left;
-  width: 100%;
-  height: 100%;
-}
-
-.timeline-card-blank.right {
-  grid-area: right;
-}
-
-/* Timeline arrow styling */
 .timeline-arrow {
   position: absolute;
   z-index: 5;
@@ -83,58 +5,167 @@
   height: 0;
   top: 50%;
   transform: translateY(-50%);
-  transition: border-color 0.3s ease;
-  will-change: border-color;
+  transition: border-color 0.2s ease;
 }
 
 /* Left arrow (points to center) */
 .timeline-arrow.left {
-  right: 0;
+  right: 1px;
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
-  border-left: 20px solid var(--card-outline-color);
+  border-left: 20px solid var(--primary);
 }
 
 /* Secondary left arrow with different color */
 .timeline-arrow.left.secondary {
-  z-index: 6; /* Lower z-index to appear behind the primary arrow */
-  right: 3px; /* Small offset to create a visible border effect */
-  border-left: 20px solid var(--sectionBackground);
+  z-index: 6;
+  right: 3px;
+  border-left: 20px solid var(--background);
 }
 
 /* Tertiary left arrow with background color */
 .timeline-arrow.left.tertiary {
-  z-index: 7; /* Lowest z-index to appear behind the other arrows */
-  right: 7px; /* Additional offset for third layer */
-  border-left: 20px solid var(--bg_color);
+  z-index: 7;
+  right: 8px;
+  border-left: 20px solid var(--background-secondary);
 }
 
 /* Right arrow (points to center) */
 .timeline-arrow.right {
-  left: 0;
+  left: 1px;
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
-  border-right: 20px solid var(--card-outline-color);
+  border-right: 20px solid var(--primary);
 }
 
 /* Secondary right arrow with different color */
 .timeline-arrow.right.secondary {
-  z-index: 6; /* Lower z-index to appear behind the primary arrow */
-  left: 3px; /* Small offset to create a visible border effect */
-  border-right: 20px solid var(--sectionBackground);
+  z-index: 6;
+  left: 3px;
+  border-right: 20px solid var(--background);
 }
 
 /* Tertiary right arrow with background color */
 .timeline-arrow.right.tertiary {
-  z-index: 7; /* Lowest z-index to appear behind the other arrows */
-  left: 7px; /* Additional offset for third layer */
-  border-right: 20px solid var(--bg_color);
+  z-index: 7;
+  left: 8px;
+  border-right: 20px solid var(--background-secondary);
+}
+
+/* Mobile optimizations for timeline container */
+.timeline-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@media (min-width: 768px) {
+  .timeline-container {
+    padding: 0 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .timeline-container {
+    padding: 0 48px;
+  }
+}
+
+/* Responsive arrow sizes for smaller screens */
+@media (max-width: 768px) {
+  .timeline-arrow.left {
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid var(--primary);
+  }
+
+  .timeline-arrow.left.secondary {
+    border-left: 15px solid var(--background);
+  }
+
+  .timeline-arrow.left.tertiary {
+    border-left: 15px solid var(--background-secondary);
+  }
+
+  .timeline-arrow.right {
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid var(--primary);
+  }
+
+  .timeline-arrow.right.secondary {
+    border-right: 15px solid var(--background);
+  }
+
+  .timeline-arrow.right.tertiary {
+    border-right: 15px solid var(--background-secondary);
+  }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Card */
+
+.card-container {
+  outline: rgb(0, 98, 190) solid 2px;
+  outline-offset: 4px;
+  background-color: var(--background-secondary);
+}
+
+.top-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  position: absolute;
+  top: -2px;
+}
+
+.top-tags.left {
+  left: 2rem;
+}
+
+.top-tags.right {
+  right: 2rem;
+  flex-direction: row-reverse;
+}
+
+.top-tag-pill {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--primary);
+  color: var(--accent);
+  font-size: 0.875rem;
+  border: var(--background) solid 3px;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  font-weight: 600;
+  width: fit-content;
+  max-width: 250px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.top-tag-pill.institution {
+  background-color: var(--accent);
+  color: var(--primary);
+  text-decoration: none;
 }
 
 /* Arrow container groups */
 .timeline-arrows-group {
   position: relative;
-  height: 40px; /* To ensure it has some height */
+  height: 40px;
   width: 30px;
   display: flex;
   align-items: center;
@@ -150,322 +181,24 @@
   left: 0;
 }
 
-/* Timeline center icon */
-.timeline-center {
-  grid-area: center;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.timeline-icon {
-  width: var(--iconSize);
-  height: var(--iconSize);
-  border-radius: 50%;
-  background: var(--sectionBackground);
-  border: var(--borderSize) solid var(--text-blue);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  position: relative;
-  pointer-events: all;
-  will-change: transform, box-shadow;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-  box-sizing: border-box;
-  min-width: var(--iconSize);
-  min-height: var(--iconSize);
-}
-
-.timeline-icon svg {
-  color: var(--text-cyan);
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  transition:
-    color 0.3s ease,
-    transform 0.3s ease;
-}
-
-.timeline-icon:hover {
-  border-color: var(--text-cyan);
-  box-shadow: 0 0 15px rgba(1, 244, 252, 0.2);
-}
-
-.timeline-icon:hover svg {
-  transform: scale(1.1);
-}
-
-.items-center {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Date pill */
-.date-pill {
-  position: absolute;
-  background: var(--text-blue);
-  color: var(--text-cyan);
-  border-radius: 16px;
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: bold;
-  z-index: 9;
-  white-space: nowrap;
-  box-shadow: 0 0 0 4px var(--sectionBackground);
-  pointer-events: all;
-  will-change: transform, opacity;
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease;
-}
-
-.date-pill.left {
-  left: 40px;
-  right: auto;
-}
-
-.date-pill.right {
-  right: 40px;
-  left: auto;
-}
-
-.date-pill:hover {
-  transform: translateY(-2px);
-  background: var(--text-cyan);
-  color: var(--text-blue);
-}
-
-/* Card content styling */
-.timeline-card-title {
-  font-family: Inter, sans-serif;
-  font-size: 20px;
-  margin: 0px;
-  color: var(--text-cyan);
-  transition: transform 0.3s ease;
-}
-
-.timeline-card:hover .timeline-card-title {
-  transform: translateY(-2px);
-}
-
-.timeline-card:hover {
-  box-shadow: 0 10px 25px rgba(1, 244, 252, 0.2) !important;
-  outline-color: var(--text-cyan) !important;
-}
-
-.timeline-card-tags {
-  display: flex;
-  gap: 4px;
-  margin: 8px 0;
-  flex-wrap: wrap;
-}
-
-.timeline-tags-icon {
-  width: 25px;
-  height: 25px;
-  padding: 4px;
-  margin: 4px 0px;
-  background: var(--text-blue);
-  color: var(--text-cyan);
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease;
-}
-
-.timeline-tags-icon:hover {
-  transform: scale(1.15);
-  background: var(--text-cyan);
-  color: var(--text-blue);
-}
-
-/* Top tags */
-.top-tags {
-  position: absolute;
-  top: -4px;
-  left: 0px;
-  width: 100%;
-  height: 0px;
-  display: flex;
-  align-items: center;
-  padding: 0px 40px;
-  gap: 8px;
-}
-
-.top-tag {
-  font-size: 14px;
-  padding: 5px 15px;
-  border-radius: 14px;
-  border: 4px solid rgb(12, 12, 12);
-  background: var(--text-cyan);
-  color: var(--text-blue);
-  font-weight: bold;
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease,
-    color 0.3s ease;
-}
-
-.tag-title {
-  background: var(--text-blue);
-  color: var(--text-cyan);
-  font-weight: bold;
-  transition:
-    transform 0.3s ease,
-    background 0.3s ease,
-    color 0.3s ease;
-}
-
-.timeline-card:hover .top-tag {
-  transform: translateY(-3px);
-}
-
-.timeline-card:hover .tag-title {
-  background: var(--text-cyan);
-  color: var(--text-blue);
-}
-
-.timeline-card-description {
-  font-family: Inter, sans-serif;
-  font-weight: 400;
-  -webkit-tap-highlight-color: transparent;
-  box-sizing: border-box;
-  text-decoration: none;
-  position: relative;
-  width: 100%;
-  flex: 1 1 0%;
-  font-size: 16px;
-  line-height: 22px;
-  white-space: pre-line;
-  margin-bottom: 0px;
-  color: rgb(210, 234, 255);
-  transition: color 0.3s ease;
-}
-
-.timeline-card:hover .timeline-card-description {
-  color: rgb(235, 245, 255);
-}
-
-.timeline-card-description::before {
-  content: '"';
-  margin-right: 10px;
-  color: rgba(255, 255, 255, 0.1);
-  font-size: 14px;
-  font-weight: bold;
-  display: inline-block;
-  transform: scale(2);
-  transition: color 0.3s ease;
-}
-
-.timeline-card-description::after {
-  content: '"';
-  margin-left: 10px;
-  color: rgba(255, 255, 255, 0.1);
-  font-size: 14px;
-  font-weight: bold;
-  display: inline-block;
-  transform: scale(2);
-  transition: color 0.3s ease;
-}
-
-.timeline-card:hover .timeline-card-description::before,
-.timeline-card:hover .timeline-card-description::after {
-  color: rgba(255, 255, 255, 0.2);
-}
-
-/* Classes inativas removidas para limpar o CSS */
-.info {
-  display: none;
-}
-
-/* Classes para sticky center */
-.timeline-sticky-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: visible;
-  z-index: 20;
-  pointer-events: none;
-}
-
-.timeline-sticky-wrapper.arrows-left {
-  z-index: 19;
-}
-
-.timeline-sticky-wrapper.arrows-right {
-  z-index: 19;
-}
-
-.timeline-center-content {
-  position: sticky;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translateY(-50%);
-  width: 100%;
-  height: 100px;
-  position: relative; /* Added to ensure absolute positioned children work correctly */
-}
-
-/* Ajustes para o container de setas */
 .timeline-arrows-container {
   position: absolute;
   z-index: 10;
   display: flex;
   align-items: center;
-  width: 30px;
-  height: 40px;
-  transition: transform 0.3s ease;
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1) !important;
+  top: 50%;
+  transform: translateY(-50%) translateZ(0);
+  -webkit-transform: translateY(-50%) translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .timeline-arrows-container.left {
-  right: 80px;
+  right: 17px;
 }
 
 .timeline-arrows-container.right {
-  left: 80px;
-}
-
-/* Ajustes para responsividade do scroll */
-@media (max-width: 768px) {
-  .timeline-sticky-container {
-    top: 40vh;
-  }
-}
-
-/* Novos estilos para setas com hover */
-.timeline-card:hover ~ .timeline-center .timeline-arrow:not(.secondary):not(.tertiary) {
-  border-left-color: var(--text-cyan) !important;
-  border-right-color: var(--text-cyan) !important;
-}
-
-.timeline-card.left:hover ~ .timeline-center .timeline-arrow.left:not(.secondary):not(.tertiary) {
-  border-left-color: var(--text-cyan) !important;
-}
-
-.timeline-card.right:hover ~ .timeline-center .timeline-arrow.right:not(.secondary):not(.tertiary) {
-  border-right-color: var(--text-cyan) !important;
-}
-
-/* Animação para os arrows containers */
-.timeline-card:hover ~ .timeline-center .timeline-arrows-container.left {
-  transform: translateX(-5px);
-}
-
-.timeline-card:hover ~ .timeline-center .timeline-arrows-container.right {
-  transform: translateX(5px);
+  left: 17px;
 }

@@ -1,9 +1,10 @@
 'use client';
-import React, { useState, useEffect, useCallback, memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { skillsData, SkillDataType } from '@/constants';
+import { AnimatePresence, motion } from 'framer-motion';
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { SkillDataType, skillsData } from '@/constants';
 import './ExpGraph.css';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export interface ExpGraphProps {
   className?: string;
@@ -24,51 +25,51 @@ const SkillIcon = memo(
     const IconComponent = skill.icon;
 
     return (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <motion.div
-              className={`w-full aspect-square rounded-xl flex items-center justify-center cursor-pointer skill-icon-card ${
-                isHovered ? 'active' : ''
-              }`}
-              style={{
-                backgroundColor: isHovered ? 'var(--secondary)' : 'var(--primary)',
-                border: isHovered
-                  ? `1px solid rgba(255, 255, 255, 0.25)`
-                  : '1px solid rgba(75, 75, 75, 0.2)',
-              }}
-              animate={{
-                scale: isHovered ? 1.03 : 1,
-              }}
-              transition={{
-                type: 'spring',
-                stiffness: 300,
-                damping: 15,
-                duration: 0.15,
-              }}
-              onMouseEnter={() => onHover(skill.name)}
-              onMouseLeave={() => onHover(null)}
-              whileTap={{ scale: 0.98 }}
-              role="button"
-              aria-label={`${skill.name}: ${skill.proexp + skill.exp} years of experience`}
-            >
-              <IconComponent size={30} color="white" />
-            </motion.div>
-          </TooltipTrigger>
-          <TooltipContent side="top" align="center" className="tooltip-enhanced">
-            <div className="p-1">
-              <div className="font-semibold">{skill.name}</div>
-              <div className="text-xs flex gap-2">
-                <span>Pro: {skill.proexp}y</span>
-                <span>Total: {skill.proexp + skill.exp}y</span>
-              </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <motion.div
+            className={`w-full aspect-square rounded-xl flex items-center justify-center cursor-pointer skill-icon-card ${
+              isHovered ? 'active' : ''
+            }`}
+            style={{
+              backgroundColor: isHovered ? 'var(--secondary)' : 'var(--primary)',
+              border: isHovered
+                ? `1px solid rgba(255, 255, 255, 0.25)`
+                : '1px solid rgba(75, 75, 75, 0.2)',
+            }}
+            animate={{
+              scale: isHovered ? 1.03 : 1,
+            }}
+            transition={{
+              type: 'spring',
+              stiffness: 300,
+              damping: 15,
+              duration: 0.15,
+            }}
+            onMouseEnter={() => onHover(skill.name)}
+            onMouseLeave={() => onHover(null)}
+            whileTap={{ scale: 0.98 }}
+            role="button"
+            aria-label={`${skill.name}: ${skill.proexp + skill.exp} years of experience`}
+          >
+            <IconComponent size={30} color="white" />
+          </motion.div>
+        </TooltipTrigger>
+        <TooltipContent side="top" align="center" className="tooltip-enhanced">
+          <div className="p-1">
+            <div className="font-semibold">{skill.name}</div>
+            <div className="text-xs flex gap-2">
+              <span>Pro: {skill.proexp}y</span>
+              <span>Total: {skill.proexp + skill.exp}y</span>
             </div>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+          </div>
+        </TooltipContent>
+      </Tooltip>
     );
   }
 );
+
+SkillIcon.displayName = 'ExperienceGraphSkillIcon';
 
 const ExpGraph = ({ className }: ExpGraphProps) => {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
@@ -333,7 +334,6 @@ const ExpGraph = ({ className }: ExpGraphProps) => {
                   rotate: 0,
                   x: '-50%',
                   y: '-50%',
-                  y: ['-50%', '-52%', '-50%'], // Floating animation
                 }}
                 exit={{
                   opacity: 0,
@@ -346,12 +346,6 @@ const ExpGraph = ({ className }: ExpGraphProps) => {
                   opacity: { duration: 0.8, ease: 'easeInOut' },
                   scale: { duration: 0.8, ease: 'backOut' },
                   rotate: { duration: 0.8, ease: 'easeInOut' },
-                  y: {
-                    duration: 6,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                    delay: 0.5, // Delay para começar o float após a entrada
-                  },
                 }}
               >
                 {React.createElement(skillsData[currentSkillIndex].icon, {
@@ -361,59 +355,26 @@ const ExpGraph = ({ className }: ExpGraphProps) => {
               </motion.div>
             </AnimatePresence>
             <div className="relative z-10">
-              {' '}
-              <div className="mb-10 items-start flex flex-col">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <h3 className="text-lg text-[var(--muted-foreground)] mb-2">Onde sou bom</h3>
-                </motion.div>
-
-                <div className="flex items-center">
-                  {/* Animated icon */}
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentSkillIndex}
-                      className="w-10 h-10 mr-3 flex items-center justify-center"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1, rotate: 360 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      {React.createElement(skillsData[currentSkillIndex].icon, {
-                        size: 32,
-                        color: 'var(--primary)',
-                      })}
-                    </motion.div>
-                  </AnimatePresence>
-                  {/* Title text */}
-                  <div className="text-4xl font-bold flex gap-3">
-                    <motion.span
-                      className="text-[var(--color-foreground)]"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: 0.8 }}
-                    >
-                      Minhas
-                    </motion.span>
-                    <motion.span
-                      className="text-[var(--primary)]"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{
-                        duration: 0.5,
-                        delay: 1.2,
-                        type: 'spring',
-                        stiffness: 200,
-                      }}
-                    >
-                      skills
-                    </motion.span>
-                  </div>
-                </div>
-              </div>
+              <HomeSectionTitle
+                subTitle="Onde sou bom"
+                titleWhitePart="Minhas"
+                titleBluePart="Skills"
+                icon={
+                  <motion.div
+                    key={currentSkillIndex}
+                    className="w-10 h-10 mr-3 flex items-center justify-center"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 360 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {React.createElement(skillsData[currentSkillIndex].icon, {
+                      size: 32,
+                      color: 'var(--primary)',
+                    })}
+                  </motion.div>
+                }
+              />
               {/* Technology icons grid */}
               <div className="grid grid-cols-4 gap-4">
                 {orderedSkills.slice(0, 9).map((skill, index) => {

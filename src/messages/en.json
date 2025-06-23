@@ -1,10 +1,8 @@
 {
   "Navigation": {
-    "home": "Home",
+    "contact": "Contact",
     "about": "About",
-    "projects": "Projects",
-    "blog": "Blog",
-    "gallery": "Gallery"
+    "projects": "Projects"
   },
   "Footer": {
     "aboutTitle": "About",
@@ -15,7 +13,9 @@
     "projects": "Projects",
     "blog": "Blog",
     "connect": "Connect",
-    "rightsReserved": "All rights reserved."
+    "rightsReserved": "All rights reserved.",
+    "contactTitle": "Contact",
+    "projectsTitle": "Projects"
   },
   "Home": {
     "title": "Hello, I'm Lucas",
@@ -38,7 +38,12 @@
     "title": "Projects",
     "description": "A showcase of my latest and best projects.",
     "featured": "Featured",
-    "viewProject": "View Project"
+    "viewProject": "View Project",
+    "viewDemo": "View Live Demo",
+    "viewSource": "View Source Code",
+    "techStack": "Tech Stack",
+    "allProjects": "All Projects",
+    "contactMe": "Let's talk"
   },
   "Blog": {
     "title": "Blog",

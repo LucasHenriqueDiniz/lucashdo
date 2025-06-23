@@ -106,33 +106,6 @@ g:hover .exp-year-label {
   animation: fadeIn 0.3s forwards; /* Faster animation */
 }
 
-/* Simplified tooltip styles */
-.exp-tooltip {
-  position: absolute;
-  z-index: 10;
-  background-color: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  white-space: nowrap;
-  pointer-events: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); /* Lighter shadow */
-  border: 1px solid rgba(0, 156, 255, 0.3);
-  /* Removed backdrop-filter for better performance */
-}
-
-.tooltip-enhanced {
-  background-color: var(--color-card) !important;
-  border: 1px solid var(--color-chart-2) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important; /* Simplified shadow */
-  /* Removed backdrop-filter for better performance */
-  padding: 8px 12px !important;
-  border-radius: 6px !important;
-  font-weight: 500 !important;
-  color: var(--color-foreground) !important;
-}
-
 /* Simplified highlight effect for active bars - removed drop-shadow */
 @keyframes highlight {
   0% {

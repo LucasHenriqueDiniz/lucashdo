@@ -1,53 +1,166 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
 :root {
-  /* Core UI Colors - Dark Mode Only */
-  --background: oklch(0.145 0 0); /* Dark background */
-  --background-rgb: 20, 20, 25; /* RGB values for background for transparency */
-  --foreground: oklch(0.97 0 0); /* Light text */
-  --card: oklch(0.19 0 0); /* Slightly lighter than background */
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.25 0 0);
-  --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.61 0.22 260); /* #0184fc - Blue */
-  --primary-foreground: oklch(0.97 0 0);
-  --secondary: #0f0f0f; /* Darker version of #eaf5ff */
-  --secondary-foreground: oklch(0.97 0 0);
-  --muted: oklch(0.25 0 0); /* Based on #222222 */
-  --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.55 0.15 290);
-  --accent-foreground: oklch(0.97 0 0);
-  --border: oklch(1 0 0 / 15%);
-  --input: oklch(1 0 0 / 15%);
+  --background: #0c0c0c;
+  --background-secondary: #181818;
+  --background-rgb: 20, 20, 25;
+  --foreground: rgb(247, 247, 247);
+  --card: rgb(49, 49, 49);
+  --card-foreground: rgb(247, 247, 247);
+  --popover: rgb(64, 64, 64);
+  --popover-foreground: rgb(247, 247, 247);
+  --primary-bg: linear-gradient(45deg, #0184fc, #0184fc);
+  --primary: rgb(1, 132, 252);
+  --primary-foreground: rgb(247, 247, 247);
+  --primary-hover: rgba(35, 96, 204, 0.8);
+  --secondary: #0f0f0f;
+  --secondary-foreground: rgb(247, 247, 247);
+  --muted: rgb(64, 64, 64);
+  --muted-foreground: rgb(128, 128, 128);
+  --accent: rgb(1, 244, 252);
+  --accent-foreground: rgb(247, 247, 247);
+  --border: rgba(255, 255, 255, 0.15);
+  --input: rgba(255, 255, 255, 0.15);
 
-  /* Accent/Brand Colors */
-  --blue: oklch(0.61 0.22 260); /* #0184fc - Primary Blue */
-  --cyan: oklch(0.7 0.15 195); /* Teal accent */
-  --green: oklch(0.7 0.18 145); /* Green accent */
-  --amber: oklch(0.75 0.18 85); /* Amber/Gold accent */
-  --pink: oklch(0.65 0.2 330); /* Pink accent */
-  --destructive: oklch(0.65 0.25 25); /* Red-Orange for errors */
+  --blue: rgb(35, 96, 204);
+  --cyan: rgb(73, 186, 214);
+  --green: rgb(91, 207, 151);
+  --amber: rgb(235, 196, 102);
+  --pink: rgb(218, 115, 185);
+  --destructive: rgb(230, 112, 78);
 
-  /* Chart Colors */
-  --chart-1: oklch(0.61 0.22 260); /* #0184fc - Primary Blue */
-  --chart-2: oklch(0.7 0.15 195); /* Teal */
-  --chart-3: oklch(0.75 0.18 85); /* Gold */
-  --chart-4: oklch(0.65 0.2 330); /* Purple/Pink */
-  --chart-5: oklch(0.65 0.25 25); /* Red-Orange */
+  /* Header specific variables */
+  --header-height-top: 6rem;
+  --header-height-scrolled: 4.5rem;
+  --header-bg-top: rgba(12, 12, 12, 0.25);
+  --header-bg-scrolled: rgba(20, 20, 24, 0.45);
+  --header-blur-top: 8px;
+  --header-blur-scrolled: 16px;
+  --header-border-glow: rgba(1, 132, 252, 0.6);
 
-  /* Sidebar Colors */
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.61 0.22 260); /* #0184fc - Blue */
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 15%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Construction banner variables */
+  --banner-bg: linear-gradient(90deg, rgba(1, 132, 252, 0.9), rgba(73, 186, 214, 0.8));
+  --banner-text: rgb(255, 255, 255);
+  --banner-height: 36px;
 
-  /* Border Radius */
+  --chart-1: rgb(35, 96, 204);
+  --chart-2: rgb(73, 186, 214);
+  --chart-3: rgb(235, 196, 102);
+  --chart-4: rgb(218, 115, 185);
+  --chart-5: rgb(230, 112, 78);
+
+  --sidebar: rgb(52, 52, 52);
+  --sidebar-foreground: rgb(251, 251, 251);
+  --sidebar-primary: rgb(35, 96, 204);
+  --sidebar-primary-foreground: rgb(251, 251, 251);
+  --sidebar-accent: rgb(69, 69, 69);
+  --sidebar-accent-foreground: rgb(251, 251, 251);
+  --sidebar-border: rgba(255, 255, 255, 0.15);
+  --sidebar-ring: rgb(142, 142, 142);
+
   --radius: 0.625rem;
+  --header-height: 80px;
+}
+
+/* Efeito de vidro embaçado para elementos com transparência */
+.frosted-glass {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-color: rgba(20, 20, 24, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.frosted-glass-light {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(20, 20, 24, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Button with icon style for header navigation */
+.nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  will-change: transform;
+}
+
+.nav-button .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-button .icon-secondary {
+  position: absolute;
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+/* Construction banner styles */
+.construction-banner {
+  width: 100%;
+  background: var(--banner-bg);
+  color: var(--banner-text);
+  text-align: center;
+  font-weight: 500;
+  z-index: 60;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  will-change: opacity, transform;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.construction-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/noise.png');
+  background-size: 200px;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+}
+
+section {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1200px; /* Adjust based on your design */
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden; /* Prevents overflow issues */
+  scroll-snap-align: start; /* Ensures sections snap to the start */
+  scroll-snap-stop: always; /* Ensures sections snap consistently */
+  scroll-snap-type: y mandatory; /* Enables vertical snapping */
+  scroll-behavior: smooth; /* Smooth scrolling */
+  padding-bottom: 2rem; /* Ensures space at the bottom for content */
 }
 
 /* Hide scrollbar for cleaner UI */
@@ -79,4 +192,15 @@ body {
   background-color: var(--background);
   font-size: 16px;
   font-weight: 400;
+}
+
+/* Ajuste para manter uma transição suave quando o banner aparece/desaparece */
+body.has-banner main {
+  margin-top: calc(var(--banner-height) + var(--header-height-top));
+  transition: margin-top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body:not(.has-banner) main {
+  margin-top: var(--header-height-top);
+  transition: margin-top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }

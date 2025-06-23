@@ -18,15 +18,27 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'lastfm.freetls.fastly.net',
-      },
-      {
-        protocol: 'https',
         hostname: 'randomuser.me',
       },
       {
         protocol: 'https',
+        hostname: 'lastfm.freetls.fastly.net',
+      },
+      {
+        protocol: 'https',
         hostname: '*.last.fm',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.steamstatic.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.steampowered.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.licdn.com',
       },
     ],
     formats: ['image/avif', 'image/webp'],
@@ -36,7 +48,16 @@ const nextConfig: NextConfig = {
 
   // Configuração de ambiente para produção/desenvolvimento
   env: {
-    SITE_URL: process.env.NODE_ENV === 'production' ? 'www.lucashdo.com' : 'http://localhost:3000',
+    SITE_URL:
+      process.env.NODE_ENV === 'production' ? 'https://www.lucashdo.com' : 'http://localhost:3000',
+  },
+
+  // Expor variáveis de ambiente para o cliente
+  publicRuntimeConfig: {
+    NEXT_PUBLIC_LASTFM_API_KEY: process.env.NEXT_PUBLIC_LASTFM_API_KEY,
+    NEXT_PUBLIC_STEAM_API_KEY: process.env.NEXT_PUBLIC_STEAM_API_KEY,
+    NEXT_PUBLIC_STEAM_ID: process.env.NEXT_PUBLIC_STEAM_ID,
+    NEXT_PUBLIC_LYFTA_API_KEY: process.env.NEXT_PUBLIC_LYFTA_API_KEY,
   },
 
   // Security headers

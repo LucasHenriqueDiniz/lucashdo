@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowUpRight,
   ChevronLeft,
@@ -10,28 +10,25 @@ import {
   Instagram,
   Link as LinkIcon,
   Quote,
-  Send,
   SmilePlus,
   User,
   X,
 } from 'lucide-react';
 import Image from 'next/image';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import './GuestBook.css';
 
-// Types for our guest book entries
+// Types para as entradas do livro de visitas
 interface GuestBookEntry {
   id: string;
   name: string;
   message: string;
   timestamp: string;
-  avatar?: string; // URL to user avatar
-  emoji?: string; // User's chosen emoji
-  socialLink?: string; // GitHub or Instagram link
-  isDeveloper?: boolean; // Whether the user is a developer
+  avatar?: string;
+  emoji?: string;
+  socialLink?: string;
+  isDeveloper?: boolean;
 }
 
-// Popular emojis for quick selection
+// Emojis populares para seleção rápida
 const popularEmojis = [
   '😊',
   '👍',
@@ -49,7 +46,7 @@ const popularEmojis = [
   '🎨',
 ];
 
-// Mock data - replace with actual database fetch
+// Mock data otimizado
 const mockEntries: GuestBookEntry[] = [
   {
     id: '1',
@@ -58,7 +55,8 @@ const mockEntries: GuestBookEntry[] = [
       'Amazing portfolio! Your design skills are impressive and I love the attention to detail in every project.',
     emoji: '🔥',
     timestamp: '2025-06-10T14:23:00Z',
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=120&h=120&fit=crop&crop=face',
     socialLink: 'https://github.com/sarahjohnson',
     isDeveloper: true,
   },
@@ -69,7 +67,8 @@ const mockEntries: GuestBookEntry[] = [
       'The interactive elements on your site are so engaging! What animation library are you using?',
     emoji: '✨',
     timestamp: '2025-06-09T08:15:00Z',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face',
     socialLink: 'https://instagram.com/davidchen',
     isDeveloper: false,
   },
@@ -80,7 +79,8 @@ const mockEntries: GuestBookEntry[] = [
       'Keep up the great work! Your projects showcase excellent technical skills combined with a strong design sense.',
     emoji: '👏',
     timestamp: '2025-06-05T19:42:00Z',
-    avatar: 'https://randomuser.me/api/portraits/women/67.jpg',
+    avatar:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&crop=face',
     socialLink: 'https://github.com/mayap',
     isDeveloper: true,
   },
@@ -90,58 +90,15 @@ const mockEntries: GuestBookEntry[] = [
     message: 'Very inspiring portfolio! I especially liked your approach to responsive design.',
     emoji: '💯',
     timestamp: '2025-06-04T10:23:00Z',
-    avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
+    avatar:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face',
     socialLink: 'https://instagram.com/thomaswright',
     isDeveloper: false,
-  },
-  {
-    id: '5',
-    name: 'Aisha Khan',
-    message:
-      'Such creative work. The UI/UX of your projects demonstrates exceptional skill and understanding of user needs.',
-    emoji: '🎨',
-    timestamp: '2025-06-03T15:40:00Z',
-    avatar: 'https://randomuser.me/api/portraits/women/39.jpg',
-    socialLink: 'https://github.com/aishakhan',
-    isDeveloper: true,
-  },
-  {
-    id: '6',
-    name: 'Marcus Johnson',
-    message:
-      'Your portfolio shows great technical depth. Love the projects and the clean code architecture.',
-    emoji: '💻',
-    timestamp: '2025-06-02T11:20:00Z',
-    avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
-    socialLink: 'https://github.com/marcusj',
-    isDeveloper: true,
-  },
-  {
-    id: '7',
-    name: 'Elena Rodriguez',
-    message:
-      'The animations throughout your site create such a delightful experience! Inspiring work!',
-    emoji: '🎉',
-    timestamp: '2025-05-30T09:15:00Z',
-    avatar: 'https://randomuser.me/api/portraits/women/33.jpg',
-    socialLink: 'https://instagram.com/elenarodz',
-    isDeveloper: false,
-  },
-  {
-    id: '8',
-    name: 'James Wilson',
-    message:
-      "As a fellow developer, I'm impressed by your implementation. Have you considered open-sourcing some of your components?",
-    emoji: '👨‍💻',
-    timestamp: '2025-05-28T16:45:00Z',
-    avatar: 'https://randomuser.me/api/portraits/men/11.jpg',
-    socialLink: 'https://github.com/jameswilson',
-    isDeveloper: true,
   },
 ];
 
 const GuestBook = () => {
-  // State variables
+  // Estados otimizados
   const [entries, setEntries] = useState<GuestBookEntry[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [name, setName] = useState('');
@@ -153,444 +110,507 @@ const GuestBook = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [featuredIndex, setFeaturedIndex] = useState(0);
 
-  // Load entries when component mounts
+  // Refs para otimização
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  // Carrega entradas apenas uma vez
   useEffect(() => {
-    // In a real app, fetch from your database instead
     setEntries(mockEntries);
   }, []);
 
-  // Auto-rotate featured testimonial every 10 seconds
+  // Auto-rotação do carrossel com cleanup adequado
   useEffect(() => {
-    const interval = setInterval(() => {
-      setFeaturedIndex(prev => (prev + 1) % entries.length);
-    }, 10000);
+    if (entries.length > 1) {
+      intervalRef.current = setInterval(() => {
+        setFeaturedIndex(prev => (prev + 1) % entries.length);
+      }, 10000);
+    }
 
-    return () => clearInterval(interval);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, [entries.length]);
 
-  // Format date based on locale
-  const formatDate = (dateString: string) => {
+  // Fechar emoji picker ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    if (showEmojiPicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showEmojiPicker]);
+
+  // Formatar data de forma otimizada
+  const formatDate = useCallback((dateString: string) => {
     try {
       const date = new Date(dateString);
-      const options: Intl.DateTimeFormatOptions = {
+      return new Intl.DateTimeFormat('pt-BR', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
         hour12: true,
-      };
-      return new Intl.DateTimeFormat('pt-BR', options).format(date);
-    } catch (e) {
+      }).format(date);
+    } catch {
       return dateString;
     }
-  };
+  }, []);
 
-  // Navigate featured testimonial
+  // Navegação do carrossel otimizada
   const goToNextFeatured = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
     setFeaturedIndex(prev => (prev + 1) % entries.length);
   }, [entries.length]);
 
   const goToPrevFeatured = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
     setFeaturedIndex(prev => (prev - 1 + entries.length) % entries.length);
   }, [entries.length]);
 
-  // Handle quick emoji selection
-  const selectQuickEmoji = (emoji: string) => {
-    setSelectedEmoji(emoji);
-  };
+  // Validações otimizadas
+  const validateUsername = useCallback((username: string, platform: 'github' | 'instagram') => {
+    const patterns = {
+      github: /^(https?:\/\/)?(github\.com\/)?/i,
+      instagram: /^(https?:\/\/)?(instagram\.com\/)?/i,
+    };
+    return username.replace(patterns[platform], '').trim();
+  }, []);
 
-  // Validate GitHub username
-  const validateGithubUsername = (username: string) => {
-    // Remove https://github.com/ if present
-    const cleanUsername = username.replace(/^(https?:\/\/)?(github\.com\/)?/i, '');
-    return cleanUsername.trim();
-  };
+  // Submissão do formulário otimizada
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-  // Validate Instagram username
-  const validateInstagramUsername = (username: string) => {
-    // Remove https://instagram.com/ if present
-    const cleanUsername = username.replace(/^(https?:\/\/)?(instagram\.com\/)?/i, '');
-    return cleanUsername.trim();
-  };
+      // Validações
+      if (!name.trim()) {
+        setError('Por favor, digite seu nome');
+        return;
+      }
 
-  // Handle submitting a new entry
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+      if (!newMessage.trim()) {
+        setError('Por favor, digite uma mensagem');
+        return;
+      }
 
-    if (!name.trim()) {
-      setError('Por favor, digite seu nome');
-      return;
-    }
+      if (isDeveloper === null) {
+        setError('Por favor, selecione se você é desenvolvedor ou não');
+        return;
+      }
 
-    if (!newMessage.trim()) {
-      setError('Por favor, digite uma mensagem');
-      return;
-    }
+      setIsSubmitting(true);
+      setError(null);
 
-    if (isDeveloper === null) {
-      setError('Por favor, selecione se você é desenvolvedor ou não');
-      return;
-    }
+      try {
+        // Processar dados
+        let avatarUrl = '';
+        let formattedSocialLink = '';
 
-    setIsSubmitting(true);
-    setError(null);
+        if (socialLink.trim()) {
+          if (isDeveloper) {
+            const username = validateUsername(socialLink, 'github');
+            formattedSocialLink = `https://github.com/${username}`;
+            avatarUrl = `https://github.com/${username}.png`;
+          } else {
+            const username = validateUsername(socialLink, 'instagram');
+            formattedSocialLink = `https://instagram.com/${username}`;
+          }
+        }
 
-    let avatarUrl = '';
-    let formattedSocialLink = '';
+        // Avatar padrão se não houver GitHub
+        if (!avatarUrl) {
+          avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0184fc&color=fff&size=120`;
+        }
 
-    // Format social link and get avatar based on selection
-    if (isDeveloper) {
-      const username = validateGithubUsername(socialLink);
-      formattedSocialLink = username ? `https://github.com/${username}` : '';
-      avatarUrl = username ? `https://github.com/${username}.png` : '';
-    } else {
-      const username = validateInstagramUsername(socialLink);
-      formattedSocialLink = username ? `https://instagram.com/${username}` : '';
-      // Use Boring Avatars API for non-GitHub users since we can't easily get Instagram photos
-      avatarUrl = `https://source.boringavatars.com/beam/120/${encodeURIComponent(name)}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`;
-    }
+        // Simular delay da API
+        await new Promise(resolve => setTimeout(resolve, 800));
 
-    // Simulating API call delay
-    setTimeout(() => {
-      const newEntry: GuestBookEntry = {
-        id: Date.now().toString(),
-        name,
-        message: newMessage,
-        emoji: selectedEmoji,
-        timestamp: new Date().toISOString(),
-        avatar:
-          avatarUrl || `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}`,
-        socialLink: formattedSocialLink,
-        isDeveloper,
-      };
+        const newEntry: GuestBookEntry = {
+          id: Date.now().toString(),
+          name: name.trim(),
+          message: newMessage.trim(),
+          emoji: selectedEmoji,
+          timestamp: new Date().toISOString(),
+          avatar: avatarUrl,
+          socialLink: formattedSocialLink,
+          isDeveloper,
+        };
 
-      setEntries(prev => [newEntry, ...prev]);
-      setNewMessage('');
-      setSelectedEmoji('');
-      setSocialLink('');
-      setIsDeveloper(null);
-      setIsSubmitting(false);
-    }, 800);
-  };
+        setEntries(prev => [newEntry, ...prev]);
 
-  // Get the featured entry for the quote carousel
+        // Reset do formulário
+        setNewMessage('');
+        setName('');
+        setSocialLink('');
+        setSelectedEmoji('');
+        setIsDeveloper(null);
+      } catch (err) {
+        console.error('Erro ao enviar mensagem:', err);
+        setError('Erro ao enviar mensagem. Tente novamente.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [name, newMessage, isDeveloper, socialLink, selectedEmoji, validateUsername]
+  );
+
+  // Entry em destaque otimizada
   const featuredEntry = useMemo(() => {
-    if (entries.length === 0) return null;
-    return entries[featuredIndex];
+    return entries.length > 0 ? entries[featuredIndex] : null;
   }, [entries, featuredIndex]);
-  // Generate background avatar grid
-  const avatarBackgroundElements = useMemo(() => {
-    // Duplicar entradas para preencher o grid se necessário
-    const gridEntries = [...entries];
-    while (gridEntries.length < 40) {
-      gridEntries.push(...entries);
-    }
 
-    // Limitar a um número máximo para evitar problemas de desempenho
-    const limitedEntries = gridEntries.slice(0, 50);
+  // Grid de avatares otimizado (limitado para performance)
+  const avatarGrid = useMemo(() => {
+    if (entries.length === 0) return [];
 
-    // Embaralhar as entradas para distribuição aleatória no grid
-    const shuffledEntries = [...limitedEntries].sort(() => Math.random() - 0.5);
+    // Limitar a 20 avatares para performance
+    const limitedEntries = entries.slice(0, 20);
 
-    return shuffledEntries
-      .map((entry, index) => {
-        // Alguns avatares podem estar um pouco fora do grid por efeito estético
-        const randomOffset = index % 3 === 0 ? Math.random() * 15 : 0;
-
-        // Variar tamanho levemente
-        const sizeVariation = 0.7 + Math.random() * 0.6;
-
-        return entry.avatar ? (
+    return limitedEntries
+      .map((entry, index) =>
+        entry.avatar ? (
           <div
             key={`${entry.id}-${index}`}
-            className="avatar-bg-item"
-            style={
-              {
-                transform: `scale(${sizeVariation})`,
-                // Atraso diferente para cada avatar na animação
-                '--delay': `${Math.random() * 10}s`,
-                marginLeft: index % 5 === 0 ? `${randomOffset}px` : 0,
-                marginTop: index % 7 === 0 ? `${randomOffset}px` : 0,
-              } as React.CSSProperties
-            }
+            className="absolute w-12 h-12 rounded-lg overflow-hidden opacity-5 hover:opacity-10 transition-opacity duration-500 border border-white/5"
+            style={{
+              left: `${(index * 47) % 100}%`,
+              top: `${Math.floor(index / 3) * 25}%`,
+              animationDelay: `${index * 0.5}s`,
+            }}
           >
             <Image
               src={entry.avatar}
               alt=""
-              fill
-              className="object-cover"
-              sizes="100px"
-              priority={index < 10} // Carregar com prioridade os primeiros avatares
+              className="w-full h-full object-cover"
+              loading="lazy"
             />
           </div>
-        ) : null;
-      })
+        ) : null
+      )
       .filter(Boolean);
   }, [entries]);
 
   return (
-    <section className="w-full py-32 relative overflow-hidden">
-      {/* Background pattern */}
-      <div className="absolute inset-0 w-full h-full bg-[#050505] overflow-hidden">
-        {/* Animated gradient backgrounds */}
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-primary/5 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-[#050505] via-[rgba(5,5,5,0.7)] to-transparent"></div>
+    <section
+      className="w-full py-32 relative overflow-hidden min-h-screen"
+      style={{ backgroundColor: '#0c0c0c' }}
+    >
+      {/* Background otimizado com cores globais */}
+      <div
+        className="absolute inset-0"
+        style={{ background: 'linear-gradient(180deg, #0c0c0c 0%, #181818 50%, #0c0c0c 100%)' }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(180deg, transparent 0%, rgba(1, 244, 252, 0.03) 100%)',
+          }}
+        />
 
-        {/* Avatar grid background */}
-        <div className="avatar-grid absolute inset-0 w-full h-full">{avatarBackgroundElements}</div>
+        {/* Grid de avatares otimizado */}
+        <div className="absolute inset-0 overflow-hidden">{avatarGrid}</div>
       </div>
 
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 relative z-10">
         {/* Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-4xl font-bold mb-4">
-            <motion.span
-              className="text-muted-foreground block text-lg font-normal mb-2"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.7, delay: 0.2 }}
+        <div className="text-center mb-16 opacity-0 animate-[fadeIn_0.6s_ease-out_forwards]">
+          <h2 className="text-4xl font-bold mb-4" style={{ color: 'rgb(247, 247, 247)' }}>
+            <span
+              className="block text-lg font-normal mb-2"
+              style={{ color: 'rgb(128, 128, 128)' }}
             >
-              'Deixe seu recado'
-            </motion.span>
-            <motion.span
-              className="inline-block align-middle"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: false }}
-              transition={{ duration: 1.0, delay: 0.7 }}
-            >
-              <motion.span
-                className="font-extrabold text-white"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: false }}
-                transition={{ duration: 0.7, delay: 1.0 }}
-              >
-                'Meu '
-                <motion.span
-                  className="text-cyan-400"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: false }}
-                  transition={{ duration: 0.5, delay: 1.4 }}
-                >
-                  'Livro de Visitas'
-                </motion.span>
-              </motion.span>
-            </motion.span>
+              Deixe seu recado
+            </span>
+            Meu <span style={{ color: 'rgb(1, 244, 252)' }}>Livro de Visitas</span>
           </h2>
-          <motion.p
-            className="text-muted-foreground max-w-xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            {'Deixe uma mensagem, feedback ou apenas um olá! Adoraria saber que você esteve aqui.'}
-          </motion.p>
-        </motion.div>
+          <p className="max-w-xl mx-auto" style={{ color: 'rgb(128, 128, 128)' }}>
+            Deixe uma mensagem, feedback ou apenas um olá! Adoraria saber que você esteve aqui.
+          </p>
+        </div>
 
-        {/* Featured Quote Carousel */}
+        {/* Carrossel de destaques */}
         {featuredEntry && (
-          <div className="mb-24 relative z-20">
-            <motion.div
-              className="relative quote-container max-w-4xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              {/* Navigation buttons */}
-              <button
-                onClick={goToPrevFeatured}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors"
-                aria-label="Previous testimonial"
-              >
-                <ChevronLeft size={24} />
-              </button>
-
-              <button
-                onClick={goToNextFeatured}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors"
-                aria-label="Next testimonial"
-              >
-                <ChevronRight size={24} />
-              </button>
-
-              <div className="p-8 sm:p-12 backdrop-blur-xl bg-[rgba(5,5,5,0.5)] shadow-2xl rounded-2xl border border-white/5">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={featuredEntry.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5 }}
-                    className="flex flex-col items-center"
+          <div className="mb-24 relative opacity-0 animate-[fadeIn_0.8s_ease-out_0.2s_forwards]">
+            <div className="relative max-w-4xl mx-auto">
+              {/* Botões de navegação */}
+              {entries.length > 1 && (
+                <>
+                  <button
+                    onClick={goToPrevFeatured}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-lg transition-colors"
+                    style={{
+                      backgroundColor: 'rgba(12, 12, 12, 0.8)',
+                      color: 'rgb(247, 247, 247)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = 'rgba(1, 132, 252, 0.2)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = 'rgba(12, 12, 12, 0.8)';
+                    }}
+                    aria-label="Anterior"
                   >
-                    {/* Quote icon */}
-                    <div className="flex justify-center mb-8">
-                      <Quote size={48} className="text-primary/60" strokeWidth={1} />
-                    </div>
+                    <ChevronLeft size={24} />
+                  </button>
 
-                    {/* Quote text */}
-                    <div className="text-xl sm:text-2xl text-center text-white font-light italic mb-10 max-w-3xl leading-relaxed">
-                      "{featuredEntry.message}"
-                      {featuredEntry.emoji && (
-                        <span className="inline-block ml-2 transform -rotate-12">
-                          {featuredEntry.emoji}
-                        </span>
-                      )}
-                    </div>
+                  <button
+                    onClick={goToNextFeatured}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-lg transition-colors"
+                    style={{
+                      backgroundColor: 'rgba(12, 12, 12, 0.8)',
+                      color: 'rgb(247, 247, 247)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = 'rgba(1, 132, 252, 0.2)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = 'rgba(12, 12, 12, 0.8)';
+                    }}
+                    aria-label="Próximo"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                </>
+              )}
 
-                    {/* Author info with avatar */}
-                    <div className="flex items-center gap-4">
-                      {/* Avatar */}
-                      <div className="relative">
-                        <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/30 featured-profile">
-                          {featuredEntry.avatar ? (
-                            <Image
-                              src={featuredEntry.avatar}
-                              alt={featuredEntry.name}
-                              width={56}
-                              height={56}
-                              className="object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-xl font-bold">
-                              {featuredEntry.name.charAt(0).toUpperCase()}
-                            </div>
-                          )}
-                        </div>
+              <div
+                className="p-8 sm:p-12 rounded-2xl backdrop-blur-xl"
+                style={{
+                  backgroundColor: 'rgba(24, 24, 24, 0.8)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                }}
+              >
+                <div
+                  key={featuredEntry.id}
+                  className="text-center opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]"
+                >
+                  <Quote
+                    size={48}
+                    className="mx-auto mb-8"
+                    style={{ color: 'rgba(1, 244, 252, 0.6)' }}
+                  />
 
-                        {/* Social icon badge */}
-                        {featuredEntry.isDeveloper !== undefined && (
-                          <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center bg-[#111] border border-[#333] shadow-lg">
-                            {featuredEntry.isDeveloper ? (
-                              <Github size={14} className="text-white" />
-                            ) : (
-                              <Instagram size={14} className="text-white" />
-                            )}
+                  <blockquote
+                    className="text-xl sm:text-2xl font-light italic mb-8 max-w-3xl mx-auto"
+                    style={{ color: 'rgb(247, 247, 247)' }}
+                  >
+                    &quot;{featuredEntry.message}&quot;
+                    {featuredEntry.emoji && <span className="ml-2">{featuredEntry.emoji}</span>}
+                  </blockquote>
+
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="relative">
+                      <div
+                        className="w-14 h-14 rounded-lg overflow-hidden"
+                        style={{ border: '2px solid rgba(1, 244, 252, 0.3)' }}
+                      >
+                        {featuredEntry.avatar ? (
+                          <Image
+                            src={featuredEntry.avatar}
+                            alt={featuredEntry.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div
+                            className="w-full h-full flex items-center justify-center text-xl font-bold"
+                            style={{
+                              background:
+                                'linear-gradient(45deg, rgb(1, 244, 252), rgb(1, 132, 252))',
+                              color: 'rgb(247, 247, 247)',
+                            }}
+                          >
+                            {featuredEntry.name.charAt(0)}
                           </div>
                         )}
                       </div>
 
-                      {/* Author info */}
-                      <div>
-                        <div className="font-medium text-white">{featuredEntry.name}</div>
-                        <div className="text-sm text-gray-300">
-                          {formatDate(featuredEntry.timestamp)}
-                        </div>
-                      </div>
-
-                      {/* Social link */}
-                      {featuredEntry.socialLink && (
-                        <a
-                          href={featuredEntry.socialLink}
-                          className="ml-2 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`Visit ${featuredEntry.name}'s profile`}
+                      {featuredEntry.isDeveloper !== undefined && (
+                        <div
+                          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center"
+                          style={{
+                            backgroundColor: 'rgb(64, 64, 64)',
+                            border: '1px solid rgba(255, 255, 255, 0.15)',
+                          }}
                         >
-                          <ArrowUpRight size={16} className="text-primary" />
-                        </a>
+                          {featuredEntry.isDeveloper ? (
+                            <Github size={14} style={{ color: 'rgb(247, 247, 247)' }} />
+                          ) : (
+                            <Instagram size={14} style={{ color: 'rgb(247, 247, 247)' }} />
+                          )}
+                        </div>
                       )}
                     </div>
 
-                    {/* Navigation dots */}
-                    <div className="flex gap-2 mt-8">
+                    <div className="text-left">
+                      <div className="font-medium" style={{ color: 'rgb(247, 247, 247)' }}>
+                        {featuredEntry.name}
+                      </div>
+                      <div className="text-sm" style={{ color: 'rgb(128, 128, 128)' }}>
+                        {formatDate(featuredEntry.timestamp)}
+                      </div>
+                    </div>
+
+                    {featuredEntry.socialLink && (
+                      <a
+                        href={featuredEntry.socialLink}
+                        className="p-2 rounded-lg transition-colors"
+                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.backgroundColor = 'rgba(1, 132, 252, 0.2)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ArrowUpRight size={16} style={{ color: 'rgb(1, 244, 252)' }} />
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Indicadores de navegação */}
+                  {entries.length > 1 && (
+                    <div className="flex justify-center gap-2 mt-8">
                       {entries.map((_, index) => (
                         <button
                           key={index}
-                          className={`w-2 h-2 rounded-full ${
-                            index === featuredIndex ? 'bg-primary' : 'bg-gray-600'
-                          }`}
+                          className="w-2 h-2 rounded-full transition-colors"
+                          style={{
+                            backgroundColor:
+                              index === featuredIndex ? 'rgb(1, 244, 252)' : 'rgb(128, 128, 128)',
+                          }}
                           onClick={() => setFeaturedIndex(index)}
-                          aria-label={`Go to testimonial ${index + 1}`}
                         />
                       ))}
                     </div>
-                  </motion.div>
-                </AnimatePresence>
+                  )}
+                </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         )}
 
-        {/* Form container */}
-        <motion.div
-          className="max-w-2xl mx-auto bg-black/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl overflow-hidden"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+        {/* Formulário */}
+        <div
+          className="max-w-2xl mx-auto rounded-2xl overflow-hidden backdrop-blur-xl opacity-0 animate-[fadeIn_0.8s_ease-out_0.4s_forwards]"
+          style={{
+            backgroundColor: 'rgba(24, 24, 24, 0.8)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+          }}
         >
           <div className="p-8">
-            <h3 className="text-xl font-semibold mb-6 text-white">{'Adicionar uma mensagem'}</h3>
+            <h3 className="text-xl font-semibold mb-6" style={{ color: 'rgb(247, 247, 247)' }}>
+              Adicionar uma mensagem
+            </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Developer/Non-Developer selection - Simplified as Pills */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-300 mb-3">{'Você é:'}</label>
-                <div className="flex gap-3 p-1 bg-black/30 backdrop-blur-sm rounded-lg inline-flex">
-                  <motion.button
+              {/* Seleção de tipo de usuário */}
+              <div>
+                <label
+                  className="block text-sm font-medium mb-3"
+                  style={{ color: 'rgb(247, 247, 247)' }}
+                >
+                  Você é:
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
                     type="button"
-                    className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-sm font-medium ${
-                      isDeveloper === true
-                        ? 'bg-primary text-white shadow-lg'
-                        : 'bg-transparent text-gray-300 hover:bg-white/5'
-                    }`}
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-all"
+                    style={{
+                      backgroundColor:
+                        isDeveloper === true ? 'rgb(1, 132, 252)' : 'rgba(255, 255, 255, 0.05)',
+                      border: `1px solid ${isDeveloper === true ? 'rgb(1, 132, 252)' : 'rgba(255, 255, 255, 0.15)'}`,
+                      color: 'rgb(247, 247, 247)',
+                    }}
+                    onMouseEnter={e => {
+                      if (isDeveloper !== true) {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (isDeveloper !== true) {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                      }
+                    }}
                     onClick={() => setIsDeveloper(true)}
-                    whileHover={isDeveloper !== true ? { scale: 1.02 } : {}}
-                    whileTap={{ scale: 0.98 }}
                   >
                     <Code size={16} />
-                    <span>{'Desenvolvedor'}</span>
-                  </motion.button>
+                    Desenvolvedor
+                  </button>
 
-                  <motion.button
+                  <button
                     type="button"
-                    className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-sm font-medium ${
-                      isDeveloper === false
-                        ? 'bg-primary text-white shadow-lg'
-                        : 'bg-transparent text-gray-300 hover:bg-white/5'
-                    }`}
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg transition-all"
+                    style={{
+                      backgroundColor:
+                        isDeveloper === false ? 'rgb(1, 132, 252)' : 'rgba(255, 255, 255, 0.05)',
+                      border: `1px solid ${isDeveloper === false ? 'rgb(1, 132, 252)' : 'rgba(255, 255, 255, 0.15)'}`,
+                      color: 'rgb(247, 247, 247)',
+                    }}
+                    onMouseEnter={e => {
+                      if (isDeveloper !== false) {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (isDeveloper !== false) {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                      }
+                    }}
                     onClick={() => setIsDeveloper(false)}
-                    whileHover={isDeveloper !== false ? { scale: 1.02 } : {}}
-                    whileTap={{ scale: 0.98 }}
                   >
                     <User size={16} />
-                    <span>{'Não-Dev'}</span>
-                  </motion.button>
+                    Não-Dev
+                  </button>
                 </div>
               </div>
 
+              {/* Campos de entrada */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
-                    {'Seu nome'}
+                  <label
+                    className="block text-sm font-medium mb-2"
+                    style={{ color: 'rgb(247, 247, 247)' }}
+                  >
+                    Seu nome
                   </label>
                   <input
                     type="text"
-                    id="name"
                     value={name}
                     onChange={e => setName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder={'Como devemos te chamar?'}
+                    className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all"
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: 'rgb(247, 247, 247)',
+                    }}
+                    placeholder="Como devemos te chamar?"
+                    maxLength={50}
                   />
                 </div>
 
                 <div>
                   <label
-                    htmlFor="socialLink"
-                    className="block text-sm font-medium text-gray-300 mb-1"
+                    className="block text-sm font-medium mb-2"
+                    style={{ color: 'rgb(247, 247, 247)' }}
                   >
                     {isDeveloper === true
                       ? 'GitHub'
@@ -599,139 +619,146 @@ const GuestBook = () => {
                         : 'Link Social'}
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
                       {isDeveloper === true ? (
-                        <Github size={16} className="text-gray-400" />
+                        <Github size={16} style={{ color: 'rgb(128, 128, 128)' }} />
                       ) : isDeveloper === false ? (
-                        <Instagram size={16} className="text-gray-400" />
+                        <Instagram size={16} style={{ color: 'rgb(128, 128, 128)' }} />
                       ) : (
-                        <LinkIcon size={16} className="text-gray-400" />
+                        <LinkIcon size={16} style={{ color: 'rgb(128, 128, 128)' }} />
                       )}
                     </div>
                     <input
                       type="text"
-                      id="socialLink"
                       value={socialLink}
                       onChange={e => setSocialLink(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all disabled:opacity-50"
+                      style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        color: 'rgb(247, 247, 247)',
+                      }}
                       placeholder="username"
                       disabled={isDeveloper === null}
+                      maxLength={50}
                     />
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">{'Será usado para seu avatar'}</p>
                 </div>
               </div>
 
+              {/* Mensagem */}
               <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-300">
-                    {'Sua mensagem'}
+                <div className="flex justify-between items-center mb-2">
+                  <label
+                    className="block text-sm font-medium"
+                    style={{ color: 'rgb(247, 247, 247)' }}
+                  >
+                    Sua mensagem
                   </label>
-
-                  <div className="flex items-center">
-                    {selectedEmoji && <span className="mr-2 text-lg">{selectedEmoji}</span>}
-                    <motion.button
-                      type="button"
-                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                      className="p-1.5 rounded-md hover:bg-white/10 text-gray-300 relative"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <SmilePlus size={16} />
-                    </motion.button>
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <textarea
-                    id="message"
-                    rows={4}
-                    value={newMessage}
-                    onChange={e => setNewMessage(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder={'Compartilhe seus pensamentos ou feedback...'}
-                  />
-
-                  {/* Emoji picker popup */}
-                  <AnimatePresence>
-                    {showEmojiPicker && (
-                      <motion.div
-                        className="absolute right-0 top-0 mt-8 z-50"
-                        initial={{ opacity: 0, scale: 0.9, y: -10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: -10 }}
-                        transition={{ duration: 0.2 }}
+                  <div className="flex items-center gap-2">
+                    {selectedEmoji && <span className="text-lg">{selectedEmoji}</span>}
+                    <div className="relative" ref={emojiPickerRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                        className="p-2 rounded-lg transition-colors"
+                        style={{ color: 'rgb(247, 247, 247)' }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                        }}
                       >
-                        <div className="bg-[#141414] border border-white/10 p-4 rounded-lg shadow-lg">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm text-gray-300">{'Escolha um emoji'}</span>
+                        <SmilePlus size={16} />
+                      </button>
+
+                      {/* Emoji picker */}
+                      {showEmojiPicker && (
+                        <div
+                          className="absolute right-0 top-full mt-2 z-50 rounded-lg p-4 shadow-xl opacity-0 animate-[fadeIn_0.2s_ease-out_forwards]"
+                          style={{
+                            backgroundColor: 'rgb(64, 64, 64)',
+                            border: '1px solid rgba(255, 255, 255, 0.15)',
+                          }}
+                        >
+                          <div className="flex justify-between items-center mb-3">
+                            <span className="text-sm" style={{ color: 'rgb(247, 247, 247)' }}>
+                              Escolha um emoji
+                            </span>
                             <button
                               type="button"
                               onClick={() => setShowEmojiPicker(false)}
-                              className="text-gray-400 hover:text-white"
+                              className="transition-colors"
+                              style={{ color: 'rgb(128, 128, 128)' }}
+                              onMouseEnter={e => {
+                                e.currentTarget.style.color = 'rgb(247, 247, 247)';
+                              }}
+                              onMouseLeave={e => {
+                                e.currentTarget.style.color = 'rgb(128, 128, 128)';
+                              }}
                             >
                               <X size={16} />
                             </button>
                           </div>
-                          <div className="grid grid-cols-7 gap-2 max-w-[266px]">
+                          <div className="grid grid-cols-7 gap-2 max-w-[280px]">
                             {popularEmojis.map(emoji => (
-                              <motion.button
+                              <button
                                 key={emoji}
                                 type="button"
                                 onClick={() => {
                                   setSelectedEmoji(emoji);
                                   setShowEmojiPicker(false);
                                 }}
-                                className="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded"
-                                whileHover={{ scale: 1.2 }}
-                                whileTap={{ scale: 0.9 }}
+                                className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+                                onMouseEnter={e => {
+                                  e.currentTarget.style.backgroundColor =
+                                    'rgba(255, 255, 255, 0.1)';
+                                }}
+                                onMouseLeave={e => {
+                                  e.currentTarget.style.backgroundColor = 'transparent';
+                                }}
                               >
                                 <span className="text-lg">{emoji}</span>
-                              </motion.button>
+                              </button>
                             ))}
                           </div>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                      )}
+                    </div>
+                  </div>
                 </div>
+
+                <textarea
+                  rows={4}
+                  value={newMessage}
+                  onChange={e => setNewMessage(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 resize-none transition-all"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    color: 'rgb(247, 247, 247)',
+                  }}
+                  placeholder="Compartilhe seus pensamentos ou feedback..."
+                  maxLength={500}
+                />
               </div>
 
-              {/* Error message */}
-              {error && (
-                <motion.div
-                  className="text-red-400 text-sm bg-red-500/10 px-4 py-2 rounded-lg"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  {error}
-                </motion.div>
+              {/* Botão de envio */}
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Enviar
+              </button>
+              {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
+              {isSubmitting && (
+                <div className="text-blue-500 text-sm mt-2">Enviando sua mensagem...</div>
               )}
-
-              <div className="flex justify-end">
-                <motion.button
-                  type="submit"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-lg text-sm font-medium shadow-lg disabled:opacity-50 w-full sm:w-auto"
-                  whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(0, 200, 225, 0.4)' }}
-                  whileTap={{ scale: 0.98 }}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      {'Enviando...'}
-                    </>
-                  ) : (
-                    <>
-                      <Send size={16} />
-                      {'Enviar mensagem'}
-                    </>
-                  )}
-                </motion.button>
-              </div>
             </form>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -8,7 +8,6 @@ import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
-import { ignores } from 'eslint-plugin-prettier/recommended';
 import { dirname } from 'path';
 import * as tseslint from 'typescript-eslint';
 import { fileURLToPath } from 'url';
@@ -22,7 +21,7 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-export default [
+const eslintConfig = [
   // JavaScript recommended rules
   js.configs.recommended,
 
@@ -39,14 +38,13 @@ export default [
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     ignores: [
-      ...ignores,
       '**/node_modules/**',
       '**/.next/**',
       '**/out/**',
       '**/dist/**',
       '**/coverage/**',
       '**/build/**',
-      './eslint.config.mjs',
+      '.eslint.config',
     ],
 
     linterOptions: {
@@ -63,6 +61,9 @@ export default [
       // React rules
       'react/jsx-props-no-spreading': 'warn',
       'react/destructuring-assignment': ['warn', 'always'],
+      'react/prop-types': 'off', // TypeScript handles prop types
+      'react/jsx-filename-extension': ['warn', { extensions: ['.jsx', '.tsx'] }],
+      'react/jsx-no-duplicate-props': 'warn',
 
       // Accessibility rules
       'jsx-a11y/anchor-is-valid': 'error',
@@ -79,17 +80,43 @@ export default [
       '@typescript-eslint/no-non-null-assertion': 'warn',
 
       // Import rules
-      'import/no-default-export': 'off', // Allowed in Next.js pages
+      'import/no-default-export': 'off',
       'import/order': [
         'warn',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-          'newlines-between': 'always',
+          'newlines-between': 'never',
         },
       ],
 
       // Prettier rules
-      'prettier/prettier': 'warn',
+      'prettier/prettier': [
+        'warn',
+        {
+          endOfLine: 'auto', // Automatically detect and preserve line endings (CRLF or LF)
+        },
+      ],
+    },
+
+    settings: {
+      'import/resolver': {
+        alias: {
+          map: [
+            ['@', './src'],
+            ['@components', './src/components'],
+            ['@app', './src/app'],
+            ['@constants', './src/constants'],
+            ['@lib', './src/lib'],
+            ['@messages', './src/messages'],
+            ['@scripts', './src/scripts'],
+            ['@services', './src/services'],
+            ['@types', './src/types'],
+          ],
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+        },
+      },
     },
   },
 ];
+
+export default eslintConfig;

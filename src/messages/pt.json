@@ -1,10 +1,8 @@
 {
   "Navigation": {
-    "home": "Início",
     "about": "Sobre",
     "projects": "Projetos",
-    "blog": "Blog",
-    "gallery": "Galeria"
+    "contact": "Contato"
   },
   "Footer": {
     "aboutTitle": "Sobre",
@@ -15,7 +13,9 @@
     "projects": "Projetos",
     "blog": "Blog",
     "connect": "Conecte-se",
-    "rightsReserved": "Todos os direitos reservados."
+    "rightsReserved": "Todos os direitos reservados.",
+    "contactTitle": "Contato",
+    "projectsTitle": "Projetos"
   },
   "Home": {
     "title": "Olá, sou Lucas",
@@ -42,7 +42,8 @@
     "featured": "Destaque",
     "viewDemo": "Ver Demo ao Vivo",
     "viewSource": "Ver Código Fonte",
-    "techStack": "Stack Tecnológica"
+    "techStack": "Stack Tecnológica",
+    "contactMe": "Vamos conversar"
   },
   "Blog": {
     "title": "Blog",

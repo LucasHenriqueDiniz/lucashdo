@@ -1,7 +1,6 @@
-import { useTranslations } from 'next-intl';
 import { Metadata } from 'next';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-
 import MainLayout from '@/components/layout/MainLayout';
 
 export const metadata: Metadata = {

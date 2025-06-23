@@ -34,5 +34,6 @@ export function getPathname<P extends keyof Pathnames>(path: P, locale: Locale):
     return value;
   }
 
-  return value[locale];
+  // Map 'pt' to 'pt-BR' for gallery path
+  return value[locale === 'pt' ? 'pt-BR' : locale];
 }

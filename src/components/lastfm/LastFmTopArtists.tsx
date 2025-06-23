@@ -1,10 +1,9 @@
 'use client';
 
-import { getTopArtists } from '@/services/lastfm';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import useSWR from 'swr';
+import { getTopArtists } from '@/services/lastfm';
 
 interface TopArtist {
   name: string;
@@ -23,30 +22,33 @@ interface LastFmTopArtistsProps {
   className?: string;
 }
 
-const fetcher = (args: string[]) => {
-  const [username, period, limitStr] = args;
-  const limit = parseInt(limitStr);
-  return getTopArtists(username, period, limit);
-};
-
 export default function LastFmTopArtists({
   username,
   period = '1month',
   limit = 6,
   className = '',
 }: LastFmTopArtistsProps) {
-  // Use SWR for better data fetching with caching
-  const {
-    data: topArtists,
-    error,
-    isLoading,
-  } = useSWR([`${username}`, period, `${limit}`], fetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    dedupingInterval: 1000 * 60 * 15, // 15 minutes
-    refreshInterval: 1000 * 60 * 60, // 60 minutes (hourly)
-    revalidateIfStale: false, // Don't revalidate just because data is stale
-  });
+  const [topArtists, setTopArtists] = useState<TopArtist[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchArtists() {
+      try {
+        setIsLoading(true);
+        const artists = await getTopArtists(username, period, limit);
+        setTopArtists(artists);
+        setError(null);
+      } catch (err) {
+        setError('Não foi possível carregar os artistas');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchArtists();
+  }, [username, period, limit]);
 
   // Animation variants
   const containerVariants = {
@@ -106,7 +108,6 @@ export default function LastFmTopArtists({
                 <div key={idx} className="animate-pulse flex gap-3 items-center p-2 rounded-md">
                   <div className="w-12 h-12 bg-gray-700 rounded-full"></div>
                   <div className="space-y-2 flex-1">
-                    {' '}
                     <div className="h-4 bg-gray-700 rounded w-3/4"></div>
                     <div className="h-3 bg-gray-700 rounded w-1/2"></div>
                   </div>

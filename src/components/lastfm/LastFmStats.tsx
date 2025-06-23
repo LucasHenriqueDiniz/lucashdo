@@ -1,9 +1,8 @@
 'use client';
 
-import { getUserInfo } from '@/services/lastfm';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import useSWR from 'swr';
+import { getUserInfo } from '@/services/lastfm';
 
 interface LastFmStatsProps {
   username: string;
@@ -19,33 +18,28 @@ interface UserStats {
   };
 }
 
-const statsFetcher = (username: string) => getUserInfo(username);
-
 export default function LastFmStats({ username, className = '' }: LastFmStatsProps) {
-  // Use SWR for better data fetching with caching
-  const { data, error, isLoading } = useSWR(username, statsFetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    dedupingInterval: 1000 * 60 * 60 * 6, // 6 hours - stats don't change frequently
-    refreshInterval: 1000 * 60 * 60 * 24, // Update once per day
-    revalidateIfStale: false, // Don't revalidate just because data is stale
-  });
+  const [data, setData] = useState<UserStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const calculateYearsOnLastfm = (registeredUnixtime?: string): string => {
-    if (!registeredUnixtime) return '0';
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        setIsLoading(true);
+        const stats = await getUserInfo(username);
+        setData(stats);
+        setError(null);
+      } catch (err) {
+        setError('Não foi possível carregar estatísticas');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-    const registeredDate = new Date(parseInt(registeredUnixtime) * 1000);
-    const now = new Date();
-
-    const years = now.getFullYear() - registeredDate.getFullYear();
-
-    // Adjust for if the current date is before the anniversary date
-    const isBefore =
-      now.getMonth() < registeredDate.getMonth() ||
-      (now.getMonth() === registeredDate.getMonth() && now.getDate() < registeredDate.getDate());
-
-    return isBefore ? (years - 1).toString() : years.toString();
-  };
+    fetchStats();
+  }, [username]);
 
   // Animation variants
   const containerVariants = {
@@ -73,15 +67,14 @@ export default function LastFmStats({ username, className = '' }: LastFmStatsPro
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-3 gap-2 md:gap-4"
+        className="grid grid-rows-2 gap-2 md:gap-4"
       >
         {isLoading ? (
           <>
-            {Array(3)
+            {Array(2)
               .fill(0)
               .map((_, idx) => (
                 <div key={idx} className="animate-pulse bg-gray-800 p-3 md:p-4 rounded-lg">
-                  {' '}
                   <div className="h-4 bg-gray-700 rounded w-16 mb-2"></div>
                   <div className="h-6 bg-gray-700 rounded w-12"></div>
                 </div>
@@ -95,7 +88,6 @@ export default function LastFmStats({ username, className = '' }: LastFmStatsPro
           <div className="col-span-3 text-gray-500 text-center">Nenhum dado encontrado</div>
         ) : (
           <>
-            {' '}
             <motion.div
               variants={itemVariants}
               className="bg-gray-800/50 p-3 md:p-4 rounded-lg text-center"
@@ -104,16 +96,7 @@ export default function LastFmStats({ username, className = '' }: LastFmStatsPro
               <p className="text-lg md:text-2xl font-bold text-primary">
                 {formatNumber(data.playcount)}
               </p>
-            </motion.div>{' '}
-            <motion.div
-              variants={itemVariants}
-              className="bg-gray-800/50 p-3 md:p-4 rounded-lg text-center"
-            >
-              <p className="text-xs text-gray-400 mb-1">Anos</p>
-              <p className="text-lg md:text-2xl font-bold text-primary">
-                {calculateYearsOnLastfm(data.registered?.unixtime)}
-              </p>
-            </motion.div>{' '}
+            </motion.div>
             <motion.div
               variants={itemVariants}
               className="bg-gray-800/50 p-3 md:p-4 rounded-lg text-center"

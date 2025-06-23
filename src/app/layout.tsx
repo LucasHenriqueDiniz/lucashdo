@@ -1,13 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Roboto_Mono } from 'next/font/google';
-import { NextIntlClientProvider } from 'next-intl';
-import { defaultLocale, locales } from '@/lib/i18n/config';
-
 import './globals.css';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import Header from '@/components/layout/Header';
+import { Locale, NextIntlClientProvider } from 'next-intl';
+import { Inter, Roboto_Mono } from 'next/font/google';
 import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
+import { defaultLocale, locales } from '@/lib/i18n/config';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono' });
@@ -78,6 +76,11 @@ export function generateStaticParams() {
   return locales.map(locale => ({ locale }));
 }
 
+// Helper to check if a value is a valid Locale
+function isValidLocale(val: string): val is Locale {
+  return (locales as readonly string[]).includes(val);
+}
+
 export default async function RootLayout({
   children,
   params: { locale },
@@ -86,13 +89,14 @@ export default async function RootLayout({
   params: { locale: string };
 }) {
   // Use default locale if the provided one is invalid
-  const validLocale = locales.includes(locale as any) ? locale : defaultLocale;
+  const localeStr = String(locale);
+  const validLocale: Locale = isValidLocale(localeStr) ? localeStr : defaultLocale;
 
   let messages;
   try {
     messages = (await import(`@/messages/${validLocale}.json`)).default;
   } catch (error) {
-    // Fallback to default locale messages if the requested ones fail to load
+    console.error(error);
     messages = (await import(`@/messages/${defaultLocale}.json`)).default;
   }
 

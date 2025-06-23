@@ -1,8 +1,7 @@
 // Arquivo de rotas para o App Router
 import { createNavigation } from 'next-intl/navigation';
 import NextLink from 'next/link';
-
-import { pathnames, locales } from '@/lib/i18n/config';
+import { locales, pathnames } from '@/lib/i18n/config';
 
 // Para next-intl 4.x:
 // https://next-intl-docs.vercel.app/docs/routing/navigation

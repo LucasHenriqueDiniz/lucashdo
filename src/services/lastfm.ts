@@ -1,8 +1,6 @@
 // Last.fm API service
-// API key: 6560f11e30bc8bc2e856926bde8e0cbe
-
-const API_KEY = '6560f11e30bc8bc2e856926bde8e0cbe';
 const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
+const API_KEY = process.env.NEXT_PUBLIC_LASTFM_API_KEY || process.env.LASTFM_API_KEY || null;
 
 export interface LastFmUser {
   name: string;
@@ -16,6 +14,17 @@ export interface LastFmUser {
     size: string;
     '#text': string;
   }>;
+  country?: string;
+  age?: string;
+  gender?: string;
+  subscriber?: string;
+  playlists?: string;
+  bootstrap?: string;
+  type?: string;
+  realname?: string;
+  artist_count?: string;
+  track_count?: string;
+  album_count?: string;
 }
 
 export interface LastFmTrack {
@@ -24,7 +33,7 @@ export interface LastFmTrack {
     name: string;
     mbid: string;
     url: string;
-    '#text'?: string; // Para suportar a API que às vezes retorna artist como objeto e às vezes como texto
+    '#text'?: string;
   };
   url: string;
   image: Array<{
@@ -35,6 +44,53 @@ export interface LastFmTrack {
     uts: string;
     '#text': string;
   };
+  duration?: string;
+  playcount?: string;
+  listeners?: string;
+  mbid?: string;
+  streamable?: {
+    fulltrack: string;
+    '#text': string;
+  };
+  album?: {
+    '#text': string;
+    mbid: string;
+  };
+  '@attr'?: {
+    rank: string;
+    nowplaying?: string;
+  };
+}
+
+export interface LastFmArtist {
+  name: string;
+  mbid: string;
+  url: string;
+  image: Array<{
+    size: string;
+    '#text': string;
+  }>;
+  streamable: string;
+  listeners: string;
+  playcount: string;
+  tags?: {
+    tag: Array<{
+      name: string;
+      url: string;
+    }>;
+  };
+  bio?: {
+    published: string;
+    summary: string;
+    content: string;
+  };
+  stats?: {
+    listeners: string;
+    playcount: string;
+  };
+  '@attr'?: {
+    rank: string;
+  };
 }
 
 /**
@@ -43,6 +99,11 @@ export interface LastFmTrack {
  * @returns User information
  */
 export async function getUserInfo(username: string): Promise<LastFmUser> {
+  if (!API_KEY) {
+    throw new Error('Last.fm API key is not set');
+  }
+
+  console.log('👤 Fetching Last.fm user info...');
   const params = new URLSearchParams({
     method: 'user.getInfo',
     user: username,
@@ -57,6 +118,7 @@ export async function getUserInfo(username: string): Promise<LastFmUser> {
   }
 
   const data = await response.json();
+  console.log('📦 Last.fm User Info Response:', JSON.stringify(data, null, 2));
   return data.user;
 }
 
@@ -70,6 +132,11 @@ export async function getRecentTracks(
   username: string,
   limit: number = 10
 ): Promise<LastFmTrack[]> {
+  if (!API_KEY) {
+    throw new Error('Last.fm API key is not set');
+  }
+
+  console.log('🎵 Fetching Last.fm recent tracks...');
   const params = new URLSearchParams({
     method: 'user.getRecentTracks',
     user: username,
@@ -85,6 +152,7 @@ export async function getRecentTracks(
   }
 
   const data = await response.json();
+  console.log('📦 Last.fm Recent Tracks Response:', JSON.stringify(data, null, 2));
   return data.recenttracks.track;
 }
 
@@ -100,6 +168,11 @@ export async function getTopTracks(
   period: string = 'overall',
   limit: number = 10
 ): Promise<LastFmTrack[]> {
+  if (!API_KEY) {
+    throw new Error('Last.fm API key is not set');
+  }
+
+  console.log('🎵 Fetching Last.fm top tracks...');
   const params = new URLSearchParams({
     method: 'user.getTopTracks',
     user: username,
@@ -116,6 +189,7 @@ export async function getTopTracks(
   }
 
   const data = await response.json();
+  console.log('📦 Last.fm Top Tracks Response:', JSON.stringify(data, null, 2));
   return data.toptracks.track;
 }
 
@@ -130,7 +204,13 @@ export async function getTopArtists(
   username: string,
   period: string = 'overall',
   limit: number = 10
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any[]> {
+  if (!API_KEY) {
+    throw new Error('Last.fm API key is not set');
+  }
+
+  console.log('🎨 Fetching Last.fm top artists...');
   const params = new URLSearchParams({
     method: 'user.getTopArtists',
     user: username,
@@ -141,11 +221,12 @@ export async function getTopArtists(
   });
 
   const response = await fetch(`${BASE_URL}?${params.toString()}`);
-
   if (!response.ok) {
     throw new Error(`Failed to fetch top artists: ${response.statusText}`);
   }
 
   const data = await response.json();
+  console.log('📦 Last.fm Top Artists Response:', JSON.stringify(data, null, 2));
+  console.log('WE NEED TO CREATE A INTERFACE FOR LASTFM ARTISTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
   return data.topartists.artist;
 }
