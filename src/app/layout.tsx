@@ -3,6 +3,7 @@ import './globals.css';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { Locale, NextIntlClientProvider } from 'next-intl';
 import { Inter, Roboto_Mono } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import { defaultLocale, locales } from '@/lib/i18n/config';
@@ -111,6 +112,7 @@ export default async function RootLayout({
             <Footer />
           </TooltipProvider>
         </NextIntlClientProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
