@@ -13,13 +13,12 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Setup Node.js e instalar pnpm
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          cache: 'pnpm'
 
-      - name: Instalar pnpm
+      - name: Instalar PNPM
         run: npm install -g pnpm
 
       - name: Instalar dependências e buildar standalone
@@ -35,10 +34,10 @@ jobs:
           host: ${{ secrets.AWS_HOST }}
           username: ubuntu
           key: ${{ secrets.AWS_SSH_KEY }}
-          source: ".next/standalone/*"
-          target: "/home/ubuntu/app"
+          source: '.next/standalone/*'
+          target: '/home/ubuntu/app'
 
-      - name: Reiniciar Node (ex: via pm2)
+      - name: Reiniciar Node com PM2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.AWS_HOST }}
