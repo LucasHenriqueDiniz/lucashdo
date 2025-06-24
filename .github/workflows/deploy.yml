@@ -1,0 +1,48 @@
+name: Build and Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js e instalar pnpm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Instalar pnpm
+        run: npm install -g pnpm
+
+      - name: Instalar dependências e buildar standalone
+        run: |
+          pnpm install
+          pnpm build
+          mkdir -p .next/standalone/public
+          cp -r public .next/standalone/public
+
+      - name: Enviar para a VM
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.AWS_SSH_KEY }}
+          source: ".next/standalone/*"
+          target: "/home/ubuntu/app"
+
+      - name: Reiniciar Node (ex: via pm2)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.AWS_SSH_KEY }}
+          script: |
+            pm2 restart app || pm2 start /home/ubuntu/app/server.js --name app
