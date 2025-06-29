@@ -295,7 +295,9 @@ const GuestBook = () => {
           >
             <Image
               src={entry.avatar}
-              alt=""
+              alt={entry.name}
+              width={48}
+              height={48}
               className="w-full h-full object-cover"
               loading="lazy"
             />
@@ -426,6 +428,8 @@ const GuestBook = () => {
                             src={featuredEntry.avatar}
                             alt={featuredEntry.name}
                             className="w-full h-full object-cover"
+                            width={56}
+                            height={56}
                           />
                         ) : (
                           <div

@@ -120,7 +120,7 @@ export default function LastFmProfile({ username, className = '' }: LastFmProfil
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </div>
-                )}{' '}
+                )}
               <motion.div
                 className="absolute -top-20 -right-20 w-40 h-40 bg-red-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-30 z-0"
                 initial={{ scale: 0.8 }}
@@ -194,8 +194,8 @@ export default function LastFmProfile({ username, className = '' }: LastFmProfil
                               alt="Vinyl record"
                               fill
                               className="object-contain"
-                              sizes="176px"
-                            />{' '}
+                              sizes="(max-width: 300px) 100vw, 33vw"
+                            />
                           </motion.div>
                         </motion.div>
                       )}
@@ -370,7 +370,7 @@ export default function LastFmProfile({ username, className = '' }: LastFmProfil
                             {track.image && track.image[0]['#text'] ? (
                               <Image
                                 src={track.image[0]['#text']}
-                                alt=""
+                                alt={`${track.name} album art`}
                                 width={32}
                                 height={32}
                                 className="object-cover rounded"

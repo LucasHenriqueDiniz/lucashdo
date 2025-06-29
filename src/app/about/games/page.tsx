@@ -85,6 +85,8 @@ export default function GamesPage() {
           src={stats.profile?.avatarfull ?? ''}
           alt={stats.profile?.personaname ?? ''}
           className="w-32 h-32 rounded-full"
+          width={128}
+          height={128}
         />
         <div className="flex-1">
           <h1 className="text-3xl font-bold flex items-center gap-3 mb-2">
@@ -264,6 +266,8 @@ export default function GamesPage() {
                   src={`https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_icon_url}.jpg`}
                   alt={game.name}
                   className="w-16 h-16 rounded"
+                  width={64}
+                  height={64}
                 />
                 <div>
                   <p className="font-medium text-lg">{game.name}</p>
@@ -319,6 +323,8 @@ export default function GamesPage() {
                   src={`https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_icon_url}.jpg`}
                   alt={game.name}
                   className="w-16 h-16 rounded"
+                  width={64}
+                  height={64}
                 />
                 <div>
                   <p className="font-medium text-lg">{game.name}</p>

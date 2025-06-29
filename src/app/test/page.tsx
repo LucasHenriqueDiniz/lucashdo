@@ -1,10 +1,10 @@
 'use client';
-import GuestBook from '@/components/home/GuestBook/GuestBook';
+import Browser from '@/components/home/Browser/Browser';
 
 export default function Blog() {
   return (
     <section>
-      <GuestBook />
+      <Browser />
     </section>
   );
 }

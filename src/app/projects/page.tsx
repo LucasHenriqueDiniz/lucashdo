@@ -22,7 +22,7 @@ export default function Projects() {
   const locale = useLocale() as Locale;
 
   return (
-    <MainLayout>
+    <>
       <AnimatedProjectsLayout>
         <ProjectsHeader
           title={t('title')}
@@ -37,9 +37,29 @@ export default function Projects() {
           translations={{
             featured: t('featured'),
             viewProject: t('viewProject'),
+            search: t('search'),
+            columns: t('columns'),
+            noResults: t('noResults'),
+            previous: t('previous'),
+            next: t('next'),
+            showing: t('showing'),
+            of: t('of'),
+            results: t('results'),
+            filterByTags: t('filterByTags'),
+            clearAll: t('clearAll'),
+            allTags: t('allTags'),
+            cards: t('cards'),
+            list: t('list'),
+            all: t('all'),
+            title: t('title'),
+            description: t('description'),
+            tags: t('tags'),
+            status: t('status'),
+            viewCode: t('viewCode'),
+            viewDemo: t('viewDemo'),
           }}
         />
       </AnimatedProjectsLayout>
-    </MainLayout>
+    </>
   );
 }

@@ -565,7 +565,13 @@ const Browser = forwardRef<BrowserRefType, BrowserProps>(function Browser({
                     </div>
                     <div className="tab-preview-image">
                       {typeof tab.icon === 'string' && (
-                        <Image src={tab.icon as string} alt="" className="preview-img" />
+                        <Image
+                          src={tab.icon as string}
+                          alt={tab.title}
+                          className="preview-img"
+                          width={64}
+                          height={64}
+                        />
                       )}
                     </div>
                   </div>
@@ -621,7 +627,13 @@ const Browser = forwardRef<BrowserRefType, BrowserProps>(function Browser({
         >
           <div className="url-icon">
             {activeTab && typeof activeTab.icon === 'string' ? (
-              <Image src={activeTab.icon as string} alt="" className="url-icon-img" />
+              <Image
+                src={activeTab.icon as string}
+                alt={activeTab.title}
+                className="url-icon-img"
+                width={16}
+                height={16}
+              />
             ) : activeTab?.icon ? (
               activeTab.icon
             ) : (
@@ -705,7 +717,9 @@ const Browser = forwardRef<BrowserRefType, BrowserProps>(function Browser({
                               {typeof result.icon === 'string' ? (
                                 <Image
                                   src={result.icon as string}
-                                  alt=""
+                                  alt={result.title}
+                                  width={16}
+                                  height={16}
                                   className="url-search-result-icon-img"
                                 />
                               ) : (
@@ -756,7 +770,9 @@ const Browser = forwardRef<BrowserRefType, BrowserProps>(function Browser({
                         {typeof result.icon === 'string' ? (
                           <Image
                             src={result.icon as string}
-                            alt=""
+                            alt={result.title}
+                            width={16}
+                            height={16}
                             className="url-search-result-icon-img"
                           />
                         ) : (
@@ -830,7 +846,9 @@ const Browser = forwardRef<BrowserRefType, BrowserProps>(function Browser({
                             {typeof tab.icon === 'string' ? (
                               <Image
                                 src={tab.icon as string}
-                                alt=""
+                                alt={tab.title}
+                                width={32}
+                                height={32}
                                 className="browser-showcase-icon-img"
                               />
                             ) : (

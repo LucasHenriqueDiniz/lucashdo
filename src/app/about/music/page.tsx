@@ -138,6 +138,7 @@ export default async function MusicPage() {
                     alt={`${track.name} album art`}
                     fill
                     className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">

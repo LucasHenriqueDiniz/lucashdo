@@ -120,6 +120,7 @@ export const ProjectDetail = ({ project, locale, translations }: ProjectDetailPr
               }`}
               onLoadingComplete={() => setImageLoading(false)}
               priority
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
             />
 
             {/* Overlay with buttons on hover - enhanced interactive elements */}

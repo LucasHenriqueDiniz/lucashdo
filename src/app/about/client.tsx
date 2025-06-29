@@ -65,7 +65,8 @@ export default function AboutClient() {
   const experienceRef = useRef(null);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  // Profile section animations  const isProfileInView = useInView(profileRef, { once: true, amount: 0.3 });
+  // Profile section animations
+  const isProfileInView = useInView(profileRef, { once: true, amount: 0.3 });
   const isSkillsInView = useInView(skillsRef, { once: true, amount: 0.2 });
   const isProjectsInView = useInView(projectsRef, { once: true, amount: 0.2 });
   const isExperienceInView = useInView(experienceRef, { once: true, amount: 0.2 });
@@ -97,210 +98,59 @@ export default function AboutClient() {
     <>
       {/* Simplified Hero Banner */}
       <motion.div className="relative w-full h-[50vh] mb-12 bg-gradient-to-br from-[color:var(--primary)]/90 to-[color:var(--blue)]/90 overflow-hidden">
-        {/* Enhanced animated background with improved shapes */}
-        <div className="absolute inset-0">
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm"
-              initial={{
-                x: `${Math.random() * 100}%`,
-                y: `${Math.random() * 100}%`,
-                width: `${Math.random() * 80 + 30}px`,
-                height: `${Math.random() * 80 + 30}px`,
-                opacity: Math.random() * 0.2 + 0.1,
-                rotate: Math.random() * 180,
-                scale: Math.random() * 0.5 + 0.5,
-              }}
-              animate={{
-                x: [
-                  `${Math.random() * 100}%`,
-                  `${Math.random() * 100}%`,
-                  `${Math.random() * 100}%`,
-                ],
-                y: [
-                  `${Math.random() * 100}%`,
-                  `${Math.random() * 100}%`,
-                  `${Math.random() * 100}%`,
-                ],
-                rotate: [0, 180, 360],
-                scale: [
-                  Math.random() * 0.3 + 0.7,
-                  Math.random() * 0.5 + 0.8,
-                  Math.random() * 0.3 + 0.7,
-                ],
-              }}
-              transition={{
-                repeat: Infinity,
-                repeatType: 'reverse',
-                duration: Math.random() * 25 + 20,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
-
-          {/* Add subtle geometric shapes for more visual interest */}
-          {[...Array(6)].map((_, i) => {
-            const shapes = [
-              'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-              'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
-            ];
-            return (
-              <motion.div
-                key={`shape-${i}`}
-                className="absolute bg-white/5"
-                style={{
-                  clipPath: shapes[i % shapes.length],
-                  width: `${Math.random() * 80 + 40}px`,
-                  height: `${Math.random() * 80 + 40}px`,
-                }}
-                initial={{
-                  x: `${Math.random() * 100}%`,
-                  y: `${Math.random() * 100}%`,
-                  opacity: Math.random() * 0.2 + 0.05,
-                  rotate: Math.random() * 180,
-                }}
-                animate={{
-                  rotate: [0, 180],
-                  scale: [1, 1.2, 1],
-                  opacity: [
-                    Math.random() * 0.2 + 0.05,
-                    Math.random() * 0.15 + 0.1,
-                    Math.random() * 0.2 + 0.05,
-                  ],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  repeatType: 'reverse',
-                  duration: Math.random() * 30 + 25,
-                  ease: 'easeInOut',
-                }}
-              />
-            );
-          })}
-        </div>
+        {/* Simplified background */}
         <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10 bg-repeat"></div>
         <div className="max-w-4xl mx-auto px-4 h-full flex flex-col justify-center items-center text-white text-center relative z-10">
-          {/* Enhanced heading with character-by-character reveal */}
-          <div className="overflow-hidden">
-            <motion.div
-              initial={{ y: 60 }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.8, type: 'spring', stiffness: 50, damping: 12 }}
-              className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg"
-            >
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="inline-block"
-              >
-                Olá,
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-                className="inline-block"
-              >
-                eu
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-                className="inline-block"
-              >
-                sou
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.5, type: 'spring', stiffness: 200 }}
-                className="inline-block text-[color:var(--amber)]"
-              >
-                Lucas HDO
-              </motion.span>
-            </motion.div>
-          </div>
+          {/* Simplified heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg"
+          >
+            <span className="inline-block">Olá, eu sou </span>
+            <span className="inline-block text-[color:var(--amber)]">Lucas HDO</span>
+          </motion.div>
+
           <motion.p
             className="text-xl md:text-2xl max-w-3xl leading-relaxed mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
           >
             Transformando ideias em experiências digitais impactantes
           </motion.p>
-          {/* Staggered button animations for visual interest */}
+
+          {/* Simplified buttons */}
           <div className="flex flex-wrap justify-center gap-4 mt-4">
-            {[
-              {
-                href: '#projects',
-                className:
-                  'bg-white text-[color:var(--primary)] px-6 py-3 rounded-full font-medium flex items-center gap-2 hover:bg-white/90 transition-all hover:shadow-lg group',
-                text: 'Ver Projetos',
-                icon: <LuArrowRight className="group-hover:scale-110 transition-transform" />,
-                iconAnimation: { x: 4 },
-                delay: 0.9,
-              },
-              {
-                href: '/contact',
-                className:
-                  'border-2 border-white/60 px-6 py-[10px] rounded-full font-medium hover:bg-white/10 transition-all hover:shadow-lg flex items-center gap-2 group',
-                text: 'Contato',
-                icon: <LuExternalLink className="group-hover:rotate-12 transition-transform" />,
-                delay: 1.0,
-              },
-              {
-                href: '/resume.pdf',
-                className:
-                  'border-2 border-white/30 px-6 py-[10px] rounded-full font-medium hover:bg-white/10 transition-all hover:shadow-lg flex items-center gap-2 group',
-                text: 'Currículo',
-                icon: <LuDownload className="group-hover:scale-110 transition-transform" />,
-                delay: 1.1,
-              },
-            ].map((button, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{
-                  delay: button.delay,
-                  duration: 0.4,
-                  type: 'spring',
-                  stiffness: 120,
-                }}
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <Link
-                  href={button.href}
-                  target={button.href.startsWith('/') ? undefined : '_blank'}
-                  className={button.className}
-                >
-                  {button.text}
-                  <motion.span
-                    whileHover={button.iconAnimation}
-                    transition={{ type: 'spring', stiffness: 400 }}
-                  >
-                    {button.icon}
-                  </motion.span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-          <motion.div
-            className="absolute bottom-[-20px] left-1/2 transform -translate-x-1/2"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-          >
-            <a
-              href="#profile"
-              className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white block"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
             >
-              <LuChevronDown />
-            </a>
-          </motion.div>
+              <Link
+                href="#projects"
+                className="bg-white text-[color:var(--primary)] px-6 py-3 rounded-full font-medium flex items-center gap-2 hover:bg-white/90 transition-all hover:shadow-lg group"
+              >
+                Ver Projetos
+                <LuArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+            >
+              <Link
+                href="/contact"
+                className="border-2 border-white/60 px-6 py-[10px] rounded-full font-medium hover:bg-white/10 transition-all hover:shadow-lg flex items-center gap-2 group"
+              >
+                Entre em Contato
+                <LuMail className="group-hover:scale-110 transition-transform" />
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
 
@@ -541,140 +391,68 @@ export default function AboutClient() {
                 );
               })}
             </motion.div>
-            {/* Enhanced Testimonials Section with more visual appeal */}
-            <motion.div
-              className="bg-gradient-to-br from-[color:var(--card)] to-[color:var(--card)]/80 p-7 rounded-2xl shadow-sm overflow-hidden relative mt-8 border border-gray-100 dark:border-gray-800/50"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-            >
-              {/* Decorative quotation marks */}
-              <div className="absolute top-3 right-4 text-6xl text-[color:var(--primary)]/10 font-serif leading-none">
-                &quot;
-              </div>
-              <div className="absolute bottom-3 left-4 text-6xl text-[color:var(--primary)]/10 font-serif leading-none rotate-180">
-                &quot;
-              </div>
+            {/* Simplified testimonial carousel */}
+            <div className="relative h-[190px] overflow-hidden">
+              <div className="absolute top-0 left-0 w-full">
+                <p className="text-gray-600 dark:text-gray-300 italic mb-5 relative pl-2">
+                  <span className="text-[color:var(--primary)]/80 text-lg font-serif absolute -left-1">
+                    ❝
+                  </span>
+                  {aboutTestimonials[currentTestimonial].content.pt}
+                  <span className="text-[color:var(--primary)]/80 text-lg font-serif">❞</span>
+                </p>
 
-              {/* Testimonial heading with animation */}
-              <motion.h3
-                className="text-xl font-bold mb-5 flex items-center gap-2 relative"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.8, duration: 0.5 }}
-              >
-                <span className="p-1.5 rounded-full bg-[color:var(--primary)]/10 flex items-center justify-center">
-                  <LuMessagesSquare className="text-[color:var(--primary)]" />
-                </span>
-                <span>O que dizem sobre mim</span>
-                <motion.div
-                  className="absolute -bottom-2 left-0 h-1 bg-[color:var(--primary)]/20 rounded"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: '60px' }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 1, duration: 0.7 }}
-                />
-              </motion.h3>
-
-              {/* Improved testimonial carousel */}
-              <div className="relative h-[190px] overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentTestimonial}
-                    className="absolute top-0 left-0 w-full"
-                    initial={{ opacity: 0, x: 40, scale: 0.95 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                    exit={{ opacity: 0, x: -40, scale: 0.95 }}
-                    transition={{
-                      type: 'tween',
-                      ease: 'easeInOut',
-                      duration: 0.5,
-                    }}
-                  >
-                    <p className="text-gray-600 dark:text-gray-300 italic mb-5 relative pl-2">
-                      <span className="text-[color:var(--primary)]/80 text-lg font-serif absolute -left-1">
-                        ❝
-                      </span>
-                      {aboutTestimonials[currentTestimonial].content.pt}
-                      <span className="text-[color:var(--primary)]/80 text-lg font-serif">❞</span>
-                    </p>
-
-                    <div className="flex items-center gap-3 mt-4">
-                      <div className="relative">
-                        <Image
-                          src={
-                            aboutTestimonials[currentTestimonial].image ??
-                            './placeholder_avatar.png'
-                          }
-                          alt={aboutTestimonials[currentTestimonial].name}
-                          width={48}
-                          height={48}
-                          className="rounded-full shadow-sm border border-white dark:border-gray-700"
-                        />
-                        {/* Subtle pulse effect behind avatar */}
-                        <motion.div
-                          className="absolute inset-0 bg-[color:var(--primary)]/20 rounded-full -z-10"
-                          animate={{
-                            scale: [1, 1.2, 1],
-                            opacity: [0.7, 0.3, 0.7],
-                          }}
-                          transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            repeatType: 'reverse',
-                          }}
-                        />
-                      </div>
-                      <Link
-                        href={aboutTestimonials[currentTestimonial].link || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <p className="font-medium">{aboutTestimonials[currentTestimonial].name}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {aboutTestimonials[currentTestimonial].role.pt}
-                        </p>
-                      </Link>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Improved navigation dots */}
-              <div className="flex justify-center gap-2 mt-4">
-                {aboutTestimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    aria-label={`Ver testimonial de ${aboutTestimonials[index].name}`}
-                    className="group transition-all focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]/50 rounded-full"
-                    onClick={() => setCurrentTestimonial(index)}
-                  >
-                    <motion.div
-                      className={`w-2.5 h-2.5 rounded-full transition-all group-hover:scale-125 
-                        ${
-                          currentTestimonial === index
-                            ? 'bg-[color:var(--primary)] shadow-sm'
-                            : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
-                        }`}
-                      whileHover={{ scale: 1.2 }}
-                      whileTap={{ scale: 0.9 }}
+                <div className="flex items-center gap-3 mt-4">
+                  <div className="relative">
+                    <Image
+                      src={
+                        aboutTestimonials[currentTestimonial].image ?? './placeholder_avatar.png'
+                      }
+                      alt={aboutTestimonials[currentTestimonial].name}
+                      width={48}
+                      height={48}
+                      className="rounded-full shadow-sm border border-white dark:border-gray-700"
                     />
-                  </button>
-                ))}
+                  </div>
+                  <Link
+                    href={aboutTestimonials[currentTestimonial].link || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <p className="font-medium">{aboutTestimonials[currentTestimonial].name}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {aboutTestimonials[currentTestimonial].role.pt}
+                    </p>
+                  </Link>
+                </div>
               </div>
+            </div>
 
-              {/* Automatic toggle indicator */}
-              <motion.div
-                className="mt-3 text-center text-xs text-gray-400 dark:text-gray-500"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
-              >
-                Deslizando automaticamente a cada 8s
-              </motion.div>
-            </motion.div>
+            {/* Simplified navigation dots */}
+            <div className="flex justify-center gap-2 mt-4">
+              {aboutTestimonials.map((_, index) => (
+                <button
+                  key={index}
+                  aria-label={`Ver testimonial de ${aboutTestimonials[index].name}`}
+                  className="group transition-all focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]/50 rounded-full"
+                  onClick={() => setCurrentTestimonial(index)}
+                >
+                  <div
+                    className={`w-2.5 h-2.5 rounded-full transition-all group-hover:scale-125 
+                      ${
+                        currentTestimonial === index
+                          ? 'bg-[color:var(--primary)] shadow-sm'
+                          : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                      }`}
+                  />
+                </button>
+              ))}
+            </div>
+
+            {/* Automatic toggle indicator */}
+            <div className="mt-3 text-center text-xs text-gray-400 dark:text-gray-500">
+              Deslizando automaticamente a cada 8s
+            </div>
           </div>
         </Section>
 

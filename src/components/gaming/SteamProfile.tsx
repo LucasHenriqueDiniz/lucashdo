@@ -123,6 +123,8 @@ export default function SteamProfile({ className = '' }: SteamProfileProps) {
           }
           alt={stats.profile?.personaname ?? 'unknown'}
           className="w-24 h-24 rounded-full relative z-10"
+          width={96}
+          height={96}
         />
         <div className="relative z-10">
           <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -270,6 +272,8 @@ export default function SteamProfile({ className = '' }: SteamProfileProps) {
                 src={`https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_icon_url}.jpg`}
                 alt={game.name}
                 className="w-12 h-12 rounded"
+                width={48}
+                height={48}
               />
             </motion.div>
           ))}
