@@ -1,4 +1,4 @@
-import MacBrowser from '@/components/home/Browser/MacBrowser';
+import MacBrowser from '@/components/home/Browser/HeroBrowser';
 import ExpGraph from '@/components/home/ExpGraph';
 import Hero from '@/components/home/Hero';
 import Timeline from '@/components/home/Timeline/Timeline';

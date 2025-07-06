@@ -5,8 +5,6 @@ import type { NextConfig } from 'next';
 const withNextIntl = createNextIntlPlugin('./src/lib/i18n/server.ts');
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
-  // Configurações avançadas de imagens
   images: {
     remotePatterns: [
       {

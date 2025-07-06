@@ -1,26 +1,24 @@
 'use client';
 
+import { motion, useInView } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import {
   LuArrowRight,
   LuBraces,
   LuBriefcase,
   LuChevronDown,
   LuCode,
-  LuDownload,
   LuExternalLink,
   LuGithub,
   LuGraduationCap,
   LuHeartHandshake,
   LuLinkedin,
   LuMail,
-  LuMessagesSquare,
   LuStar,
   LuUser,
 } from 'react-icons/lu';
-import { AnimatePresence, motion, useInView } from 'framer-motion';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
 import { ExperienceTimeline, ProfileHeader, Section, SkillsGrid } from '@/components/about';
 import InterestsTabs from '@/components/interests/InterestsTabs';
 import { GradientCardWithPattern } from '@/components/ui/GradientCard';

@@ -1,60 +1,34 @@
 'use client';
 
-import { Code, ExternalLink, Github, Home, Search, Star } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Code, ExternalLink, Github, Search, Star } from 'lucide-react';
+import { useState } from 'react';
+import { useLocale } from 'next-intl';
 import { projects } from '@/constants/projects';
-import Browser, { BrowserRefType, BrowserTab } from './Browser';
-import './Browser.css';
-import './MacBrowser.css';
+import Browser, { BrowserTab } from './Browser';
+import './HeroBrowser.css';
 
-interface MacBrowserProps {
-  /** Define se o navegador está em modo decorativo */
-  isDecorative?: boolean;
-  /** Modo antigo ou novo do MacBrowser (uso do Browser ou ProjectsBrowser) */
-  useProjectBrowser?: boolean;
-  /** Título personalizado para a seção de projetos */
+interface HeroBrowserProps {
   title?: string;
-  /** Subtítulo personalizado para a seção de projetos */
   subtitle?: string;
-  /** URL personalizada para exibir na barra de endereço */
-  url?: string;
-  /** Nome da aba personalizado */
-  tabName?: string;
-  /** Largura personalizada do navegador */
-  width?: string;
-  /** Altura personalizada do navegador */
-  height?: string;
-  /** Idioma para exibir o conteúdo (pt ou en) */
-  locale?: 'pt' | 'en';
+  width?: string | number;
+  height?: string | number;
+  isInteractive?: boolean;
 }
 
 /**
- * MacBrowser - Um componente que exibe navegador com projetos em modo desktop
- * Mantido para compatibilidade com código existente
+ * HeroBrowser - Versão componentizada do Browser para a seção de projetos
  */
-export default function MacBrowser({
-  isDecorative = false,
+export default function HeroBrowser({
   title = 'Meus Projetos',
-  subtitle = 'Confira alguns dos meus trabalhos mais recentes',
-  width = '1200px', // Tamanho fixo para melhor visualização
-  height = '600px', // Tamanho fixo para melhor visualização
-  locale = 'pt',
-}: MacBrowserProps) {
-  // Estado para controlar abas ativas e pesquisa
-  const [activeTabId, setActiveTabId] = useState<string | undefined>('home-tab');
-  const [searchQuery, setSearchQuery] = useState('');
-  // Ref para acessar funções do Browser, como focar na barra de URL
-  const browserRef = useRef<BrowserRefType | null>(null);
+  subtitle = 'Explore alguns dos meus trabalhos recentes',
+  width = 1200,
+  height = 600,
+  isInteractive = true,
+}: HeroBrowserProps) {
+  const locale = useLocale() as 'pt' | 'en';
 
-  /**
-   * Função para manejar o foco na pesquisa
-   * Quando chamada, foca na barra de URL do Browser
-   */
-  const handleSearchFocus = () => {
-    if (browserRef.current) {
-      browserRef.current.focusUrlBar();
-    }
-  };
+  // Estado para controlar pesquisa
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Função para gerar o conteúdo de um projeto
   const generateProjectContent = (project: (typeof projects)[0]) => {
@@ -134,40 +108,6 @@ export default function MacBrowser({
   };
   // Criar abas para projetos destacados
   const featuredProjects = projects.filter(project => project.featured).slice(0, 4);
-  /*
-   * Criando a aba Home - Esta é a aba especial que mostrará
-   * todos os projetos e permitirá que o usuário escolha
-   * qual projeto abrir em uma nova aba. O conteúdo desta aba
-   * é o mesmo que o CustomHomeScreen fornece.
-   */
-  const homeTab: BrowserTab = {
-    id: 'home-tab',
-    title: locale === 'pt' ? 'Início' : 'Home',
-    url: 'https://lucashdo.com/projects',
-    content: null, // O conteúdo será atualizado dinamicamente mais tarde
-    icon: <Home size={14} />, // Usando o ícone de casa da biblioteca lucide-react
-    data: {
-      isHome: true,
-    },
-  };
-
-  const projectTabs: BrowserTab[] = [
-    homeTab, // Adicionando a aba Home como primeira aba
-    ...featuredProjects.map(project => {
-      return {
-        id: project.id,
-        title: project.title,
-        url: project.repoUrl || `https://lucashdo.com/projects/${project.id}`,
-        content: generateProjectContent(project),
-        icon: project.image || project.title.charAt(0).toUpperCase(),
-        data: {
-          featured: true,
-          tags: project.tags,
-          description: project.description[locale],
-        },
-      };
-    }),
-  ];
 
   // Todos os projetos para o showcase
   const allProjectTabs: BrowserTab[] = projects.map(project => {
@@ -185,8 +125,10 @@ export default function MacBrowser({
         repoUrl: project.repoUrl,
       },
     };
-  }); // Componente para a tela inicial personalizada
-  const CustomHomeScreen = () => {
+  });
+
+  // Componente para a tela inicial personalizada
+  const CustomHomeScreen = ({ onTabOpen }: { onTabOpen?: (tabId: string) => void }) => {
     // Filtrar projetos com base na pesquisa
     const filteredProjects = projects.filter(
       project =>
@@ -198,15 +140,14 @@ export default function MacBrowser({
     // Manipular alteração na pesquisa
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchQuery(e.target.value);
-    }; // Manipular clique em um projeto
+    };
 
+    // Manipular clique em um projeto - agora usa onTabOpen se disponível
     const handleProjectClick = (projectId: string) => {
-      // Atualiza a aba ativa para o projeto selecionado
-      setActiveTabId(projectId);
-
-      const projectTab = document.querySelector(`[data-tab-id="${projectId}"]`);
-      if (projectTab) {
-        projectTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      if (onTabOpen) {
+        onTabOpen(projectId);
+      } else {
+        console.log('Project clicked:', projectId);
       }
     };
 
@@ -215,21 +156,16 @@ export default function MacBrowser({
         {/* Cabeçalho da página inicial */}
         <div className="mac-browser-home-header">
           <h1 className="mac-browser-home-title">{title}</h1>
-          <p className="mac-browser-home-subtitle">{subtitle}</p>{' '}
-          {/* Barra de pesquisa de projetos */}{' '}
-          <div className="mac-browser-search" onClick={handleSearchFocus}>
-            <Search className="mac-browser-search-icon" size={18} />{' '}
+          <p className="mac-browser-home-subtitle">{subtitle}</p>
+          {/* Barra de pesquisa de projetos */}
+          <div className="mac-browser-search">
+            <Search className="mac-browser-search-icon" size={18} />
             <input
               type="text"
               value={searchQuery}
               onChange={handleSearchChange}
               className="mac-browser-search-input"
               placeholder={locale === 'pt' ? 'Pesquisar projetos...' : 'Search projects...'}
-              onClick={e => {
-                // Impedir propagação para que não interfira no onClick do div pai
-                e.stopPropagation();
-                handleSearchFocus();
-              }}
             />
           </div>
         </div>
@@ -339,75 +275,16 @@ export default function MacBrowser({
       </div>
     );
   };
-  // Handler para alteração de aba
-  const handleTabChange = (tabId: string) => {
-    setActiveTabId(tabId);
-  };
-  // Handler para novas abas
-  const handleNewTab = () => {
-    // Define que a aba ativa será a Home e limpa a pesquisa
-    setActiveTabId('home-tab');
-    setSearchQuery('');
 
-    // Adiciona uma classe visual para indicar quando a aba Home foi selecionada
-    setTimeout(() => {
-      const homeTabElement = document.querySelector('[data-tab-id="home-tab"]');
-      if (homeTabElement) {
-        homeTabElement.classList.add('tab-highlight');
-        setTimeout(() => {
-          homeTabElement.classList.remove('tab-highlight');
-        }, 600);
-      }
-    }, 100);
-  };
-
-  // Atualiza o conteúdo da aba Home
-  const updatedTabs = projectTabs.map(tab => {
-    if (tab.id === 'home-tab') {
-      return {
-        ...tab,
-        content: <CustomHomeScreen />, // Sempre use o CustomHomeScreen para a aba Home
-      };
-    }
-    return tab;
-  });
-
-  // Função para pegar o conteúdo correto da aba
-  const getTabContent = (tabId: string) => {
-    if (tabId === 'home-tab') {
-      return <CustomHomeScreen />;
-    }
-
-    const project = projects.find(p => p.id === tabId);
-    if (project) {
-      return generateProjectContent(project);
-    }
-
-    return null;
-  };
-
-  // Agora atualize todas as abas com o conteúdo correto
-  const finalTabs = updatedTabs.map(tab => ({
-    ...tab,
-    content: getTabContent(tab.id),
-  }));
   return (
     <Browser
-      isDecorative={isDecorative}
-      tabs={finalTabs}
-      availableTabs={allProjectTabs}
-      activeTabId={activeTabId}
-      onTabChange={handleTabChange}
-      onNewTab={handleNewTab}
+      tabs={allProjectTabs}
+      homeContent={<CustomHomeScreen />}
+      initialOpenTabs={featuredProjects.slice(0, 2).map(p => p.id)} // Abrir 2 projetos em destaque
       width={width}
       height={height}
-      title={title}
-      subtitle={subtitle}
+      isInteractive={isInteractive}
       showWindowControls={true}
-      CustomHomeScreen={<CustomHomeScreen />}
-      searchQuery={searchQuery}
-      onSearchChange={(query: string) => setSearchQuery(query)}
-      ref={browserRef}
     />
   );
 }
