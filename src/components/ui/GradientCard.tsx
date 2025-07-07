@@ -132,30 +132,39 @@ export function GradientCardWithPattern({
 }
 
 function ParticleEffect({ patternFill }: { patternFill: string }) {
+  // Predefined positions to avoid hydration issues
+  const particlePositions = [
+    { x: 30, y: 40, scale: 0.5 },
+    { x: 80, y: 60, scale: 0.7 },
+    { x: 120, y: 30, scale: 0.6 },
+    { x: 50, y: 100, scale: 0.8 },
+    { x: 90, y: 80, scale: 0.4 },
+    { x: 140, y: 70, scale: 0.9 },
+    { x: 70, y: 120, scale: 0.6 },
+    { x: 110, y: 110, scale: 0.5 },
+  ];
+
   return (
     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500">
-      {[...Array(8)].map((_, i) => (
+      {particlePositions.map((pos, i) => (
         <motion.div
           key={`particle-${i}`}
-          className={`absolute w-1.5 h-1.5 rounded-full bg-${patternFill}`}
+          className={`absolute w-1.5 h-1.5 rounded-full`}
+          style={{ backgroundColor: patternFill }}
           initial={{
-            x: 20 + Math.random() * 120,
-            y: 20 + Math.random() * 120,
+            x: pos.x,
+            y: pos.y,
             opacity: 0,
-            scale: 0.4 + Math.random() * 0.6,
+            scale: pos.scale,
           }}
           animate={{
-            x: [20 + Math.random() * 120, 10 + Math.random() * 150, 20 + Math.random() * 120],
-            y: [20 + Math.random() * 120, 10 + Math.random() * 150, 20 + Math.random() * 120],
+            x: [pos.x, pos.x + 20, pos.x],
+            y: [pos.y, pos.y + 15, pos.y],
             opacity: [0, 0.8, 0],
-            scale: [
-              0.4 + Math.random() * 0.6,
-              0.6 + Math.random() * 0.8,
-              0.4 + Math.random() * 0.6,
-            ],
+            scale: [pos.scale, pos.scale + 0.2, pos.scale],
           }}
           transition={{
-            duration: 3 + Math.random() * 3,
+            duration: 3 + i * 0.2,
             repeat: Infinity,
             repeatType: 'loop',
             ease: 'easeInOut',

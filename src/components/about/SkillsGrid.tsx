@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { LuBriefcase, LuCode, LuStar, LuX } from 'react-icons/lu';
+import { useTranslations } from 'next-intl';
 import { SkillDataType } from '@/constants/skillsData';
 
 interface SkillCategoryColors {
@@ -60,6 +61,7 @@ interface SkillsGridProps {
 }
 
 export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) {
+  const t = useTranslations('About.skills');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isFilterAnimating, setIsFilterAnimating] = useState(false);
   const [isTodosSelected, setIsTodosSelected] = useState(true);
@@ -155,7 +157,7 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
               }}
             />
           )}
-          <span>Todos</span>
+          <span>{t('all')}</span>
         </motion.button>
         {categories.map((category, idx) => (
           <motion.button
@@ -181,18 +183,26 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
             ></span>
             {categoryLabels[category]}
             {selectedCategory === category && (
-              <motion.button
-                className="ml-1 text-white/80 hover:text-white"
+              <motion.span
+                className="ml-1 text-white/80 hover:text-white cursor-pointer"
                 onClick={e => {
                   e.stopPropagation();
                   handleCategoryChange(null);
                 }}
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
+                role="button"
+                tabIndex={0}
                 aria-label="Limpar filtro"
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleCategoryChange(null);
+                  }
+                }}
               >
                 <LuX size={12} />
-              </motion.button>
+              </motion.span>
             )}
           </motion.button>
         ))}
@@ -218,7 +228,7 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            Nenhuma habilidade encontrada nesta categoria
+            {t('noSkills')}
           </motion.div>
         )}
         <AnimatePresence mode="sync" initial={false}>
@@ -349,27 +359,27 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.3 }}
       >
-        <div className="font-medium mb-3 text-gray-700 dark:text-gray-300">Legenda:</div>
+        <div className="font-medium mb-3 text-gray-700 dark:text-gray-300">{t('legend.title')}</div>
         <div className="flex flex-wrap justify-center gap-4 items-center">
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full">
               <LuBriefcase size={14} className="text-blue-600 dark:text-blue-400" />
             </div>
-            <span>Experiência Profissional</span>
+            <span>{t('legend.professional')}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-6 h-6 bg-purple-100 dark:bg-purple-900/30 rounded-full">
               <LuCode size={14} className="text-purple-600 dark:text-purple-400" />
             </div>
-            <span>Experiência Pessoal/Projetos</span>
+            <span>{t('legend.personal')}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-6 h-6 bg-[color:var(--amber)]/90 rounded-full">
               <LuStar size={14} className="text-white" />
             </div>
-            <span>Tecnologias Favoritas</span>
+            <span>{t('legend.favorites')}</span>
           </div>
         </div>
       </motion.div>

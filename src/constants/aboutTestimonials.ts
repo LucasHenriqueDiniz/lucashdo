@@ -1,4 +1,5 @@
 import { TranslatedField } from '@/types/experience.types';
+import { GabrielSoaresAvatar, RodrigoShardongAvatar } from '../../public';
 
 interface aboutTestimonialsProp {
   name: string;
@@ -22,8 +23,7 @@ export const aboutTestimonials: aboutTestimonialsProp[] = [
       en: 'I worked with Lucas on the Seu IoT project and witnessed his growth as a web developer. What surprised me the most were his quick learning abilities and the quality of the tasks he was responsible for. We worked together remotely and asynchronously, and it worked out great. I highly recommend him to everyone in the network.',
     },
     link: 'https://www.linkedin.com/in/rodrigoschardong/',
-    image:
-      'https://media.licdn.com/dms/image/v2/D4D03AQH83XVRhb7Hgg/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1726609890619?e=1755734400&v=beta&t=lzcOEd_DlNmT_UeHNBGKSKEDAzriF7HxLB2NGSWz2eY',
+    image: RodrigoShardongAvatar.src,
   },
   {
     name: 'Gabriel Soares',
@@ -37,7 +37,6 @@ export const aboutTestimonials: aboutTestimonialsProp[] = [
       en: 'I had the pleasure of working with Lucas on several projects. His dedication and technical skills were fundamental to the success of the project. He is a committed professional and always strives for excellence in everything he does. I highly recommend him!',
     },
     link: 'https://www.linkedin.com/in/soaresgabe/',
-    image:
-      'https://media.licdn.com/dms/image/v2/D4D03AQFNRNi4fsN2dA/profile-displayphoto-shrink_800_800/B4DZRymK1PHUAc-/0/1737089396869?e=1755734400&v=beta&t=lnL4B3PC1bEaZyhR70myBdAqcsV1rqTdCfOKPPjBDfs',
+    image: GabrielSoaresAvatar.src,
   },
 ];

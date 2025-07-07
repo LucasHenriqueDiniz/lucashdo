@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { LuCode, LuBrain, LuHeart, LuMail } from 'react-icons/lu';
@@ -21,7 +21,6 @@ export default function ProfileHeader({
   keywords = [],
   className = '',
 }: ProfileHeaderProps) {
-  const [currentKeyword, setCurrentKeyword] = useState(0);
   const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.3 });
@@ -30,29 +29,12 @@ export default function ProfileHeader({
   useEffect(() => {
     if (!keywords.length) return;
 
-    // Initialize with a few random keywords
+    // Initialize with static keywords to avoid constant changes
     setActiveKeywords(keywords.slice(0, Math.min(4, keywords.length)));
 
-    const interval = window.setInterval(() => {
-      setCurrentKeyword(prev => (prev + 1) % keywords.length);
-
-      // Rotate keywords for dynamic display
-      setActiveKeywords(prev => {
-        const newKeywords = [...prev];
-        // Remove one keyword and add a new one
-        if (newKeywords.length > 3) {
-          newKeywords.shift();
-        }
-        const nextKeyword = keywords[(currentKeyword + 3) % keywords.length];
-        if (!newKeywords.includes(nextKeyword)) {
-          newKeywords.push(nextKeyword);
-        }
-        return newKeywords;
-      });
-    }, 3000);
-
-    return () => window.clearInterval(interval);
-  }, [keywords, currentKeyword]);
+    // Removed auto-cycling animation to fix flickering
+    // Instead, keep keywords static for better performance
+  }, [keywords]);
 
   // Enhanced keyword categorization with better visual indicators
   const keywordCategories = [
@@ -164,28 +146,33 @@ export default function ProfileHeader({
             </Link>
           </motion.div>
 
-          {/* Enhanced animated keywords */}
+          {/* Enhanced animated keywords - Fixed flickering issue */}
           {keywords.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2 justify-center md:justify-start">
-              <AnimatePresence mode="popLayout">
-                {activeKeywords.map(keyword => {
-                  const category = getKeywordCategory(keyword);
-                  return (
-                    <motion.span
-                      key={keyword}
-                      layout
-                      className={`text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 whitespace-nowrap ${category.bgClass} ${category.textClass} shadow-sm`}
-                      initial={{ opacity: 0, scale: 0.8, x: -10 }}
-                      animate={{ opacity: 1, scale: 1, x: 0 }}
-                      exit={{ opacity: 0, scale: 0.8, x: 10 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {category.icon}
-                      <span className="font-medium">{keyword}</span>
-                    </motion.span>
-                  );
-                })}
-              </AnimatePresence>
+              {/* Simplified animation without AnimatePresence to prevent flickering */}
+              {activeKeywords.map((keyword: string, index: number) => {
+                const category = getKeywordCategory(keyword);
+                return (
+                  <motion.span
+                    key={keyword}
+                    className={`text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 whitespace-nowrap ${category.bgClass} ${category.textClass} shadow-sm`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      delay: index * 0.1,
+                      ease: 'easeOut',
+                    }}
+                    whileHover={{
+                      scale: 1.05,
+                      transition: { duration: 0.2 },
+                    }}
+                  >
+                    {category.icon}
+                    <span className="font-medium">{keyword}</span>
+                  </motion.span>
+                );
+              })}
 
               {keywords.length > 4 && (
                 <motion.div

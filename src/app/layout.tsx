@@ -7,6 +7,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import { defaultLocale, locales } from '@/lib/i18n/config';
+import InteractiveTerminal from '@/components/about/InteractiveTerminal';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono' });
@@ -110,6 +111,7 @@ export default async function RootLayout({
             <Header />
             {children}
             <Footer />
+            <InteractiveTerminal />
           </TooltipProvider>
         </NextIntlClientProvider>
         <SpeedInsights />

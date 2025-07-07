@@ -32,7 +32,142 @@
     "title": "About Me",
     "description": "Learn more about my journey and experience.",
     "skills": "Skills",
-    "experience": "Experience"
+    "experience": "Experience",
+    "hero": {
+      "greeting": "Hello, I'm",
+      "name": "Lucas HDO",
+      "tagline": "Transforming ideas into impactful digital experiences",
+      "viewProjects": "View Projects",
+      "contact": "Contact Me"
+    },
+    "profile": {
+      "title": "Who I Am",
+      "role": "Full-stack Developer",
+      "bio": {
+        "part1": "Passionate developer creating technological solutions that positively impact people. With experience in",
+        "part2": "and interface design, I combine technical and creative skills to develop modern and intuitive web applications.",
+        "part3": "Computer Engineering student, I'm constantly seeking to learn new technologies and improve my skills. I believe that good code is one that solves real problems in an elegant and efficient way."
+      },
+      "education": "Computer Engineering",
+      "social": {
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "email": "Email"
+      }
+    },
+    "achievements": {
+      "openSource": {
+        "title": "🌐 Open Source Enthusiast",
+        "description": "Active contributions to community projects and knowledge sharing",
+        "stat": "Active",
+        "statLabel": "Contributor"
+      },
+      "techStack": {
+        "title": "🛠️ Tech Stack",
+        "description": "React · Next.js · Node.js · TypeScript · SQL · Python",
+        "stat": "Full-stack",
+        "statLabel": "Developer"
+      }
+    },
+    "projects": {
+      "title": "Featured Projects",
+      "featured": "Featured Project",
+      "viewDetails": "View Details",
+      "viewAll": "View All Projects"
+    },
+    "skills": {
+      "title": "Skills",
+      "all": "All",
+      "legend": {
+        "title": "Legend:",
+        "professional": "Professional Experience",
+        "personal": "Personal Experience/Projects",
+        "favorites": "Favorite Technologies"
+      },
+      "noSkills": "No skills found in this category"
+    },
+    "experience": {
+      "professional": "Professional Experience",
+      "academic": "Academic Background"
+    },
+    "interests": {
+      "title": "Interests",
+      "description": "Passionate about technology, I also cultivate various interests that inspire me and help me maintain a broad perspective:"
+    },
+    "cta": {
+      "title": "Let's work together?",
+      "description": "I'm always open to new challenging projects and opportunities to apply my skills.",
+      "contact": "Contact me"
+    },
+    "testimonials": {
+      "title": "What people say about me",
+      "subtitle": "Testimonials from clients and colleagues who worked with me",
+      "autoSlide": "Auto-sliding every 8s"
+    },
+    "stats": {
+      "yearsExperience": "Years of Experience",
+      "yearsExperienceDesc": "Developing web solutions and modern applications",
+      "projectsCompleted": "Projects Completed",
+      "projectsCompletedDesc": "From concept to production with excellence",
+      "technologies": "Technologies",
+      "technologiesDesc": "Mastering from front-end to back-end",
+      "clientSatisfaction": "Client Satisfaction",
+      "clientSatisfactionDesc": "Focus on delivering value and quality",
+      "availability": "Availability",
+      "availabilityDesc": "Always ready for new challenges",
+      "learning": "Continuous Learning",
+      "learningDesc": "Always seeking new technologies"
+    },
+    "journey": {
+      "professional": "Professional",
+      "academic": "Academic"
+    },
+    "values": {
+      "passion": {
+        "title": "Passion",
+        "description": "I love what I do. Every line of code is written with dedication and purpose."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "Commitment to quality and attention to detail in every project."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "Always seeking new technologies and approaches to solve problems."
+      },
+      "collaboration": {
+        "title": "Collaboration",
+        "description": "I believe in the power of teamwork and knowledge sharing."
+      },
+      "creativity": {
+        "title": "Creativity",
+        "description": "Transforming complex ideas into elegant and intuitive solutions."
+      },
+      "integrity": {
+        "title": "Integrity",
+        "description": "Transparency, honesty and commitment to deadlines and quality."
+      }
+    },
+    "cta": {
+      "title": "Let's work together?",
+      "description": "I'm always open to new challenging projects and opportunities to apply my skills.",
+      "subtitle": "Let's turn your ideas into reality!",
+      "contact": "Contact me",
+      "benefits": {
+        "communication": {
+          "title": "Clear Communication",
+          "description": "Stay informed about every step of the project"
+        },
+        "collaboration": {
+          "title": "Efficient Collaboration",
+          "description": "Work closely to ensure your needs are met"
+        },
+        "delivery": {
+          "title": "Timely Delivery",
+          "description": "Commitment to deadlines and code quality"
+        }
+      }
+    }
   },
   "Projects": {
     "title": "Projects",

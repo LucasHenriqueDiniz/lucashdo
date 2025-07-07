@@ -32,7 +32,143 @@
     "title": "Sobre Mim",
     "description": "Conheça mais sobre minha jornada e experiência.",
     "skills": "Habilidades",
-    "experience": "Experiência"
+    "experience": "Experiência",
+    "hero": {
+      "greeting": "Olá, eu sou",
+      "name": "Lucas HDO",
+      "tagline": "Transformando ideias em experiências digitais impactantes",
+      "viewProjects": "Ver Projetos",
+      "contact": "Entre em Contato"
+    },
+    "profile": {
+      "title": "Quem Sou Eu",
+      "role": "Desenvolvedor Full-stack",
+      "bio": {
+        "part1": "Desenvolvedor apaixonado por criar soluções tecnológicas que impactam positivamente as pessoas. Com experiência em",
+        "part2": "e design de interfaces, combino habilidades técnicas e criativas para desenvolver aplicações web modernas e intuitivas.",
+        "part3": "Estudante de",
+        "part4": ", estou constantemente buscando aprender novas tecnologias e aprimorar minhas habilidades. Acredito que o bom código é aquele que resolve problemas reais de forma elegante e eficiente."
+      },
+      "education": "Engenharia de Computação",
+      "social": {
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "email": "Email"
+      }
+    },
+    "achievements": {
+      "openSource": {
+        "title": "🌐 Fã de Open Source",
+        "description": "Contribuições ativas para projetos da comunidade e compartilhamento de conhecimento",
+        "stat": "Ativo",
+        "statLabel": "Colaborador"
+      },
+      "techStack": {
+        "title": "🛠️ Stack Técnico",
+        "description": "React · Next.js · Node.js · TypeScript · SQL · Python",
+        "stat": "Full-stack",
+        "statLabel": "Developer"
+      }
+    },
+    "projects": {
+      "title": "Projetos Destacados",
+      "featured": "Projeto Destaque",
+      "viewDetails": "Ver Detalhes",
+      "viewAll": "Ver Todos os Projetos"
+    },
+    "skills": {
+      "title": "Habilidades",
+      "all": "Todos",
+      "legend": {
+        "title": "Legenda:",
+        "professional": "Experiência Profissional",
+        "personal": "Experiência Pessoal/Projetos",
+        "favorites": "Tecnologias Favoritas"
+      },
+      "noSkills": "Nenhuma habilidade encontrada nesta categoria"
+    },
+    "experience": {
+      "professional": "Experiência Profissional",
+      "academic": "Formação Acadêmica"
+    },
+    "interests": {
+      "title": "Interesses",
+      "description": "Apaixonado por tecnologia, também cultivo diversos interesses que me inspiram e me ajudam a manter uma perspectiva ampla:"
+    },
+    "cta": {
+      "title": "Vamos trabalhar juntos?",
+      "description": "Estou sempre aberto a novos projetos desafiadores e oportunidades para aplicar minhas habilidades.",
+      "contact": "Entre em contato"
+    },
+    "testimonials": {
+      "title": "O que dizem sobre mim",
+      "subtitle": "Depoimentos de clientes e colegas que trabalharam comigo",
+      "autoSlide": "Deslizando automaticamente a cada 8s"
+    },
+    "stats": {
+      "yearsExperience": "Anos de Experiência",
+      "yearsExperienceDesc": "Desenvolvendo soluções web e aplicações modernas",
+      "projectsCompleted": "Projetos Concluídos",
+      "projectsCompletedDesc": "Do conceito à produção com excelência",
+      "technologies": "Tecnologias",
+      "technologiesDesc": "Dominando desde front-end até back-end",
+      "clientSatisfaction": "Satisfação do Cliente",
+      "clientSatisfactionDesc": "Foco em entregar valor e qualidade",
+      "availability": "Disponibilidade",
+      "availabilityDesc": "Sempre pronto para novos desafios",
+      "learning": "Aprendizado Contínuo",
+      "learningDesc": "Sempre em busca de novas tecnologias"
+    },
+    "journey": {
+      "professional": "Profissional",
+      "academic": "Acadêmica"
+    },
+    "values": {
+      "passion": {
+        "title": "Paixão",
+        "description": "Amo o que faço. Cada linha de código é escrita com dedicação e propósito."
+      },
+      "excellence": {
+        "title": "Excelência",
+        "description": "Compromisso com a qualidade e atenção aos detalhes em cada projeto."
+      },
+      "innovation": {
+        "title": "Inovação",
+        "description": "Sempre buscando novas tecnologias e abordagens para resolver problemas."
+      },
+      "collaboration": {
+        "title": "Colaboração",
+        "description": "Acredito no poder do trabalho em equipe e no compartilhamento de conhecimento."
+      },
+      "creativity": {
+        "title": "Criatividade",
+        "description": "Transformando ideias complexas em soluções elegantes e intuitivas."
+      },
+      "integrity": {
+        "title": "Integridade",
+        "description": "Transparência, honestidade e compromisso com prazos e qualidade."
+      }
+    },
+    "cta": {
+      "title": "Vamos trabalhar juntos?",
+      "description": "Estou sempre aberto a novos projetos desafiadores e oportunidades para aplicar minhas habilidades.",
+      "subtitle": "Vamos transformar suas ideias em realidade!",
+      "contact": "Entre em contato",
+      "benefits": {
+        "communication": {
+          "title": "Comunicação Clara",
+          "description": "Mantenha-se informado sobre cada etapa do projeto"
+        },
+        "collaboration": {
+          "title": "Colaboração Eficiente",
+          "description": "Trabalho próximo para garantir que suas necessidades sejam atendidas"
+        },
+        "delivery": {
+          "title": "Entrega Pontual",
+          "description": "Compromisso com prazos e qualidade do código"
+        }
+      }
+    }
   },
   "Projects": {
     "title": "Projetos",

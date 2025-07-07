@@ -1,3 +1,4 @@
+//Projects
 export { default as weebprofile } from './projects/weebprofile.webp';
 export { default as windowsxponline } from './projects/windows_xp_online.webp';
 export { default as autowabba } from './projects/autowabba.webp';
@@ -13,3 +14,9 @@ export { default as siotNewDashboardConcept } from './projects/siot_new_dhasboar
 export { default as skoobAutojoin } from './projects/skoob_autojoin.webp';
 export { default as botschannelPlatform } from './projects/botschannel_plataform.webp';
 export { default as botschannelWeb } from './projects/botschannel_landingpage.webp';
+
+// About
+export { default as selfie } from './selfie.webp';
+// Testimonials
+export { default as GabrielSoaresAvatar } from './testimonials/gabriel_soares.webp';
+export { default as RodrigoShardongAvatar } from './testimonials/rodrigo_shardong.webp';
