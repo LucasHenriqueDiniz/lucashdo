@@ -776,8 +776,8 @@
 
 .floating-mouse-instruction {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: -28px;
+  right: 18px;
   display: flex;
   height: 32px;
   gap: 8px;

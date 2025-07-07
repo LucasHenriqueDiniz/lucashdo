@@ -50,7 +50,7 @@ export const ProjectCard = memo(({ project, index, locale, translations }: Proje
       variants={cardVariants}
       initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
-      className="group relative bg-white/80 dark:bg-gray-800/50 backdrop-blur-md rounded-xl overflow-hidden shadow-lg transition-all border border-gray-100/40 dark:border-gray-700/30 hover:shadow-xl hover:-translate-y-1"
+      className="group relative bg-white/80 dark:bg-gray-800/50 backdrop-blur-md rounded-xl overflow-hidden shadow-lg transition-all border border-gray-100/40 dark:border-gray-700/30 hover:shadow-xl hover:-translate-y-1 w-full"
     >
       <div className="relative rounded-xl overflow-hidden z-10 bg-white/90 dark:bg-gray-800/90 h-full flex flex-col">
         {/* Image container */}
@@ -303,7 +303,7 @@ export const ProjectsGrid = memo(
     );
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-8 container mx-auto px-4 lg:px-8 py-12">
         {/* Header melhorado */}
         <div className="bg-white/50 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 p-6">
           <div className="flex items-center justify-between mb-6">

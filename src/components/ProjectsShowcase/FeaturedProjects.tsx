@@ -250,7 +250,7 @@ const ProjectsShowcase = () => {
               <div className="relative">
                 {/* Mouse click instructional icon */}
                 <motion.div
-                  className="floating-mouse-instruction -right-4 -top-8"
+                  className="floating-mouse-instruction"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 1, duration: 0.3 }}

@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ContactLinks } from '@/constants/contacts';
+import { selfie } from '../../../public';
 
 // Map of contact icons
 const contactIcons = {
@@ -404,7 +405,7 @@ export default function ContactClient() {
   return (
     <>
       {/* Simplified Contact Header */}
-      <div className="relative my-16">
+      <div className="relative my-16 pt-[150px]">
         <div className="text-center z-10 relative">
           <motion.h1
             className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[color:var(--primary)] via-[color:var(--blue)] to-[color:var(--primary)] bg-clip-text text-transparent"
@@ -446,7 +447,7 @@ export default function ContactClient() {
             <div className="relative">
               <div className="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-md">
                 <Image
-                  src="https://images.unsplash.com/photo-1529421308418-eab98863cee4?q=80&w=1976&auto=format&fit=crop"
+                  src={selfie}
                   alt="Lucas HDO"
                   width={160}
                   height={160}
@@ -459,7 +460,7 @@ export default function ContactClient() {
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Lucas HDO</h2>
               <div className="flex items-center justify-center md:justify-start mb-4 text-gray-500 dark:text-gray-400">
                 <LuMapPin className="mr-2" />
-                <span>São Paulo, Brasil</span>
+                <span>Rio Grande do Sul, Brasil</span>
               </div>
 
               <p className="text-gray-600 dark:text-gray-300 mb-4 max-w-xl">
@@ -471,7 +472,7 @@ export default function ContactClient() {
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                 <div className="flex items-center bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-full text-sm">
                   <LuUser className="mr-2 text-[color:var(--primary)]" />
-                  <span>Engenharia de Computação</span>
+                  <span>Engenharia de Software</span>
                 </div>
                 <div className="flex items-center bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-full text-sm">
                   <LuMapPin className="mr-2 text-[color:var(--primary)]" />

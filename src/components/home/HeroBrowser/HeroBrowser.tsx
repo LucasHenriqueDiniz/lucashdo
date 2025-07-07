@@ -232,7 +232,7 @@ export default function HeroBrowser({
     <Browser
       tabs={allProjectTabs}
       homeContent={<CustomHomeScreen />}
-      initialOpenTabs={featuredProjects.slice(0, 2).map(p => p.id)} // Abrir 2 projetos em destaque
+      initialOpenTabs={featuredProjects.map(p => p.id)}
       width={width}
       height={height}
       isInteractive={isInteractive}
