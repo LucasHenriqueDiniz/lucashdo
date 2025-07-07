@@ -155,7 +155,6 @@ section {
   width: 100%;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden; /* Prevents overflow issues */
   scroll-snap-align: start; /* Ensures sections snap to the start */
   scroll-snap-stop: always; /* Ensures sections snap consistently */
   scroll-snap-type: y mandatory; /* Enables vertical snapping */

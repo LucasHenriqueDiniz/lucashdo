@@ -1,0 +1,93 @@
+.window-controls-right {
+  margin-left: 12px;
+  display: flex;
+  gap: 6px;
+  padding-right: 10px;
+  z-index: 10;
+  position: relative;
+}
+
+.control-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.control-btn:hover:not(:disabled) {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-btn.close {
+  background: var(--red-close);
+}
+
+.control-btn.minimize {
+  background: var(--yellow-minimize);
+}
+
+.control-btn.maximize {
+  background: var(--green-maximize);
+}
+
+.control-btn.maximize.active {
+  box-shadow: 0 0 0 2px rgba(40, 202, 66, 0.4);
+}
+
+/* Tooltip styles for window controls */
+.tooltip-text {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000000;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 1000;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+.tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -4px;
+  border-width: 4px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+
+.control-btn.group:hover .tooltip-text,
+button.control-btn:hover .tooltip-text {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Focus styles for accessibility */
+.control-btn:focus {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.control-btn:focus:not(:focus-visible) {
+  outline: none;
+}

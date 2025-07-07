@@ -1,15 +1,13 @@
 'use client';
 
-import { Code, ExternalLink, Github, Search, Star } from 'lucide-react';
-import { useState } from 'react';
+import { Code, ExternalLink, Github, Star } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { projects } from '@/constants/projects';
-import Browser, { BrowserTab } from './Browser';
+import Browser from '../Browser/Browser';
+import { BrowserTab } from '../Browser/types/BrowserTab';
 import './HeroBrowser.css';
 
 interface HeroBrowserProps {
-  title?: string;
-  subtitle?: string;
   width?: string | number;
   height?: string | number;
   isInteractive?: boolean;
@@ -19,22 +17,17 @@ interface HeroBrowserProps {
  * HeroBrowser - Versão componentizada do Browser para a seção de projetos
  */
 export default function HeroBrowser({
-  title = 'Meus Projetos',
-  subtitle = 'Explore alguns dos meus trabalhos recentes',
   width = 1200,
   height = 600,
   isInteractive = true,
 }: HeroBrowserProps) {
   const locale = useLocale() as 'pt' | 'en';
 
-  // Estado para controlar pesquisa
-  const [searchQuery, setSearchQuery] = useState('');
-
   // Função para gerar o conteúdo de um projeto
   const generateProjectContent = (project: (typeof projects)[0]) => {
     return (
       <div className="mac-project-browser-content">
-        {/* Imagem de capa do projeto com overlay de gradiente */}
+        {/* Imagem de capa do projeto */}
         <div className="mac-project-header">
           <div
             className="mac-project-cover-image"
@@ -129,19 +122,6 @@ export default function HeroBrowser({
 
   // Componente para a tela inicial personalizada
   const CustomHomeScreen = ({ onTabOpen }: { onTabOpen?: (tabId: string) => void }) => {
-    // Filtrar projetos com base na pesquisa
-    const filteredProjects = projects.filter(
-      project =>
-        project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (project.description[locale] || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-
-    // Manipular alteração na pesquisa
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
-    };
-
     // Manipular clique em um projeto - agora usa onTabOpen se disponível
     const handleProjectClick = (projectId: string) => {
       if (onTabOpen) {
@@ -153,23 +133,6 @@ export default function HeroBrowser({
 
     return (
       <div className="mac-browser-home">
-        {/* Cabeçalho da página inicial */}
-        <div className="mac-browser-home-header">
-          <h1 className="mac-browser-home-title">{title}</h1>
-          <p className="mac-browser-home-subtitle">{subtitle}</p>
-          {/* Barra de pesquisa de projetos */}
-          <div className="mac-browser-search">
-            <Search className="mac-browser-search-icon" size={18} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="mac-browser-search-input"
-              placeholder={locale === 'pt' ? 'Pesquisar projetos...' : 'Search projects...'}
-            />
-          </div>
-        </div>
-
         {/* Seção de projetos em destaque */}
         <div className="mac-browser-featured-section">
           <h2 className="mac-browser-section-title">
@@ -196,19 +159,19 @@ export default function HeroBrowser({
                 <div className="mac-browser-project-card-content">
                   <h3 className="mac-browser-project-card-title">{project.title}</h3>
                   <p className="mac-browser-project-card-description">
-                    {project.description[locale].length > 100
-                      ? `${project.description[locale].substring(0, 100)}...`
+                    {project.description[locale].length > 120
+                      ? `${project.description[locale].substring(0, 120)}...`
                       : project.description[locale]}
                   </p>
                   <div className="mac-browser-project-card-tags">
-                    {project.tags.slice(0, 3).map(tag => (
+                    {project.tags.slice(0, 4).map(tag => (
                       <span key={tag} className="mac-browser-project-card-tag">
                         {tag}
                       </span>
                     ))}
-                    {project.tags.length > 3 && (
+                    {project.tags.length > 4 && (
                       <span className="mac-browser-project-card-more-tags">
-                        +{project.tags.length - 3}
+                        +{project.tags.length - 4}
                       </span>
                     )}
                   </div>
@@ -226,50 +189,39 @@ export default function HeroBrowser({
           </h2>
 
           <div className="mac-browser-projects-grid">
-            {filteredProjects.length > 0 ? (
-              filteredProjects.map(project => (
+            {projects.map(project => (
+              <div
+                key={project.id}
+                className="mac-browser-project-card"
+                onClick={() => handleProjectClick(project.id)}
+              >
                 <div
-                  key={project.id}
-                  className="mac-browser-project-card"
-                  onClick={() => handleProjectClick(project.id)}
+                  className="mac-browser-project-card-image"
+                  style={{ backgroundImage: `url(${project.image})` }}
                 >
-                  <div
-                    className="mac-browser-project-card-image"
-                    style={{ backgroundImage: `url(${project.image})` }}
-                  >
-                    {project.featured && (
-                      <div className="mac-browser-project-card-badge">
-                        <Star size={12} />
-                      </div>
+                  {project.featured && (
+                    <div className="mac-browser-project-card-badge">
+                      <Star size={12} />
+                    </div>
+                  )}
+                </div>
+                <div className="mac-browser-project-card-content">
+                  <h3 className="mac-browser-project-card-title">{project.title}</h3>
+                  <div className="mac-browser-project-card-tags">
+                    {project.tags.slice(0, 3).map(tag => (
+                      <span key={tag} className="mac-browser-project-card-tag">
+                        {tag}
+                      </span>
+                    ))}
+                    {project.tags.length > 3 && (
+                      <span className="mac-browser-project-card-more-tags">
+                        +{project.tags.length - 3}
+                      </span>
                     )}
                   </div>
-                  <div className="mac-browser-project-card-content">
-                    <h3 className="mac-browser-project-card-title">{project.title}</h3>
-                    <div className="mac-browser-project-card-tags">
-                      {project.tags.slice(0, 2).map(tag => (
-                        <span key={tag} className="mac-browser-project-card-tag">
-                          {tag}
-                        </span>
-                      ))}
-                      {project.tags.length > 2 && (
-                        <span className="mac-browser-project-card-more-tags">
-                          +{project.tags.length - 2}
-                        </span>
-                      )}
-                    </div>
-                  </div>
                 </div>
-              ))
-            ) : (
-              <div className="mac-browser-no-results">
-                <Search size={32} />
-                <p>
-                  {locale === 'pt'
-                    ? 'Nenhum projeto encontrado para sua pesquisa'
-                    : 'No projects found for your search'}
-                </p>
               </div>
-            )}
+            ))}
           </div>
         </div>
       </div>

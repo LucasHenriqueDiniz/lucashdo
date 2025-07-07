@@ -1,8 +1,7 @@
 'use client';
 import Image from 'next/image';
-import BrowserV2, { BrowserTab } from '@/components/home/Browser/BrowserV2';
+import { Browser, BrowserTab } from '@/components/home/Browser';
 import { Project, projects } from '@/constants';
-import BrowserExample from '@/components/home/Browser/BrowserExample';
 
 // Placeholder for project content
 function generateProjectContent(project: Project) {
@@ -43,8 +42,7 @@ export default function Blog() {
 
   return (
     <section className="mt-36 min-h-screen flex flex-col items-center justify-center p-4">
-      <BrowserExample />
-      <BrowserV2 tabs={projectTabs} />
+      <Browser tabs={projectTabs} />
     </section>
   );
 }

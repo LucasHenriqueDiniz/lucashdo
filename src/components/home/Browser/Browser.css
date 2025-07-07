@@ -47,6 +47,56 @@
   pointer-events: none;
 }
 
+.browser-container.decorative-mode {
+  pointer-events: none;
+}
+
+.browser-container.decorative-mode .tab {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.browser-container.decorative-mode .tab-close-btn,
+.browser-container.decorative-mode .new-tab-btn,
+.browser-container.decorative-mode .window-controls {
+  display: none;
+}
+
+.browser-container.decorative-mode .address-bar {
+  pointer-events: none;
+}
+
+.browser-container.decorative-mode .url-display {
+  pointer-events: none;
+  cursor: default;
+}
+
+.browser-container.decorative-mode .nav-btn {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.browser-container.decorative-mode .refresh-btn {
+  pointer-events: auto;
+}
+
+/* Permitir interação com o conteúdo das abas */
+.browser-container.decorative-mode .tab-content-container {
+  pointer-events: auto;
+}
+
+.browser-container.decorative-mode .browser-content {
+  pointer-events: auto;
+}
+
+.browser-container.decorative-mode .browser-home-screen {
+  pointer-events: auto;
+}
+
+.browser-container.decorative-mode .custom-home-screen {
+  pointer-events: auto;
+}
+
 /* Header with tabs and window controls */
 .browser-header {
   border-radius: 12px 12px 0 0; /* Rounded corners at the top */
@@ -249,7 +299,7 @@
 /* Address bar styling */
 .address-bar {
   background: var(--bg-secondary);
-  padding: 12px 20px;
+  padding: 6px 16px;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -289,8 +339,8 @@
   flex: 1;
   background: var(--bg-tertiary);
   border-radius: 20px;
-  padding: 0 12px;
-  margin: 0 10px;
+  padding: 0 6px;
+  margin: 0 5px;
   transition: all 0.2s ease;
   border: 1px solid transparent;
   cursor: text;

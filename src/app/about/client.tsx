@@ -64,6 +64,7 @@ export default function AboutClient() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   // Profile section animations
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isProfileInView = useInView(profileRef, { once: true, amount: 0.3 });
   const isSkillsInView = useInView(skillsRef, { once: true, amount: 0.2 });
   const isProjectsInView = useInView(projectsRef, { once: true, amount: 0.2 });

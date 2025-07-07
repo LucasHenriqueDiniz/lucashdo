@@ -1,1 +1,1 @@
-export { default } from './ProjectsShowcase';
+export { default } from './FeaturedProjects';

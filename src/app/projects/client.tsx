@@ -1,18 +1,18 @@
 'use client';
 
-import { AnimatePresence, motion, useInView, Variants } from 'framer-motion';
-import { Code2, Eye, Filter, Grid3X3, List, Star } from 'lucide-react';
+import { motion, useInView, Variants } from 'framer-motion';
+import { Code2, Eye, Filter, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState, useMemo, memo, useCallback } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Locale } from '@/lib/i18n/config';
 import { Project } from '@/constants';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { DataTable } from './data-table';
 import { createColumns } from './columns';
+import { DataTable } from './data-table';
+import { StatusFilter } from './status-filter';
 import { TagFilter } from './tag-filter';
 import { ViewToggle } from './view-toggle';
-import { StatusFilter } from './status-filter';
 
 interface ProjectCardProps {
   project: Project;

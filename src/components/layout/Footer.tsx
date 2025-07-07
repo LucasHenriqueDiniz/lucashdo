@@ -4,20 +4,15 @@ import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState, memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   RiArrowRightUpLine,
   RiChat2Line,
-  RiChatSettingsLine,
-  RiChatSmile3Line,
-  RiDiscussLine,
   RiGithubFill,
   RiHeartFill,
   RiLinkedinFill,
   RiMailLine,
   RiMessage2Line,
-  RiMessage3Line,
-  RiMoreLine,
   RiTwitterXFill,
 } from 'react-icons/ri';
 import { Project, projects } from '@/constants/projects';

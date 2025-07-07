@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import { useLocale, useTranslations } from 'next-intl';
-import MainLayout from '@/components/layout/MainLayout';
 import { projects } from '@/constants';
 import { Locale } from '@/lib/i18n/config';
 import { AnimatedProjectsLayout } from './AnimatedProjects';

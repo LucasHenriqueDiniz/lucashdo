@@ -1,0 +1,130 @@
+.tab {
+  background: var(--gradient-tab);
+  border: 1px solid var(--border-color);
+  border-radius: 8px 8px 0 0;
+  padding: 8px 16px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  min-width: 150px;
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.tab.active {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-bottom-color: var(--bg-primary);
+  z-index: 10;
+}
+
+.tab:hover:not(.active) {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.tab.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tab.pinned {
+  min-width: 40px;
+  max-width: 40px;
+  padding: 8px;
+}
+
+.tab.pinned .tab-title {
+  display: none;
+}
+
+.tab-icon {
+  width: 16px;
+  height: 16px;
+  background: var(--accent-orange);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: white;
+  font-weight: bold;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.tab-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tab-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tab-unsaved-indicator {
+  color: var(--accent-orange);
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.tab-close-btn {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+.tab-close-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+/* Focus styles for accessibility */
+.tab:focus {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.tab:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .tab {
+    min-width: 80px;
+    max-width: 120px;
+    padding: 6px 12px;
+  }
+
+  .tab.pinned {
+    min-width: 32px;
+    max-width: 32px;
+    padding: 6px;
+  }
+}

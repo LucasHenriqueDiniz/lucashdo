@@ -13,22 +13,21 @@ import {
 } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { type Locale } from '@/lib/i18n/config';
 import { Project, projects } from '@/constants/projects';
 import Browser from '../home/Browser/Browser';
 import ProjectBrowserTab from './ProjectBrowserTab';
-import './ProjectsShowcase.css';
+import './FeaturedProjects.css';
 
-const ProjectsShowcase2 = () => {
+const ProjectsShowcase = () => {
   const locale = useLocale() as Locale;
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [activeTabId, setActiveTabId] = useState<string>('');
   const [activeProjectIndex, setActiveProjectIndex] = useState<number>(0);
 
   // Sort projects to get featured ones first
   const featuredProjects = projects.filter(project => project.featured);
-  const topFeaturedProjects = featuredProjects.slice(0, 4);
+  const topFeaturedProjects = featuredProjects; // Show all featured projects
 
   // Initialize active tab ONLY ONCE when component mounts
   useEffect(() => {
@@ -39,19 +38,11 @@ const ProjectsShowcase2 = () => {
       );
 
       if (windowsXPProject) {
-        console.log(
-          'Found Windows XP Online project! Setting as initial active tab:',
-          windowsXPProject.id
-        );
         // Define o índice e o ID da aba ao mesmo tempo
         const windowsXPIndex = topFeaturedProjects.findIndex(p => p.id === 'windows-xp-online');
         setActiveProjectIndex(windowsXPIndex);
         setActiveTabId('windows-xp-online');
       } else {
-        console.log(
-          'Windows XP Online not found, defaulting to first project:',
-          topFeaturedProjects[0].id
-        );
         setActiveProjectIndex(0);
         setActiveTabId(topFeaturedProjects[0].id);
       }
@@ -62,7 +53,7 @@ const ProjectsShowcase2 = () => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setSelectedProject(null);
+        // Modal functionality removed
       }
     };
 
@@ -72,40 +63,59 @@ const ProjectsShowcase2 = () => {
     };
   }, []);
 
-  // Lock scroll when modal is open
-  useEffect(() => {
-    if (selectedProject) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+  // Handle tab change
+  const handleTabChange = useCallback(
+    (tabId: string | null) => {
+      if (!tabId) return;
 
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [selectedProject]); // Handle tab change
+      // Verificar se é o mesmo ID de aba que já está ativo
+      if (tabId === activeTabId) {
+        return;
+      }
 
-  const handleTabChange = (tabId: string) => {
-    console.log('ProjectsShowcase2: Tab mudou para:', tabId);
+      // Encontre o índice do projeto para atualizar activeProjectIndex
+      const newIndex = topFeaturedProjects.findIndex(project => project.id === tabId);
 
-    // Verificar se é o mesmo ID de aba que já está ativo
-    if (tabId === activeTabId) {
-      console.log('ProjectsShowcase2: Tab já está ativa, ignorando:', tabId);
-      return;
-    }
+      if (newIndex >= 0) {
+        // Atualize os estados de forma direta e síncrona
+        setActiveProjectIndex(newIndex);
+        setActiveTabId(tabId);
+      }
+    },
+    [activeTabId, topFeaturedProjects]
+  );
 
-    // Encontre o índice do projeto para atualizar activeProjectIndex
-    const newIndex = topFeaturedProjects.findIndex(project => project.id === tabId);
-    console.log('New project index:', newIndex, 'for tab ID:', tabId);
+  // Handle external tab request (for opening projects in new tabs)
+  const handleExternalTabRequest = useCallback(
+    (tabId: string) => {
+      const project = topFeaturedProjects.find(p => p.id === tabId);
+      if (project && project.demoUrl) {
+        window.open(project.demoUrl, '_blank');
+      }
+    },
+    [topFeaturedProjects]
+  );
 
-    if (newIndex >= 0) {
-      // Atualize os estados de forma direta e síncrona
-      setActiveProjectIndex(newIndex);
-      setActiveTabId(tabId);
-    } else {
-      console.error('Tab ID not found in topFeaturedProjects:', tabId);
-    }
-  }; // Get current active project based on activeTabId  // Usando useEffect para garantir que o activeProject será atualizado quando activeTabId mudar
+  // Update active tab when navigation buttons are clicked
+  const navigateToProject = useCallback(
+    (newIndex: number) => {
+      if (newIndex >= 0 && newIndex < topFeaturedProjects.length) {
+        const newId = topFeaturedProjects[newIndex].id;
+
+        // Update states first
+        setActiveTabId(newId);
+        setActiveProjectIndex(newIndex);
+
+        // Then notify browser - but browser should just change tab, not recreate
+        setTimeout(() => {
+          handleTabChange(newId);
+        }, 0);
+      }
+    },
+    [topFeaturedProjects, handleTabChange]
+  );
+
+  // Get current active project based on activeTabId
   const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   useEffect(() => {
@@ -115,7 +125,6 @@ const ProjectsShowcase2 = () => {
       topFeaturedProjects[activeProjectIndex] ||
       topFeaturedProjects[0];
 
-    console.log('Updating active project to:', project?.title, 'based on tabId:', activeTabId);
     setActiveProject(project);
   }, [activeTabId, activeProjectIndex, topFeaturedProjects]);
 
@@ -152,7 +161,7 @@ const ProjectsShowcase2 = () => {
       {/* Featured projects in browser */}
       {topFeaturedProjects.length > 0 && (
         <motion.div
-          className="mb-24"
+          className="featured-projects-section mb-24"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -164,25 +173,23 @@ const ProjectsShowcase2 = () => {
             </h3>
 
             {/* Project navigation arrows */}
-            <div className="flex items-center gap-4">
+            <div className="project-navigation">
               <motion.button
                 onClick={() => {
                   const newIndex =
                     activeProjectIndex === 0
                       ? topFeaturedProjects.length - 1
                       : activeProjectIndex - 1;
-                  const newId = topFeaturedProjects[newIndex].id;
-                  setActiveTabId(newId);
-                  setActiveProjectIndex(newIndex);
+                  navigateToProject(newIndex);
                 }}
-                className="p-2 rounded-full bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700 hover:border-slate-600 group"
+                className="project-nav-button group"
                 aria-label="Previous project"
-                whileHover={{ x: -2 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ x: -1 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <ChevronLeft
                   size={20}
-                  className="text-slate-400 group-hover:text-white transition-colors"
+                  className="text-slate-400 group-hover:text-white transition-colors duration-200"
                 />
               </motion.button>
               <span className="text-slate-500 text-sm">
@@ -194,76 +201,59 @@ const ProjectsShowcase2 = () => {
                     activeProjectIndex === topFeaturedProjects.length - 1
                       ? 0
                       : activeProjectIndex + 1;
-                  const newId = topFeaturedProjects[newIndex].id;
-                  setActiveTabId(newId);
-                  setActiveProjectIndex(newIndex);
+                  navigateToProject(newIndex);
                 }}
-                className="p-2 rounded-full bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700 hover:border-slate-600 group"
+                className="project-nav-button group"
                 aria-label="Next project"
-                whileHover={{ x: 2 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ x: 1 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <ChevronRight
                   size={20}
-                  className="text-slate-400 group-hover:text-white transition-colors"
+                  className="text-slate-400 group-hover:text-white transition-colors duration-200"
                 />
               </motion.button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
+          <div className="featured-projects-grid">
+            <div className="md:col-span-1">
               {/* Animated Background Elements */}
               <div className="animated-background">
                 <motion.div
                   className="animated-orb orb-1"
                   animate={{
-                    x: [0, 20, -20, 0],
-                    y: [0, -30, 10, 0],
+                    x: [0, 15, -15, 0],
+                    y: [0, -20, 8, 0],
                   }}
                   transition={{
-                    duration: 20,
+                    duration: 15,
                     repeat: Infinity,
-                    repeatType: 'reverse',
-                    ease: 'easeInOut',
+                    ease: 'linear',
                   }}
                 />
                 <motion.div
                   className="animated-orb orb-2"
                   animate={{
-                    x: [0, -30, 20, 0],
-                    y: [0, 40, -20, 0],
-                  }}
-                  transition={{
-                    duration: 25,
-                    repeat: Infinity,
-                    repeatType: 'reverse',
-                    ease: 'easeInOut',
-                  }}
-                />
-                <motion.div
-                  className="animated-orb orb-3"
-                  animate={{
-                    x: [0, 40, -10, 0],
-                    y: [0, -10, 30, 0],
+                    x: [0, -20, 15, 0],
+                    y: [0, 25, -15, 0],
                   }}
                   transition={{
                     duration: 18,
                     repeat: Infinity,
-                    repeatType: 'reverse',
-                    ease: 'easeInOut',
+                    ease: 'linear',
                   }}
                 />
               </div>
 
               {/* Browser with project showcase */}
-              <div className="project-browser-wrapper relative">
+              <div className="relative">
                 {/* Mouse click instructional icon */}
                 <motion.div
-                  className="floating-mouse-instruction -right-4 top-16"
+                  className="floating-mouse-instruction -right-4 -top-8"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1, duration: 0.5 }}
+                  transition={{ delay: 1, duration: 0.3 }}
                   whileHover={{ scale: 1.05 }}
                 >
                   <div className="relative">
@@ -274,79 +264,33 @@ const ProjectsShowcase2 = () => {
                       }}
                       transition={{
                         repeat: Infinity,
-                        duration: 1.2,
-                        repeatDelay: 0.8,
+                        duration: 2,
                         ease: 'easeInOut',
                       }}
                     >
                       <MousePointer size={16} className="text-blue-400" />
                     </motion.div>
 
-                    {/* Click ripple effect */}
+                    {/* Simplified ripple effect */}
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-blue-400/30"
-                      initial={{ scale: 0.5, opacity: 0 }}
+                      className="absolute inset-0 rounded-full bg-blue-400/20"
                       animate={{
-                        scale: [0.5, 1.5, 2],
-                        opacity: [0, 0.8, 0],
+                        scale: [1, 1.8],
+                        opacity: [0.5, 0],
                       }}
                       transition={{
                         repeat: Infinity,
-                        duration: 1.5,
-                        repeatDelay: 0.5,
+                        duration: 2,
                         ease: 'easeOut',
                       }}
                     />
-
-                    {/* Sparkle effects */}
-                    <motion.div
-                      className="absolute -top-1 -right-1 w-1 h-1 rounded-full bg-blue-300"
-                      animate={{
-                        y: [0, -8],
-                        x: [0, 5],
-                        opacity: [0, 1, 0],
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 0.8,
-                        repeatDelay: 0.9,
-                      }}
-                    />
-                    <motion.div
-                      className="absolute -bottom-1 -left-1 w-1 h-1 rounded-full bg-blue-300"
-                      animate={{
-                        y: [0, 8],
-                        x: [0, -5],
-                        opacity: [0, 1, 0],
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 0.8,
-                        repeatDelay: 0.9,
-                        delay: 0.1,
-                      }}
-                    />
-                    <motion.div
-                      className="absolute -top-1 -left-2 w-1.5 h-1.5 rounded-full bg-blue-200"
-                      animate={{
-                        y: [0, -6],
-                        x: [0, -6],
-                        opacity: [0, 1, 0],
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 0.7,
-                        repeatDelay: 0.9,
-                        delay: 0.2,
-                      }}
-                    />
                   </div>
-                  <span className="text-sm text-slate-300 whitespace-nowrap">
-                    Click tabs to see projects
+                  <span className="text-sm text-slate-300 whitespace-nowrap hidden md:inline">
+                    Click tabs to explore
                   </span>
-                </motion.div>{' '}
+                </motion.div>
                 <Browser
-                  allowToCloseTabs={false}
+                  key="featured-browser" // Static key to prevent re-creation
                   tabs={topFeaturedProjects.map(project => ({
                     id: project.id,
                     title: project.title,
@@ -360,18 +304,22 @@ const ProjectsShowcase2 = () => {
                       />
                     ),
                   }))}
-                  activeTabId={activeTabId}
+                  initialActiveTab={activeTabId}
+                  initialOpenTabs={topFeaturedProjects.map(project => project.id)}
+                  externalActiveTabId={activeTabId}
                   onTabChange={handleTabChange}
-                  width="100%"
-                  height="500px"
+                  onExternalTabRequest={handleExternalTabRequest}
+                  width="600px"
+                  height="410px"
                   showWindowControls={true}
                   hideNewTabButton={true}
+                  isInteractive={false}
                 />
               </div>
             </div>
 
             {/* Project details - updates when tab changes */}
-            <div className="md:col-span-1 flex flex-col justify-center">
+            <div className="flex flex-col justify-center  h-full">
               <AnimatePresence mode="wait">
                 {activeProject && (
                   <motion.div
@@ -380,7 +328,7 @@ const ProjectsShowcase2 = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.4 }}
-                    className="relative bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl p-6 rounded-xl shadow-2xl border border-slate-700/50 overflow-hidden z-10"
+                    className="relative  h-full bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl p-6 rounded-xl shadow-2xl border border-slate-700/50 overflow-hidden z-10"
                   >
                     {/* Glass effect overlay */}
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5"></div>
@@ -428,14 +376,14 @@ const ProjectsShowcase2 = () => {
                       className="flex flex-wrap gap-2 mb-4"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3, duration: 0.4 }}
+                      transition={{ delay: 0.2, duration: 0.3 }}
                     >
                       {activeProject.tags.map((tag, index) => (
                         <motion.span
                           key={`${activeProject.id}-${tag}`}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.3 + index * 0.1, duration: 0.3 }}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 + index * 0.05, duration: 0.2 }}
                           className="bg-gradient-to-r from-blue-900/50 to-indigo-900/50 text-blue-200 text-xs px-3 py-1 rounded-full border border-blue-800/40 shadow-sm shadow-blue-900/20"
                         >
                           {tag}
@@ -448,7 +396,7 @@ const ProjectsShowcase2 = () => {
                       className="text-slate-300 mb-6 leading-relaxed text-sm md:text-base"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: 0.5, duration: 0.5 }}
+                      transition={{ delay: 0.3, duration: 0.3 }}
                     >
                       {locale === 'pt'
                         ? activeProject.description.pt
@@ -460,7 +408,7 @@ const ProjectsShowcase2 = () => {
                       className="flex flex-wrap gap-3 mt-6"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6, duration: 0.4 }}
+                      transition={{ delay: 0.4, duration: 0.3 }}
                     >
                       <Link
                         href={activeProject.repoUrl}
@@ -512,11 +460,10 @@ const ProjectsShowcase2 = () => {
             <span className="z-10 relative">View all projects</span>
             <motion.span
               className="inline-block z-10 relative"
-              animate={{ x: [0, 3, 0] }}
+              animate={{ x: [0, 2, 0] }}
               transition={{
-                duration: 1.5,
+                duration: 2,
                 repeat: Infinity,
-                repeatType: 'reverse',
                 ease: 'easeInOut',
               }}
             >
@@ -539,4 +486,4 @@ const ProjectsShowcase2 = () => {
   );
 };
 
-export default ProjectsShowcase2;
+export default ProjectsShowcase;

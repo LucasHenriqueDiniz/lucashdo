@@ -3,78 +3,19 @@
 
 import { motion } from 'framer-motion';
 import { PlusIcon } from 'lucide-react';
-import Image from 'next/image';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import './Browser.css';
-
-export interface BrowserTab {
-  /** ID único para a aba */
-  id: string;
-  /** Título da aba */
-  title: string;
-  /** URL para exibir na barra de endereço */
-  url: string;
-  /** Conteúdo da aba */
-  content: ReactNode;
-  /** Ícone opcional para a aba (ReactNode ou string para URL de imagem) */
-  icon?: ReactNode | string;
-  /** Indica se a aba está favoritada */
-  isFavorited?: boolean;
-  /** Dados adicionais opcionais que podem ser usados pelo componente */
-  data?: Record<string, any>;
-}
-
-// Componente padrão para quando o browser está fechado/minimizado
-const DefaultRestoreButton = ({ onRestore }: { onRestore: () => void }) => (
-  <div className="flex flex-col items-center justify-center mt-12">
-    <button
-      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      onClick={onRestore}
-    >
-      Restaurar Navegador
-    </button>
-  </div>
-);
-
-// Componente padrão para home screen
-const DefaultHomeScreen = ({
-  tabs,
-  onTabClick,
-}: {
-  tabs: BrowserTab[];
-  onTabClick: (tabId: string) => void;
-}) => (
-  <div className="browser-showcase">
-    <h2 className="browser-showcase-title">Projetos Disponíveis</h2>
-    <div className="browser-showcase-grid">
-      {tabs.map((tab: BrowserTab) => (
-        <div key={tab.id} className="browser-showcase-item" onClick={() => onTabClick(tab.id)}>
-          <div className="browser-showcase-card">
-            <div className="browser-showcase-icon">
-              {typeof tab.icon === 'string' ? (
-                <Image
-                  src={tab.icon as string}
-                  alt={tab.title}
-                  width={32}
-                  height={32}
-                  className="browser-showcase-icon-img"
-                />
-              ) : (
-                tab.icon || <div>{tab.title.charAt(0).toUpperCase()}</div>
-              )}
-            </div>
-            <div className="browser-showcase-content">
-              <h3 className="browser-showcase-title">{tab.title}</h3>
-              <div className="browser-showcase-url">{tab.url}</div>
-              <div className="browser-showcase-action">Visitar →</div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
+import {
+  AddressBar,
+  DefaultHomeScreen,
+  DefaultRestoreButton,
+  Tab,
+  TabPreviewTooltip,
+  WindowControls,
+} from './components';
+import { useBrowserTabs } from './hooks/useBrowserTabs';
+import { BrowserTab } from './types/BrowserTab';
 
 interface BrowserProps {
   // Todas as abas disponíveis no browser
@@ -114,6 +55,10 @@ interface BrowserProps {
   onClose?: () => void;
   onMinimize?: () => void;
   onMaximize?: () => void;
+
+  // Controle externo da aba ativa
+  externalActiveTabId?: string;
+  onExternalTabChange?: (tabId: string) => void;
 }
 
 /*
@@ -125,7 +70,7 @@ interface BrowserProps {
  * @param width - Largura fixa do navegador (padrão: '900px')
  * @param height - Altura fixa do navegador (padrão: '600px')
  * @param isInteractive - Se o navegador permite interação (abrir/fechar abas) (padrão: true)
- *  @param hideNewTabButton - Esconde o botão de nova aba (padrão: false)
+ * @param hideNewTabButton - Esconde o botão de nova aba (padrão: false)
  * @param showWindowControls - Se exibe os controles de janela (fechar/minimizar/maximizar) (padrão: true)
  * @param customRestoreComponent - Componente customizado para quando o navegador está fechado/minimizado
  * @param onTabChange - Callback chamado quando a aba ativa é alterada
@@ -154,39 +99,52 @@ const Browser = function Browser({
   onClose,
   onMinimize,
   onMaximize,
+  externalActiveTabId,
 }: BrowserProps): React.ReactElement {
   // Browser state
   const [isMaximized, setIsMaximized] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
 
-  // Initialize home screen state based on homeContent
-  const [isHomeScreen, setIsHomeScreen] = useState(!!homeContent && !initialActiveTab);
+  // Initialize tabs state
+  const initialTabs =
+    initialOpenTabs.length > 0 ? tabs.filter(tab => initialOpenTabs.includes(tab.id)) : [];
 
-  // Estado das abas abertas no browser
-  const [internalTabs, setInternalTabs] = useState<BrowserTab[]>(() => {
-    const openTabs = [];
-    if (initialOpenTabs && initialOpenTabs.length > 0) {
-      openTabs.push(...tabs.filter(tab => initialOpenTabs.includes(tab.id)));
-    }
-    return openTabs;
-  });
-
-  // Aba atualmente ativa
-  const [internalActiveTabId, setInternalActiveTabId] = useState<string | undefined>(
-    initialActiveTab ||
-      (initialOpenTabs && initialOpenTabs.length > 0 ? initialOpenTabs[0] : undefined)
+  const {
+    tabs: internalTabs,
+    activeTabIndex,
+    isHomeScreen,
+    activeTab,
+    addTab,
+    removeTab,
+    setActiveTab,
+    setHomeScreen,
+    createHomeTab,
+    createNewTab,
+    transformTab,
+  } = useBrowserTabs(
+    initialTabs,
+    initialActiveTab || (initialOpenTabs.length > 0 ? initialOpenTabs[0] : undefined),
+    !!homeContent && !initialActiveTab
   );
 
-  // Find active tab object
-  const activeTab = internalTabs.find((tab: BrowserTab) => tab.id === internalActiveTabId);
+  // Tooltip state para Floating UI
+  const [previewTabId, setPreviewTabId] = useState<string | null>(null);
+  const [previewRef, setPreviewRef] = useState<HTMLElement | null>(null);
 
-  // Flag to determine whether to show home screen
-  const shouldShowHomeScreen =
-    isHomeScreen || (!activeTab && homeContent) || activeTab?.id === 'home-tab';
+  // Responder ao controle externo da aba ativa
+  useEffect(() => {
+    if (externalActiveTabId && externalActiveTabId !== activeTab?.id) {
+      const tabIndex = internalTabs.findIndex(tab => tab.id === externalActiveTabId);
+      if (tabIndex >= 0) {
+        setActiveTab(tabIndex);
+        setHomeScreen(false);
+      }
+    }
+  }, [externalActiveTabId, activeTab?.id, internalTabs, setActiveTab, setHomeScreen]);
 
   // Window control handlers
-  const handleCloseClick = (): void => {
+  const handleCloseClick = useCallback((): void => {
     if (!isInteractive) return;
 
     if (onClose) {
@@ -194,9 +152,9 @@ const Browser = function Browser({
     } else {
       setIsClosed(true);
     }
-  };
+  }, [isInteractive, onClose]);
 
-  const handleMinimizeClick = (): void => {
+  const handleMinimizeClick = useCallback((): void => {
     if (!isInteractive) return;
 
     if (onMinimize) {
@@ -204,9 +162,9 @@ const Browser = function Browser({
     } else {
       setIsMinimized(true);
     }
-  };
+  }, [isInteractive, onMinimize]);
 
-  const handleMaximizeClick = (): void => {
+  const handleMaximizeClick = useCallback((): void => {
     if (!isInteractive) return;
 
     if (onMaximize) {
@@ -214,134 +172,97 @@ const Browser = function Browser({
     } else {
       setIsMaximized(!isMaximized);
     }
-  };
+  }, [isInteractive, onMaximize, isMaximized]);
 
-  const handleRestore = (): void => {
+  const handleRestore = useCallback((): void => {
     setIsClosed(false);
     setIsMinimized(false);
-  };
+  }, []);
 
-  // Initialize internal tabs when external tabs change
-  useEffect(() => {
-    if (tabs && tabs.length > 0) {
-      // Atualizar apenas as abas abertas se alguma tab foi modificada
-      setInternalTabs(prevTabs =>
-        prevTabs.map(openTab => {
-          const updatedTab = tabs.find(tab => tab.id === openTab.id);
-          return updatedTab || openTab;
-        })
-      );
-    }
-  }, [tabs]);
-  // Handle click on tab
-  const handleTabClick = (tabId: string): void => {
-    console.log(`Browser handleTabClick: Changing tab to ${tabId}`);
-
-    // Skip if this tab is already active internally
-    if (tabId === internalActiveTabId) {
-      console.log(`Browser handleTabClick: Tab ${tabId} is already active, skipping update`);
-      return;
-    }
-
-    // Always exit home screen when a tab is clicked
-    setIsHomeScreen(false);
-
-    // Update internal active tab immediately for responsive UI
-    setInternalActiveTabId(tabId);
-
-    // Notify parent component of tab change via callback
-    if (onTabChange) {
-      const tabExists = internalTabs.some((tab: BrowserTab) => tab.id === tabId);
-      if (tabExists) {
-        console.log(`Browser handleTabClick: Calling external onTabChange with ${tabId}`);
-        onTabChange(tabId);
-      } else {
-        console.error(`Browser handleTabClick: Tab ${tabId} not found in available tabs`);
+  // Handle click on tab (trocar de aba)
+  const handleTabClick = useCallback(
+    (tabIndex: number): void => {
+      if (tabIndex === activeTabIndex) return;
+      setActiveTab(tabIndex);
+      setHomeScreen(false);
+      if (onTabChange) {
+        onTabChange(internalTabs[tabIndex]?.id || '');
       }
-    }
-  };
+    },
+    [activeTabIndex, setActiveTab, setHomeScreen, onTabChange, internalTabs]
+  );
 
-  // Function to open a tab dynamically (for home screen clicks)
-  const openTab = (tabId: string): void => {
+  // Lógica simplificada: se a aba ativa é new/home, transforma ela
+  const openTab = useCallback(
+    (tabId: string): void => {
+      const tabToOpen = tabs.find(tab => tab.id === tabId);
+      if (!tabToOpen) return;
+      const currentActiveIndex = activeTabIndex !== null ? activeTabIndex : -1;
+      const activeTabObj = currentActiveIndex >= 0 ? internalTabs[currentActiveIndex] : null;
+
+      // Se a aba ativa é new ou home, transforma ela
+      if (activeTabObj && (activeTabObj.type === 'new' || activeTabObj.type === 'home')) {
+        transformTab(currentActiveIndex, {
+          ...tabToOpen,
+          id: activeTabObj.id, // Mantém o ID original
+        });
+        if (onTabChange) onTabChange(tabToOpen.id);
+        return;
+      }
+
+      // Se não é new/home tab, abre normalmente
+      const isTabAlreadyOpen = internalTabs.some(tab => tab.id === tabId);
+      if (!isTabAlreadyOpen) {
+        addTab(tabToOpen);
+      }
+      const newTabIndex = internalTabs.findIndex(tab => tab.id === tabId);
+      if (newTabIndex >= 0) {
+        setActiveTab(newTabIndex);
+      } else {
+        // Se a aba não foi encontrada, adicionar e ativar
+        addTab(tabToOpen);
+        setActiveTab(internalTabs.length);
+      }
+      if (onTabChange) onTabChange(tabId);
+    },
+    [tabs, internalTabs, activeTabIndex, transformTab, addTab, setActiveTab, onTabChange]
+  );
+
+  // handleNewTabClick: cria new tab
+  const handleNewTabClick = useCallback((): void => {
     if (!isInteractive) return;
+    const newTab = createNewTab();
+    addTab(newTab);
+    setActiveTab(internalTabs.length); // Usar o índice da nova aba
+    setHomeScreen(true);
+  }, [isInteractive, createNewTab, addTab, setActiveTab, setHomeScreen, internalTabs.length]);
 
-    // Check if tab exists in available tabs
-    const tabToOpen = tabs.find(tab => tab.id === tabId);
-    if (!tabToOpen) {
-      console.error(`Tab ${tabId} not found in available tabs`);
-      return;
-    }
-
-    // Check if tab is already open
-    const isTabAlreadyOpen = internalTabs.some(tab => tab.id === tabId);
-
-    if (!isTabAlreadyOpen) {
-      // Add tab to internal tabs
-      setInternalTabs(prevTabs => [...prevTabs, tabToOpen]);
-    }
-
-    // Always activate the tab and exit home screen
-    setIsHomeScreen(false);
-    setInternalActiveTabId(tabId);
-
-    // Notify parent component
-    if (onTabChange) {
-      onTabChange(tabId);
-    }
-  };
+  // Transforma a aba atual em home
+  const handleTransformToHome = useCallback(
+    (tabIndex: number) => {
+      const homeTab = createHomeTab();
+      transformTab(tabIndex, {
+        ...homeTab,
+        id: internalTabs[tabIndex]?.id || '', // Mantém o ID original
+      });
+      setHomeScreen(true);
+    },
+    [createHomeTab, transformTab, setHomeScreen, internalTabs]
+  );
 
   // Handle closing a tab
-  const handleTabClose = (tabId: string): void => {
-    // Não permitir fechar abas no modo não interativo
-    if (!isInteractive) return;
-
-    // Não permitir fechar a aba Home
-    if (tabId === 'home') return;
-
-    // Não permitir fechar a última aba
-    if (internalTabs.length <= 1) return;
-
-    if (onTabClose) {
-      // Se há um callback externo, informá-lo mas gerenciar internamente também
-      onTabClose(tabId);
-    }
-
-    // Gerenciar internamente
-    // Filtrar para obter as abas restantes após o fechamento
-    const remainingTabs = internalTabs.filter((tab: BrowserTab) => tab.id !== tabId);
-
-    // Atualizar o estado interno com as abas restantes
-    setInternalTabs(remainingTabs);
-
-    // Se não houver mais abas após o fechamento, voltar para a home screen
-    if (remainingTabs.length === 0) {
-      setIsHomeScreen(true);
-      setInternalActiveTabId(undefined);
-    } else {
-      // Mudar para a primeira aba disponível
-      handleTabClick(remainingTabs[0].id);
-    }
-  };
-
-  const handleNewTabClick = (): void => {
-    if (!isInteractive) return;
-
-    // Criar uma nova aba vazia e ativar a home screen
-    const newTabId = `tab-${Date.now()}`;
-    const newTab: BrowserTab = {
-      id: newTabId,
-      title: 'New Tab',
-      url: 'about:blank',
-      content: <div>This is a new tab!</div>,
-    };
-
-    const updatedTabs = [...internalTabs, newTab];
-    setInternalTabs(updatedTabs);
-
-    // Ativar a nova aba e mostrar a home screen
-    setInternalActiveTabId(newTabId);
-    setIsHomeScreen(true);
-  };
+  const handleTabClose = useCallback(
+    (tabIndex: number): void => {
+      if (!isInteractive) return;
+      if (internalTabs.length <= 1) return;
+      const tabId = internalTabs[tabIndex]?.id;
+      if (onTabClose && tabId) {
+        onTabClose(tabId);
+      }
+      removeTab(tabIndex);
+    },
+    [isInteractive, internalTabs, onTabClose, removeTab]
+  );
 
   // Show restore button when browser is minimized/closed
   if (isClosed || isMinimized) {
@@ -352,25 +273,9 @@ const Browser = function Browser({
     );
   }
 
-  // Function to position tooltip on hover
-  const positionTooltip = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Get the element that was hovered
-    const tabElement = e.currentTarget;
-    const tooltipElement = tabElement.querySelector('.tab-preview-tooltip');
-
-    if (tooltipElement) {
-      const tabRect = tabElement.getBoundingClientRect();
-
-      // Position the tooltip centered above the tab
-      const tooltipLeft = tabRect.left + tabRect.width / 2;
-      const tooltipTop = tabRect.top - 130; // Position above the tab with some spacing
-
-      // Set the position as inline styles (since we're using fixed positioning)
-      (tooltipElement as HTMLElement).style.left = `${tooltipLeft}px`;
-      (tooltipElement as HTMLElement).style.top = `${tooltipTop}px`;
-      (tooltipElement as HTMLElement).style.transform = 'translateX(-50%)';
-    }
-  };
+  // Flag to determine whether to show home screen
+  const shouldShowHomeScreen =
+    isHomeScreen || (!activeTab && homeContent) || activeTab?.type === 'new';
 
   return (
     <motion.div
@@ -385,101 +290,82 @@ const Browser = function Browser({
     >
       {/* Browser header with tabs and controls */}
       <div className="browser-header">
-        <div className="tab-container">
-          {internalTabs.map((tab: BrowserTab) => (
-            <div
+        <div className="tab-container" role="tablist">
+          {internalTabs.map((tab: BrowserTab, index: number) => (
+            <Tab
               key={tab.id}
-              className={`tab ${tab.id === internalActiveTabId ? 'active' : ''} relative group`}
-              data-tab-id={tab.id}
-              onClick={() => handleTabClick(tab.id)}
-              onMouseEnter={positionTooltip}
-              onMouseMove={positionTooltip}
-            >
-              <div className="tab-icon">
-                {typeof tab.icon === 'string' ? (
-                  <Image
-                    width={16}
-                    height={16}
-                    alt={tab.title}
-                    src={tab.icon as string}
-                    className="tab-icon-img"
-                  />
-                ) : (
-                  tab.icon || <span>{tab.title.charAt(0).toUpperCase()}</span>
-                )}
-              </div>
-              <div className="tab-title">{tab.title}</div>
-              {isInteractive && tab.id !== 'home-tab' && (
-                <button
-                  className="tab-close-btn"
-                  onClick={e => {
-                    e.stopPropagation();
-                    handleTabClose(tab.id);
-                  }}
-                >
-                  &times;
-                </button>
-              )}
-
-              {/* Tab Preview Tooltip - only add to non-active tabs */}
-              {tab.id !== internalActiveTabId && (
-                <div className="tab-preview-tooltip">
-                  <div className="tab-preview-content">
-                    <div className="tab-preview-header">
-                      <div className="tab-preview-title">{tab.title}</div>
-                      <div className="tab-preview-url">{tab.url}</div>
-                    </div>
-                    <div className="tab-preview-image">
-                      {typeof tab.icon === 'string' && (
-                        <Image
-                          src={tab.icon as string}
-                          alt={tab.title}
-                          className="preview-img"
-                          width={64}
-                          height={64}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+              tab={tab}
+              tabIndex={index}
+              isActive={index === activeTabIndex}
+              isInteractive={isInteractive}
+              onClick={handleTabClick}
+              onClose={handleTabClose}
+              onMouseEnter={e => {
+                setPreviewTabId(tab.id);
+                setPreviewRef(e.currentTarget);
+              }}
+              onMouseMove={e => {
+                setPreviewTabId(tab.id);
+                setPreviewRef(e.currentTarget);
+              }}
+              onMouseLeave={() => {
+                setPreviewTabId(null);
+                setPreviewRef(null);
+              }}
+            />
           ))}
           {isInteractive && !hideNewTabButton && (
-            <button className="new-tab-btn" onClick={handleNewTabClick}>
+            <button
+              className="new-tab-btn"
+              onClick={handleNewTabClick}
+              aria-label="Nova aba"
+              title="Nova aba"
+            >
               <PlusIcon size={16} />
             </button>
           )}
         </div>
-        {showWindowControls && (
-          <div className="window-controls-right">
-            <button
-              className="control-btn minimize relative group"
-              onClick={handleMinimizeClick}
-              aria-label="Minimize"
-            >
-              <div className="tooltip-text">Minimize</div>
-            </button>
-            <button
-              className="control-btn maximize relative group"
-              onClick={handleMaximizeClick}
-              aria-label="Maximize"
-            >
-              <div className="tooltip-text">Maximize</div>
-            </button>
-            <button
-              className="control-btn close relative group"
-              onClick={handleCloseClick}
-              aria-label="Close"
-            >
-              <div className="tooltip-text">Close</div>
-            </button>
-          </div>
+        {showWindowControls && isInteractive && (
+          <WindowControls
+            isInteractive={isInteractive}
+            isMaximized={isMaximized}
+            onClose={handleCloseClick}
+            onMinimize={handleMinimizeClick}
+            onMaximize={handleMaximizeClick}
+          />
         )}
       </div>
+      <AddressBar
+        tab={activeTab || internalTabs[0]}
+        availableTabs={tabs}
+        onTabSelect={openTab}
+        onTransformToHome={handleTransformToHome}
+        currentTabIndex={activeTabIndex || 0}
+        isInteractive={isInteractive}
+      />
       {/* Browser content area */}
       <div className="browser-content">
-        {shouldShowHomeScreen ? (
+        {activeTab ? (
+          <>
+            <div className="tab-content-container">
+              {activeTab.type === 'home' || activeTab.type === 'new' || shouldShowHomeScreen ? (
+                <div className="browser-home-screen">
+                  {homeContent ? (
+                    <div className="custom-home-screen">
+                      {React.isValidElement(homeContent)
+                        ? React.cloneElement(homeContent, { onTabOpen: openTab } as any)
+                        : homeContent}
+                    </div>
+                  ) : (
+                    <DefaultHomeScreen tabs={tabs} onTabClick={openTab} />
+                  )}
+                </div>
+              ) : (
+                activeTab.content
+              )}
+            </div>
+          </>
+        ) : shouldShowHomeScreen ? (
           <div className="browser-home-screen">
             {homeContent ? (
               <div className="custom-home-screen">
@@ -491,12 +377,19 @@ const Browser = function Browser({
               <DefaultHomeScreen tabs={tabs} onTabClick={openTab} />
             )}
           </div>
-        ) : activeTab ? (
-          <div className="tab-content-container">{activeTab.content}</div>
         ) : (
           <Skeleton className="w-full h-full mb-4 min-h-[500px]" />
         )}
       </div>
+
+      {/* Tab Preview Tooltip */}
+      {previewTabId && previewRef && (
+        <TabPreviewTooltip
+          tab={internalTabs.find(tab => tab.id === previewTabId) || tabs[0]}
+          open={!!previewTabId}
+          reference={previewRef}
+        />
+      )}
     </motion.div>
   );
 };

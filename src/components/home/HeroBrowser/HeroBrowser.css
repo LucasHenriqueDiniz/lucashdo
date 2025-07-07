@@ -187,7 +187,7 @@
 
 .mac-project-header {
   position: relative;
-  height: 350px;
+  height: 280px;
   overflow: hidden;
 }
 
@@ -285,12 +285,12 @@
 }
 
 .mac-project-details {
-  padding: 30px;
+  padding: 24px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  max-width: 1000px;
+  gap: 24px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -328,6 +328,8 @@
 .mac-project-description p {
   margin: 0;
   animation: fadeIn 0.6s ease-out;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .mac-project-tags {
@@ -342,9 +344,9 @@
 .mac-project-tag {
   background: rgba(59, 130, 246, 0.12);
   color: #60a5fa;
-  font-size: 14px;
-  padding: 8px 14px;
-  border-radius: 20px;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 16px;
   border: 1px solid rgba(59, 130, 246, 0.25);
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   position: relative;
@@ -374,17 +376,17 @@
 .mac-project-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .mac-project-link {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-size: 15px;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   position: relative;
@@ -453,7 +455,7 @@
 
 /* MacBrowser Homescreen Styling */
 .mac-browser-home {
-  padding: 35px;
+  padding: 20px;
   height: 100%;
   overflow-y: auto;
   background-color: #18181b;
@@ -635,7 +637,7 @@
 }
 
 .mac-browser-featured-section {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   position: relative;
   padding: 10px 0;
   animation: fadeIn 0.8s ease-out 0.1s;
@@ -658,15 +660,15 @@
 
 .mac-browser-featured-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
   perspective: 1000px;
 }
 
 .mac-browser-projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
 }
 
 .mac-browser-project-card {
@@ -714,7 +716,6 @@
 }
 
 .mac-browser-featured-card {
-  grid-column: span 2;
   animation: slideInFromRight 0.6s ease-out forwards;
   opacity: 0;
 }
@@ -724,86 +725,8 @@
   animation-delay: 0.2s;
 }
 
-@media (max-width: 768px) {
-  .mac-browser-featured-card {
-    grid-column: span 1;
-  }
-
-  .mac-browser-home {
-    padding: 25px;
-  }
-
-  .mac-browser-home-title {
-    font-size: 28px;
-  }
-
-  .mac-browser-home-subtitle {
-    font-size: 15px;
-  }
-
-  .mac-browser-search-input {
-    padding: 14px 18px 14px 45px;
-    font-size: 15px;
-  }
-
-  .mac-browser-section-title {
-    font-size: 20px;
-  }
-
-  .mac-browser-featured-grid,
-  .mac-browser-projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 15px;
-  }
-
-  .mac-project-header {
-    height: 250px;
-  }
-
-  .mac-project-title {
-    font-size: 28px;
-  }
-
-  .mac-project-details {
-    padding: 20px;
-    gap: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .mac-browser-home {
-    padding: 20px;
-  }
-
-  .mac-browser-home-title {
-    font-size: 24px;
-  }
-
-  .mac-browser-featured-grid,
-  .mac-browser-projects-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .mac-project-header {
-    height: 200px;
-  }
-
-  .mac-project-title {
-    font-size: 24px;
-  }
-
-  .mac-project-links {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .mac-project-link {
-    width: 100%;
-  }
-}
-
 .mac-browser-project-card-image {
-  height: 180px;
+  height: 140px;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -832,7 +755,7 @@
 }
 
 .mac-browser-featured-card .mac-browser-project-card-image {
-  height: 220px;
+  height: 180px;
 }
 
 .mac-browser-project-card-badge {
@@ -867,7 +790,7 @@
 }
 
 .mac-browser-project-card-content {
-  padding: 18px;
+  padding: 14px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -875,13 +798,13 @@
 }
 
 .mac-browser-project-card:hover .mac-browser-project-card-content {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
 .mac-browser-project-card-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
   color: #e4e4e7;
   transition: color 0.3s ease;
   position: relative;
@@ -891,7 +814,7 @@
 .mac-browser-project-card-title::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: -1px;
   left: 0;
   width: 0;
   height: 2px;
@@ -904,10 +827,10 @@
 }
 
 .mac-browser-project-card-description {
-  font-size: 15px;
+  font-size: 13px;
   color: #a1a1aa;
-  margin: 0 0 18px 0;
-  line-height: 1.6;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
   flex: 1;
   transition: color 0.3s ease;
 }
@@ -916,18 +839,32 @@
   color: #d1d1d6;
 }
 
+.mac-browser-featured-card .mac-browser-project-card-content {
+  padding: 16px;
+}
+
+.mac-browser-featured-card .mac-browser-project-card-title {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.mac-browser-featured-card .mac-browser-project-card-description {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
 .mac-browser-project-card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
 }
 
 .mac-browser-project-card-tag {
   background: rgba(59, 130, 246, 0.15);
   color: #60a5fa;
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 20px;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 12px;
   border: 1px solid rgba(59, 130, 246, 0.2);
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -935,16 +872,16 @@
 
 .mac-browser-project-card-tag:hover {
   background: rgba(59, 130, 246, 0.25);
-  transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .mac-browser-project-card-more-tags {
-  font-size: 12px;
+  font-size: 11px;
   color: #71717a;
-  padding: 4px 8px;
+  padding: 3px 6px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
 }
@@ -1080,4 +1017,166 @@
 .mac-browser-project-card-featured-badge,
 .mac-browser-project-card-badge {
   animation: pulseGlow 3s infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mac-browser-home {
+    padding: 16px;
+  }
+
+  .mac-browser-section-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .mac-browser-featured-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .mac-browser-projects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .mac-browser-featured-card .mac-browser-project-card-image {
+    height: 160px;
+  }
+
+  .mac-browser-project-card-image {
+    height: 120px;
+  }
+
+  .mac-project-header {
+    height: 240px;
+  }
+
+  .mac-project-title {
+    font-size: 28px;
+  }
+
+  .mac-project-details {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .mac-browser-featured-section {
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mac-browser-home {
+    padding: 12px;
+  }
+
+  .mac-browser-featured-grid,
+  .mac-browser-projects-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .mac-browser-project-card-image,
+  .mac-browser-featured-card .mac-browser-project-card-image {
+    height: 140px;
+  }
+
+  .mac-project-header {
+    height: 200px;
+  }
+
+  .mac-project-title {
+    font-size: 24px;
+  }
+
+  .mac-project-details {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .mac-project-links {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mac-project-link {
+    width: 100%;
+  }
+
+  .mac-browser-section-title {
+    font-size: 18px;
+  }
+}
+
+/* Melhoria no layout do projeto content */
+.mac-project-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #e4e4e7;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.mac-project-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, #0077ff, transparent);
+  border-radius: 2px;
+}
+
+.mac-project-description p {
+  margin: 0;
+  animation: fadeIn 0.6s ease-out;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.mac-project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.mac-project-tag {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.mac-project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.mac-project-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
 }
