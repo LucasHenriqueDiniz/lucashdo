@@ -6,7 +6,7 @@ import { LuTerminal, LuX, LuMinus, LuMaximize2 } from 'react-icons/lu';
 
 interface Command {
   input: string;
-  output: string | JSX.Element;
+  output: string | React.JSX.Element;
   timestamp: Date;
 }
 
