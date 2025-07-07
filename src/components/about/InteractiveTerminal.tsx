@@ -73,7 +73,8 @@ Digite 'help' para ver os comandos disponíveis.`,
 
   const processCommand = (cmd: string) => {
     const command = cmd.toLowerCase().trim();
-    let output: string | JSX.Element = `Comando não encontrado: ${cmd}. Digite 'help' para ajuda.`;
+    let output: string | React.JSX.Element =
+      `Comando não encontrado: ${cmd}. Digite 'help' para ajuda.`;
 
     if (command in commands) {
       if (command === 'clear') {
