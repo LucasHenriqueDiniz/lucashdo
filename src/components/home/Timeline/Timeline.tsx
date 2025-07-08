@@ -4,9 +4,11 @@ import { useEffect, useState, useCallback, useMemo, memo, useLayoutEffect, useRe
 import { BriefcaseBusiness, GraduationCap, LucideIcon } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
+import { IconType } from 'react-icons/lib';
 import { academicExperiences } from '@/constants/academicExperiences';
 import { jobExperiences } from '@/constants/jobExperiences';
 import { ExperienceProps, TimelineTagProps, TranslatedField } from '@/types/experience.types';
+import { formatExperienceDates, getFilteredAndSortedExperiences } from '@/utils/experienceUtils';
 import { Pill } from '@/components/ui/Pill';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import './Timeline.css';
@@ -48,13 +50,13 @@ const ExperienceCardSkillsIcon = memo(
     title,
     index = 0,
   }: {
-    icon: LucideIcon | string;
+    icon: LucideIcon | string | IconType;
     title?: TranslatedField;
     index?: number;
   }) => {
     // Função para renderizar o ícone correto com useCallback
     const getIcon = useCallback(
-      (iconProp: string | LucideIcon) => {
+      (iconProp: string | LucideIcon | IconType) => {
         if (typeof iconProp === 'string') {
           // Se for uma string, assume que é um caminho de ícone SVG
           return (
@@ -68,7 +70,7 @@ const ExperienceCardSkillsIcon = memo(
           );
         } else {
           // Se for um componente LucideIcon, renderiza diretamente
-          const IconComponent = iconProp as LucideIcon;
+          const IconComponent = iconProp as IconType;
           return <IconComponent size={28} className="stroke-2" />;
         }
       },
@@ -351,7 +353,7 @@ function BallContainer({
             <TimelineArrow side={side} />
           </div>
         ) : (
-          <DatePill date={item.years} side={side} />
+          <DatePill date={formatExperienceDates(item.startDate, item.endDate, 'en')} side={side} />
         )}
         <div className="size-full flex items-center justify-center">
           <Tooltip>
@@ -366,7 +368,9 @@ function BallContainer({
                 <p className="text-xs opacity-90">{item.institution}</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="inline-block w-2 h-2 rounded-full bg-[var(--accent)]"></span>
-                  <span className="text-xs">{item.years.replace('/today/', 'Now')}</span>
+                  <span className="text-xs">
+                    {formatExperienceDates(item.startDate, item.endDate, 'en')}
+                  </span>
                 </div>
                 {item.description && (
                   <p className="text-xs opacity-80 mt-1 line-clamp-2">
@@ -380,7 +384,7 @@ function BallContainer({
           </Tooltip>
         </div>
         {side === 'left' ? (
-          <DatePill date={item.years} side={side} />
+          <DatePill date={formatExperienceDates(item.startDate, item.endDate, 'en')} side={side} />
         ) : (
           <div className="relative size-full">
             <TimelineArrow side={side} />
@@ -455,11 +459,7 @@ const Timeline = () => {
   }, []);
 
   const timelineItems = useMemo(
-    () =>
-      [
-        ...academicExperiences.filter(e => e.showInTimeline),
-        ...jobExperiences.filter(e => e.showInTimeline),
-      ].sort((a, b) => (a.date > b.date ? -1 : 1)),
+    () => getFilteredAndSortedExperiences([...academicExperiences, ...jobExperiences]),
     []
   ); // Use a smaller spacing for mobile and standard for desktop
   const ballSpacing = useMemo(() => {

@@ -95,11 +95,6 @@
       "title": "Interesses",
       "description": "Apaixonado por tecnologia, também cultivo diversos interesses que me inspiram e me ajudam a manter uma perspectiva ampla:"
     },
-    "cta": {
-      "title": "Vamos trabalhar juntos?",
-      "description": "Estou sempre aberto a novos projetos desafiadores e oportunidades para aplicar minhas habilidades.",
-      "contact": "Entre em contato"
-    },
     "testimonials": {
       "title": "O que dizem sobre mim",
       "subtitle": "Depoimentos de clientes e colegas que trabalharam comigo",
@@ -122,32 +117,6 @@
     "journey": {
       "professional": "Profissional",
       "academic": "Acadêmica"
-    },
-    "values": {
-      "passion": {
-        "title": "Paixão",
-        "description": "Amo o que faço. Cada linha de código é escrita com dedicação e propósito."
-      },
-      "excellence": {
-        "title": "Excelência",
-        "description": "Compromisso com a qualidade e atenção aos detalhes em cada projeto."
-      },
-      "innovation": {
-        "title": "Inovação",
-        "description": "Sempre buscando novas tecnologias e abordagens para resolver problemas."
-      },
-      "collaboration": {
-        "title": "Colaboração",
-        "description": "Acredito no poder do trabalho em equipe e no compartilhamento de conhecimento."
-      },
-      "creativity": {
-        "title": "Criatividade",
-        "description": "Transformando ideias complexas em soluções elegantes e intuitivas."
-      },
-      "integrity": {
-        "title": "Integridade",
-        "description": "Transparência, honestidade e compromisso com prazos e qualidade."
-      }
     },
     "cta": {
       "title": "Vamos trabalhar juntos?",

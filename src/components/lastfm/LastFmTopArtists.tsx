@@ -4,16 +4,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { getTopArtists } from '@/services/lastfm';
-
-interface TopArtist {
-  name: string;
-  playcount: string;
-  url: string;
-  image: Array<{
-    size: string;
-    '#text': string;
-  }>;
-}
+import { LastFmArtist } from '@/types/lastfm.types';
 
 interface LastFmTopArtistsProps {
   username: string;
@@ -28,7 +19,7 @@ export default function LastFmTopArtists({
   limit = 6,
   className = '',
 }: LastFmTopArtistsProps) {
-  const [topArtists, setTopArtists] = useState<TopArtist[]>([]);
+  const [topArtists, setTopArtists] = useState<LastFmArtist[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -124,53 +115,66 @@ export default function LastFmTopArtists({
           </div>
         ) : (
           <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {topArtists.map((artist: TopArtist, index: number) => (
-              <a
-                key={index}
-                href={artist.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex gap-3 items-center p-2 rounded-md hover:bg-gray-800 transition-colors group"
-              >
-                <div className="w-12 h-12 flex-shrink-0">
-                  {artist.image && artist.image[2]['#text'] ? (
-                    <Image
-                      src={artist.image[2]['#text']}
-                      alt={`${artist.name}`}
-                      width={48}
-                      height={48}
-                      className="object-cover rounded-full"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
+            {topArtists.map((artist, index) => {
+              const imageUrl =
+                artist.image?.find(img => img.size === 'extralarge')?.['#text'] ||
+                artist.image?.find(img => img.size === 'mega')?.['#text'] ||
+                artist.image?.find(img => img.size === 'large')?.['#text'] ||
+                artist.image?.find(img => img.size === 'medium')?.['#text'] ||
+                artist.image?.find(img => img.size === 'small')?.['#text'] ||
+                (artist.image && artist.image.length > 0
+                  ? artist.image[artist.image.length - 1]['#text']
+                  : '') ||
+                (artist.image && artist.image.length > 0 ? artist.image[0]['#text'] : '') ||
+                '';
+              return (
+                <a
+                  key={index}
+                  href={artist.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex gap-3 items-center p-2 rounded-md hover:bg-gray-800 transition-colors group"
+                >
+                  <div className="w-12 h-12 flex-shrink-0">
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt={artist.name}
+                        width={48}
+                        height={48}
+                        className="object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
 
-                <div className="overflow-hidden">
-                  <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">
-                    {artist.name}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {parseInt(artist.playcount).toLocaleString()} plays
-                  </p>
-                </div>
-              </a>
-            ))}
+                  <div className="overflow-hidden">
+                    <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">
+                      {artist.name}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {artist.playcount ? parseInt(artist.playcount).toLocaleString() : 0} plays
+                    </p>
+                  </div>
+                </a>
+              );
+            })}
           </motion.div>
         )}
       </motion.div>

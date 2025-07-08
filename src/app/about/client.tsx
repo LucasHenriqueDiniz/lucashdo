@@ -18,7 +18,6 @@ import AboutJourney from '@/components/about/AboutJourney';
 import AboutProfile from '@/components/about/AboutProfile';
 import AboutProjects from '@/components/about/AboutProjects';
 import AboutStats from '@/components/about/AboutStats';
-import AboutValues from '@/components/about/AboutValues';
 import InterestsTabs from '@/components/interests/InterestsTabs';
 import { skillsData } from '@/constants/skillsData';
 
@@ -53,11 +52,6 @@ export default function AboutClient() {
         {/* Journey Section */}
         <Section id="journey" title="Minha Jornada" icon={<LuGraduationCap size={24} />}>
           <AboutJourney />
-        </Section>
-
-        {/* Values Section */}
-        <Section id="values" title="Valores & Princípios" icon={<LuHeartHandshake size={24} />}>
-          <AboutValues />
         </Section>
 
         {/* Projects Preview Section */}

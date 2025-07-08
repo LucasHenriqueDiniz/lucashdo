@@ -14,7 +14,12 @@ import {
   LuGraduationCap,
   LuMapPin,
 } from 'react-icons/lu';
-import { ExperienceProps } from '@/types/experience.types';
+import { getFilteredAndSortedExperiences, formatExperienceDates } from '@/utils/experienceUtils';
+import type {
+  ExperienceProps,
+  TimelineTopTagProps,
+  TimelineTagProps,
+} from '@/types/experience.types';
 
 interface ExperienceTimelineProps {
   experiences: ExperienceProps[];
@@ -32,30 +37,7 @@ export default function ExperienceTimeline({
   const timelineRef = useRef<HTMLDivElement>(null);
 
   // Filter experiences that should appear in timeline with improved sorting
-  const timelineExperiences = experiences
-    .filter(exp => exp.showInTimeline)
-    .sort((a, b) => {
-      // Extract end year from date string with more robust parsing
-      const extractEndYear = (dateString: string): number => {
-        const matches = dateString.match(/\b(20\d{2}|19\d{2})\b/g);
-        if (!matches || matches.length === 0) return 0;
-        return parseInt(matches[matches.length - 1], 10);
-      };
-
-      const yearA = extractEndYear(b.date);
-      const yearB = extractEndYear(a.date);
-
-      // Current position/education should appear first
-      const isCurrentA =
-        b.date.toLowerCase().includes('presente') || b.date.toLowerCase().includes('atual');
-      const isCurrentB =
-        a.date.toLowerCase().includes('presente') || a.date.toLowerCase().includes('atual');
-
-      if (isCurrentA && !isCurrentB) return 1;
-      if (!isCurrentA && isCurrentB) return -1;
-
-      return yearA - yearB;
-    });
+  const timelineExperiences = getFilteredAndSortedExperiences(experiences, true);
 
   // Custom toggle handler with optional auto-collapse for other items
   const toggleExpanded = useCallback((id: string) => {
@@ -104,9 +86,7 @@ export default function ExperienceTimeline({
       margin: '-10% 0px -10% 0px',
     });
     // Determine if this is a current/active experience
-    const isCurrent =
-      experience.date.toLowerCase().includes('presente') ||
-      experience.date.toLowerCase().includes('atual');
+    const isCurrent = !experience.endDate;
 
     return (
       <motion.div
@@ -183,34 +163,25 @@ export default function ExperienceTimeline({
                 {/* Top tags with improved display */}
                 {experience.topTags && experience.topTags.length > 0 && (
                   <div className="flex gap-2 mb-3 flex-wrap">
-                    {experience.topTags.slice(0, 3).map((tag, tagIndex) => (
-                      <motion.span
-                        key={tagIndex}
-                        className={`text-xs px-2 py-1 rounded-full font-medium transition-all
+                    {experience.topTags
+                      .slice(0, 3)
+                      .map((tag: TimelineTopTagProps, tagIndex: number) => (
+                        <motion.span
+                          key={tagIndex}
+                          className={`text-xs px-2 py-1 rounded-full font-medium transition-all
                           ${
                             type === 'job'
                               ? 'bg-blue-100/80 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
                               : 'bg-amber-100/80 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
                           }`}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ delay: index * 0.1 + 0.3 + tagIndex * 0.1 }}
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        {tag.labels.pt}
-                      </motion.span>
-                    ))}
-                    {experience.topTags.length > 3 && (
-                      <motion.span
-                        className="text-xs px-2 py-1 rounded-full font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
-                        initial={{ opacity: 0 }}
-                        animate={isInView ? { opacity: 1 } : {}}
-                        transition={{ delay: index * 0.1 + 0.6 }}
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        +{experience.topTags.length - 3}
-                      </motion.span>
-                    )}
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={isInView ? { opacity: 1, y: 0 } : {}}
+                          transition={{ delay: index * 0.1 + 0.3 + tagIndex * 0.1 }}
+                          whileHover={{ scale: 1.05 }}
+                        >
+                          {tag.labels.pt}
+                        </motion.span>
+                      ))}
                   </div>
                 )}
 
@@ -234,7 +205,7 @@ export default function ExperienceTimeline({
                           isCurrent ? 'text-green-600 dark:text-green-400 font-medium' : ''
                         }
                       >
-                        {experience.date}
+                        {formatExperienceDates(experience.startDate, experience.endDate, 'pt')}
                       </span>
 
                       {isCurrent && (
@@ -357,7 +328,7 @@ export default function ExperienceTimeline({
                               {type === 'job' ? 'Tecnologias' : 'Disciplinas'}
                             </h4>
                             <div className="flex flex-wrap gap-2">
-                              {experience.tags.map((tag, i) => (
+                              {experience.tags.map((tag: TimelineTagProps, i: number) => (
                                 <motion.span
                                   key={i}
                                   className={`text-xs px-2 py-1 rounded-full 

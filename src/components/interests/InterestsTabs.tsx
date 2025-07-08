@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import LyftaProfile from '@/components/fitness/LyftaProfile';
-import SteamProfile from '@/components/gaming/SteamProfile';
+import SteamProfileCached from '@/components/gaming/SteamProfileCached';
 import { LastFmProfile, LastFmStats, LastFmTopArtists } from '@/components/lastfm';
 
 export default function InterestsTabs() {
@@ -86,7 +86,7 @@ export default function InterestsTabs() {
 
           {activeTab === 'gaming' && (
             <div className="py-4">
-              <SteamProfile />
+              <SteamProfileCached />
             </div>
           )}
         </motion.div>

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import React from 'react';
 import { useLastFmTracks } from '@/hooks/useLastFm';
 
 interface LastFmWidgetProps {
@@ -165,5 +166,3 @@ export function LastFmWidget({ className = '', limit = 5 }: LastFmWidgetProps) {
     </div>
   );
 }
-
-export default LastFmWidget;

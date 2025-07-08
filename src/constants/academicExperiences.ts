@@ -20,9 +20,8 @@ export const academicExperiences: ExperienceProps[] = [
     title: 'Engenharia da Computação',
     institution: 'UERGS - Universidade Estadual do Rio Grande do Sul',
     url: 'https://www.uergs.edu.br/',
-    date: '2023 - 2027',
-    sortDate: '2023-02-01',
-    years: '2023 ~ 2027',
+    startDate: '2023-02',
+    endDate: '2027-12',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'C', en: 'C' }, icon: '/icons/c.svg' },
@@ -46,9 +45,8 @@ export const academicExperiences: ExperienceProps[] = [
     title: 'Engenharia de Software',
     institution: 'UNICV - Centro Universitário Cidade Verde',
     url: 'https://www.unicv.edu.br/',
-    date: '2025 - 2027',
-    sortDate: '2025-03-01',
-    years: '2025 ~ 2027',
+    startDate: '2025-03',
+    endDate: '2027-12',
     showInTimeline: true,
     tags: [
       {
@@ -70,9 +68,8 @@ export const academicExperiences: ExperienceProps[] = [
     title: 'Bolsa de Estudos - Include Gurias',
     institution: 'UERGS',
     url: 'https://www.uergs.edu.br/',
-    date: '2024',
-    sortDate: '2024-01-01',
-    years: '2024',
+    startDate: '2024-01',
+    endDate: '2024-12',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'Inclusão', en: 'Inclusion' }, icon: Heart },
@@ -93,9 +90,8 @@ export const academicExperiences: ExperienceProps[] = [
     ],
     image: '/images/uniritter.png',
     url: 'https://www.uniritter.edu.br/',
-    date: '2020 - 2023',
-    sortDate: '2020-02-01',
-    years: '2020 ~ 2023',
+    startDate: '2020-02',
+    endDate: '2023-12',
     showInTimeline: false,
     tags: [{ labels: { pt: 'Veterinária', en: 'Veterinary' }, icon: Stethoscope }],
     description: {
@@ -113,9 +109,8 @@ export const academicExperiences: ExperienceProps[] = [
     institution: 'Belart Escola de Estética (RS)',
     image: '/images/belart.png',
     url: '',
-    date: '2021 - 2022',
-    years: '2021 ~ 2022',
-    sortDate: '2021-02-01',
+    startDate: '2021-02',
+    endDate: '2022-12',
     showInTimeline: false,
     tags: [
       {
@@ -134,9 +129,8 @@ export const academicExperiences: ExperienceProps[] = [
     institution: 'Faculdade Jovem Profissional Porto Alegre',
     image: '/images/jovem-profissional.png',
     url: '',
-    date: '2020 - 2022',
-    sortDate: '2020-02-01',
-    years: '2020 ~ 2022',
+    startDate: '2020-02',
+    endDate: '2022-12',
     showInTimeline: false,
     topTags: [
       { labels: { pt: 'Técnico', en: 'Technical' } },

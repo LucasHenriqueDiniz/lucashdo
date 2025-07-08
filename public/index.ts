@@ -17,6 +17,10 @@ export { default as botschannelWeb } from './projects/botschannel_landingpage.we
 
 // About
 export { default as selfie } from './selfie.webp';
+
 // Testimonials
 export { default as GabrielSoaresAvatar } from './testimonials/gabriel_soares.webp';
 export { default as RodrigoShardongAvatar } from './testimonials/rodrigo_shardong.webp';
+
+// Misc
+export { default as placeholderImage } from './placeholder.webp';

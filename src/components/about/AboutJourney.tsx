@@ -2,179 +2,157 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { LuGraduationCap, LuBriefcase, LuCalendar, LuMapPin, LuExternalLink } from 'react-icons/lu';
-import { useTranslations } from 'next-intl';
-
-interface JourneyItem {
-  id: string;
-  title: string;
-  organization: string;
-  period: string;
-  location: string;
-  description: string;
-  tags: string[];
-  link?: string;
-  type: 'academic' | 'professional';
-}
+import Image from 'next/image';
+import { LuGraduationCap, LuBriefcase, LuCalendar, LuExternalLink } from 'react-icons/lu';
+import { useTranslations, useLocale } from 'next-intl';
+import { jobExperiences } from '@/constants/jobExperiences';
+import { academicExperiences } from '@/constants/academicExperiences';
+import { getFilteredAndSortedExperiences, formatExperienceDates } from '@/utils/experienceUtils';
 
 export default function AboutJourney() {
   const t = useTranslations('About.journey');
+  const locale = useLocale() as 'pt' | 'en';
   const [activeTab, setActiveTab] = useState<'academic' | 'professional'>('professional');
 
-  const journeyItems: JourneyItem[] = [
-    {
-      id: '1',
-      title: 'Desenvolvedor Full-stack',
-      organization: 'Freelancer',
-      period: '2022 - Presente',
-      location: 'Remoto',
-      description:
-        'Desenvolvimento de aplicações web completas, desde o design até a implementação e deploy.',
-      tags: ['React', 'Next.js', 'Node.js', 'TypeScript'],
-      type: 'professional',
-    },
-    {
-      id: '2',
-      title: 'Estagiário de Desenvolvimento',
-      organization: 'Empresa Tech',
-      period: '2021 - 2022',
-      location: 'São Paulo, SP',
-      description:
-        'Desenvolvimento de features para aplicações web, trabalho em equipe e metodologias ágeis.',
-      tags: ['JavaScript', 'React', 'Git', 'Agile'],
-      type: 'professional',
-    },
-    {
-      id: '3',
-      title: 'Engenharia de Computação',
-      organization: 'Universidade Federal',
-      period: '2020 - Presente',
-      location: 'São Paulo, SP',
-      description: 'Formação em engenharia com foco em desenvolvimento de software e sistemas.',
-      tags: ['Algoritmos', 'Estruturas de Dados', 'Banco de Dados', 'Redes'],
-      type: 'academic',
-    },
-    {
-      id: '4',
-      title: 'Curso de Desenvolvimento Web',
-      organization: 'Plataforma Online',
-      period: '2021',
-      location: 'Online',
-      description: 'Curso completo de desenvolvimento web moderno com as melhores práticas.',
-      tags: ['HTML', 'CSS', 'JavaScript', 'React'],
-      type: 'academic',
-    },
-  ];
+  // Filtrar e ordenar experiências
+  const getFilteredExperiences = (type: 'academic' | 'professional') => {
+    const experiences = type === 'academic' ? academicExperiences : jobExperiences;
+    return getFilteredAndSortedExperiences(experiences, true);
+  };
 
-  const filteredItems = journeyItems.filter(item => item.type === activeTab);
+  const filteredItems = getFilteredExperiences(activeTab);
 
   return (
     <div className="space-y-8">
       {/* Tab Navigation */}
-      <div className="flex justify-center">
-        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+      <div className="flex justify-center mb-8">
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-1 shadow-sm">
           <button
             onClick={() => setActiveTab('professional')}
-            className={`px-6 py-2 rounded-md font-medium transition-all ${
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
               activeTab === 'professional'
                 ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-750'
             }`}
           >
             <div className="flex items-center gap-2">
               <LuBriefcase className="w-4 h-4" />
-              {t('professional')}
+              <span className="text-sm font-semibold">{t('professional')}</span>
             </div>
           </button>
           <button
             onClick={() => setActiveTab('academic')}
-            className={`px-6 py-2 rounded-md font-medium transition-all ${
+            className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
               activeTab === 'academic'
                 ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-750'
             }`}
           >
             <div className="flex items-center gap-2">
               <LuGraduationCap className="w-4 h-4" />
-              {t('academic')}
+              <span className="text-sm font-semibold">{t('academic')}</span>
             </div>
           </button>
         </div>
       </div>
 
       {/* Journey Timeline */}
-      <div className="relative">
+      <motion.div
+        className="relative"
+        key={activeTab}
+        initial={{ opacity: 0, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         {/* Timeline line */}
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-blue-400 to-blue-300 dark:from-blue-400 dark:via-blue-500 dark:to-blue-600 opacity-20"></div>
 
         <div className="space-y-8">
           {filteredItems.map((item, index) => (
-            <motion.div
-              key={item.id}
-              className="relative pl-16"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
+            <div key={item.id} className="relative pl-16">
               {/* Timeline dot */}
-              <div className="absolute left-6 top-4 w-4 h-4 bg-blue-500 rounded-full border-4 border-white dark:border-gray-900"></div>
-
+              <div className="absolute left-6 top-6 w-5 h-5 bg-blue-500 rounded-full border-4 border-white dark:border-gray-900 shadow-sm"></div>
               {/* Content card */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200 hover:border-blue-200 dark:hover:border-blue-700"
+              >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
                       {item.title}
                     </h3>
-                    <p className="text-lg font-medium text-blue-600 dark:text-blue-400 mb-2">
-                      {item.organization}
+                    <p className="text-lg font-medium text-blue-600 dark:text-blue-400 mb-3 line-clamp-1">
+                      {item.institution}
                     </p>
                   </div>
-                  {item.link && (
+                  {item.url && (
                     <a
-                      href={item.link}
+                      href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-blue-500 transition-colors"
+                      className="flex-shrink-0 ml-4 text-gray-400 hover:text-blue-500 transition-colors"
+                      aria-label="Visit website"
                     >
                       <LuExternalLink className="w-5 h-5" />
                     </a>
                   )}
                 </div>
 
-                {/* Period and Location */}
-                <div className="flex items-center gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                {/* Period and Top Tags */}
+                <div className="flex flex-wrap items-center gap-3 mb-4 text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center gap-1">
-                    <LuCalendar className="w-4 h-4" />
-                    <span>{item.period}</span>
+                    <LuCalendar className="w-4 h-4 flex-shrink-0" />
+                    <span className="font-medium">
+                      {formatExperienceDates(item.startDate, item.endDate, locale)}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <LuMapPin className="w-4 h-4" />
-                    <span>{item.location}</span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {item.topTags.map((topTag, topTagIndex) => (
+                      <span
+                        key={topTagIndex}
+                        className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-md font-medium"
+                      >
+                        {topTag.labels[locale]}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                  {item.description}
+                <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed line-clamp-3">
+                  {item.description[locale]}
                 </p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2">
                   {item.tags.map((tag, tagIndex) => (
-                    <span
+                    <div
                       key={tagIndex}
-                      className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-xs rounded-full font-medium hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
                     >
-                      {tag}
-                    </span>
+                      {typeof tag.icon === 'string' ? (
+                        <Image
+                          src={tag.icon}
+                          alt={tag.labels[locale]}
+                          width={14}
+                          height={14}
+                          className="w-3.5 h-3.5 flex-shrink-0"
+                        />
+                      ) : (
+                        <tag.icon className="w-3.5 h-3.5 flex-shrink-0" />
+                      )}
+                      <span className="truncate">{tag.labels[locale]}</span>
+                    </div>
                   ))}
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

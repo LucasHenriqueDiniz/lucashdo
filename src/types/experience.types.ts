@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { IconType } from 'react-icons/lib';
 
 export type TranslatedField = {
   pt: string;
@@ -10,7 +11,7 @@ export interface TimelineTopTagProps {
 }
 
 export interface TimelineTagProps {
-  icon: LucideIcon | string;
+  icon: LucideIcon | string | IconType;
   labels: TranslatedField;
 }
 
@@ -20,9 +21,8 @@ export interface ExperienceProps {
   title: string;
   institution: string;
   url: string;
-  date: string;
-  sortDate?: string; // Data em formato YYYY-MM-DD para ordenação
-  years: string; // Ex: "2023 - 2024"
+  startDate: string;
+  endDate?: string | null;
   showInTimeline: boolean;
   tags: TimelineTagProps[];
   description: TranslatedField;

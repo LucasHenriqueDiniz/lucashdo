@@ -1,97 +1,8 @@
+import { LastFmUser, LastFmTrack, LastFmArtist } from '@/types/lastfm.types';
+
 // Last.fm API service
 const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
-const API_KEY = process.env.NEXT_PUBLIC_LASTFM_API_KEY || process.env.LASTFM_API_KEY || null;
-
-export interface LastFmUser {
-  name: string;
-  playcount: string;
-  registered: {
-    unixtime: string;
-    '#text': string;
-  };
-  url: string;
-  image: Array<{
-    size: string;
-    '#text': string;
-  }>;
-  country?: string;
-  age?: string;
-  gender?: string;
-  subscriber?: string;
-  playlists?: string;
-  bootstrap?: string;
-  type?: string;
-  realname?: string;
-  artist_count?: string;
-  track_count?: string;
-  album_count?: string;
-}
-
-export interface LastFmTrack {
-  name: string;
-  artist: {
-    name: string;
-    mbid: string;
-    url: string;
-    '#text'?: string;
-  };
-  url: string;
-  image: Array<{
-    size: string;
-    '#text': string;
-  }>;
-  date?: {
-    uts: string;
-    '#text': string;
-  };
-  duration?: string;
-  playcount?: string;
-  listeners?: string;
-  mbid?: string;
-  streamable?: {
-    fulltrack: string;
-    '#text': string;
-  };
-  album?: {
-    '#text': string;
-    mbid: string;
-  };
-  '@attr'?: {
-    rank: string;
-    nowplaying?: string;
-  };
-}
-
-export interface LastFmArtist {
-  name: string;
-  mbid: string;
-  url: string;
-  image: Array<{
-    size: string;
-    '#text': string;
-  }>;
-  streamable: string;
-  listeners: string;
-  playcount: string;
-  tags?: {
-    tag: Array<{
-      name: string;
-      url: string;
-    }>;
-  };
-  bio?: {
-    published: string;
-    summary: string;
-    content: string;
-  };
-  stats?: {
-    listeners: string;
-    playcount: string;
-  };
-  '@attr'?: {
-    rank: string;
-  };
-}
+const API_KEY = process.env.LASTFM_API_KEY || null;
 
 /**
  * Fetch user information from Last.fm
@@ -204,8 +115,7 @@ export async function getTopArtists(
   username: string,
   period: string = 'overall',
   limit: number = 10
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<any[]> {
+): Promise<LastFmArtist[]> {
   if (!API_KEY) {
     throw new Error('Last.fm API key is not set');
   }
@@ -227,6 +137,5 @@ export async function getTopArtists(
 
   const data = await response.json();
   console.log('📦 Last.fm Top Artists Response:', JSON.stringify(data, null, 2));
-  console.log('WE NEED TO CREATE A INTERFACE FOR LASTFM ARTISTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
   return data.topartists.artist;
 }

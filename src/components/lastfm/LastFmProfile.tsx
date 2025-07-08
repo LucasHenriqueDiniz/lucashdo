@@ -5,8 +5,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { getRecentTracks, LastFmTrack } from '@/services/lastfm';
+import { getRecentTracks } from '@/services/lastfm';
+import { LastFmTrack } from '@/types/lastfm.types';
 import { MusicalBar } from '@/components/lastfm';
+
 interface LastFmProfileProps {
   username: string;
   className?: string;

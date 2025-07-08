@@ -9,15 +9,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placeholdr.ai',
-      },
-      {
-        protocol: 'https',
-        hostname: 'randomuser.me',
+        hostname: 'github.com',
       },
       {
         protocol: 'https',
@@ -53,10 +45,9 @@ const nextConfig: NextConfig = {
 
   // Expor variáveis de ambiente para o cliente
   publicRuntimeConfig: {
-    NEXT_PUBLIC_LASTFM_API_KEY: process.env.NEXT_PUBLIC_LASTFM_API_KEY,
-    NEXT_PUBLIC_STEAM_API_KEY: process.env.NEXT_PUBLIC_STEAM_API_KEY,
-    NEXT_PUBLIC_STEAM_ID: process.env.NEXT_PUBLIC_STEAM_ID,
-    NEXT_PUBLIC_LYFTA_API_KEY: process.env.NEXT_PUBLIC_LYFTA_API_KEY,
+    NEXT_PUBLIC_LASTFM_USERNAME: process.env.LASTFM_USERNAME,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
   },
 
   // Security headers
@@ -102,12 +93,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
-
-  // Geração de sitemap
-  experimental: {
-    // O App Router já tem suporte a sitemap.xml
-    // https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
-  },
 };
 
 // Apply the plugin and export
