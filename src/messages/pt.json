@@ -31,25 +31,35 @@
   "About": {
     "title": "Sobre Mim",
     "description": "Conheça mais sobre minha jornada e experiência.",
-    "skills": "Habilidades",
-    "experience": "Experiência",
     "hero": {
       "greeting": "Olá, eu sou",
       "name": "Lucas HDO",
       "tagline": "Transformando ideias em experiências digitais impactantes",
+      "available": "Disponível para projetos",
+      "locationAndRole": "Brasil • Desenvolvedor Full-stack",
+      "description": "Código com propósito. Design com lógica. Soluções que funcionam.",
       "viewProjects": "Ver Projetos",
-      "contact": "Entre em Contato"
+      "contact": "Entre em Contato",
+      "stats": {
+        "yearsExperience": "Anos de Experiência",
+        "yearsExperienceDesc": "De landing pages a plataformas completas, com foco em performance, design e usabilidade.",
+        "projectsCompleted": "Projetos Entregues",
+        "projectsCompletedDesc": "De landing pages a plataformas completas, com foco em performance, design e usabilidade.",
+        "technologies": "Tecnologias Dominadas",
+        "technologiesDesc": "Stack moderna: React, Next.js, Node.js, TypeScript, Python, AWS, Docker e mais.",
+        "certifications": "Certificações & Cursos",
+        "certificationsDesc": "Formação contínua em desenvolvimento web, design, cloud e metodologias ágeis por Microsoft, Udemy, LinkedIn e outros.",
+        "multidisciplinary": "Perfil Multidisciplinar",
+        "multidisciplinaryDesc": "Do design ao backend e infra, entrego soluções completas."
+      }
     },
     "profile": {
       "title": "Quem Sou Eu",
       "role": "Desenvolvedor Full-stack",
       "bio": {
-        "part1": "Desenvolvedor apaixonado por criar soluções tecnológicas que impactam positivamente as pessoas. Com experiência em",
-        "part2": "e design de interfaces, combino habilidades técnicas e criativas para desenvolver aplicações web modernas e intuitivas.",
-        "part3": "Estudante de",
-        "part4": ", estou constantemente buscando aprender novas tecnologias e aprimorar minhas habilidades. Acredito que o bom código é aquele que resolve problemas reais de forma elegante e eficiente."
+        "summary": "Comecei a programar por curiosidade, buscando automatizar tarefas e resolver problemas do dia a dia. Tenho paixão por aprender, já explorei desde automação, desenvolvimento de ferramentas, game design e muito mais. Sou proativo, criativo e meus diversos projetos mostram meu entusiasmo por tecnologia. Atualmente curso {course} e tenho experiência em {skills}."
       },
-      "education": "Engenharia de Computação",
+      "education": "Engenharia de Software",
       "social": {
         "github": "GitHub",
         "linkedin": "LinkedIn",
@@ -93,7 +103,37 @@
     },
     "interests": {
       "title": "Interesses",
-      "description": "Apaixonado por tecnologia, também cultivo diversos interesses que me inspiram e me ajudam a manter uma perspectiva ampla:"
+      "loading": "Carregando...",
+      "noData": "Nenhum dado disponível.",
+      "music": {
+        "tab": "Música",
+        "nowPlaying": "Tocando agora",
+        "totalScrobbles": "Scrobbles totais",
+        "topArtists": "Artistas favoritos",
+        "recentTracks": "Faixas recentes",
+        "plays": "execuções"
+      },
+      "games": {
+        "tab": "Jogos",
+        "totalGames": "Jogos na biblioteca",
+        "totalPlaytime": "Tempo total jogado",
+        "online": "Online",
+        "recentGames": "Jogos recentes",
+        "mostPlayed": "Mais jogados",
+        "total": "total",
+        "recent": "recente"
+      },
+      "fitness": {
+        "tab": "Fitness",
+        "totalWorkouts": "Treinos realizados",
+        "totalLiftedWeight": "Peso levantado",
+        "weeks": "semanas",
+        "currentStreak": "Sequência atual",
+        "longestStreak": "Maior sequência",
+        "favoriteExercise": "Exercício favorito",
+        "lastWorkout": "Último treino",
+        "volume": "Volume"
+      }
     },
     "testimonials": {
       "title": "O que dizem sobre mim",
@@ -102,17 +142,12 @@
     },
     "stats": {
       "yearsExperience": "Anos de Experiência",
-      "yearsExperienceDesc": "Desenvolvendo soluções web e aplicações modernas",
-      "projectsCompleted": "Projetos Concluídos",
-      "projectsCompletedDesc": "Do conceito à produção com excelência",
-      "technologies": "Tecnologias",
-      "technologiesDesc": "Dominando desde front-end até back-end",
-      "clientSatisfaction": "Satisfação do Cliente",
-      "clientSatisfactionDesc": "Foco em entregar valor e qualidade",
-      "availability": "Disponibilidade",
-      "availabilityDesc": "Sempre pronto para novos desafios",
-      "learning": "Aprendizado Contínuo",
-      "learningDesc": "Sempre em busca de novas tecnologias"
+      "projectsCompleted": "Projetos Entregues",
+      "technologies": "Tecnologias Dominadas",
+      "githubStars": "Estrelas no GitHub",
+      "certifications": "Certificações & Cursos",
+      "multidisciplinary": "Perfil Multidisciplinar",
+      "fullstack": "Full-stack"
     },
     "journey": {
       "professional": "Profissional",
@@ -120,21 +155,21 @@
     },
     "cta": {
       "title": "Vamos trabalhar juntos?",
-      "description": "Estou sempre aberto a novos projetos desafiadores e oportunidades para aplicar minhas habilidades.",
-      "subtitle": "Vamos transformar suas ideias em realidade!",
+      "description": "Estou sempre aberto a novos projetos desafiadores e oportunidades para aplicar minhas melhores habilidades em tecnologia e design. Se você busca soluções inovadoras e profissionais, vamos conversar!",
+      "subtitle": "Transforme suas ideias em projetos de sucesso.",
       "contact": "Entre em contato",
       "benefits": {
         "communication": {
           "title": "Comunicação Clara",
-          "description": "Mantenha-se informado sobre cada etapa do projeto"
+          "description": "Transparência e alinhamento em cada etapa do projeto."
         },
         "collaboration": {
-          "title": "Colaboração Eficiente",
-          "description": "Trabalho próximo para garantir que suas necessidades sejam atendidas"
+          "title": "Colaboração Profissional",
+          "description": "Trabalho próximo para garantir que suas necessidades sejam superadas."
         },
         "delivery": {
-          "title": "Entrega Pontual",
-          "description": "Compromisso com prazos e qualidade do código"
+          "title": "Entrega de Excelência",
+          "description": "Compromisso com prazos, qualidade e resultados reais."
         }
       }
     }
@@ -163,11 +198,9 @@
     "cards": "Cards",
     "list": "Lista",
     "all": "Todos",
-    "description": "Descrição",
     "tags": "Tags",
     "status": "Status",
-    "viewCode": "Ver Código",
-    "viewDemo": "Ver Demo"
+    "viewCode": "Ver Código"
   },
   "Blog": {
     "title": "Blog",

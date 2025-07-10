@@ -31,24 +31,35 @@
   "About": {
     "title": "About Me",
     "description": "Learn more about my journey and experience.",
-    "skills": "Skills",
-    "experience": "Experience",
     "hero": {
       "greeting": "Hello, I'm",
       "name": "Lucas HDO",
       "tagline": "Transforming ideas into impactful digital experiences",
+      "available": "Available for projects",
+      "locationAndRole": "Brazil • Full-stack Developer",
+      "description": "Code with purpose. Design with logic. Solutions that work.",
       "viewProjects": "View Projects",
-      "contact": "Contact Me"
+      "contact": "Contact Me",
+      "stats": {
+        "yearsExperience": "Years of Experience",
+        "yearsExperienceDesc": "From landing pages to complete platforms, focusing on performance, design and usability.",
+        "projectsCompleted": "Projects Delivered",
+        "projectsCompletedDesc": "From landing pages to complete platforms, focusing on performance, design and usability.",
+        "technologies": "Technologies Mastered",
+        "technologiesDesc": "Modern stack: React, Next.js, Node.js, TypeScript, Python, AWS, Docker and more.",
+        "certifications": "Certifications & Courses",
+        "certificationsDesc": "Continuous training in web development, design, cloud and agile methodologies by Microsoft, Udemy, LinkedIn and others.",
+        "multidisciplinary": "Multidisciplinary Profile",
+        "multidisciplinaryDesc": "From design to backend and infrastructure, I deliver complete solutions."
+      }
     },
     "profile": {
       "title": "Who I Am",
       "role": "Full-stack Developer",
       "bio": {
-        "part1": "Passionate developer creating technological solutions that positively impact people. With experience in",
-        "part2": "and interface design, I combine technical and creative skills to develop modern and intuitive web applications.",
-        "part3": "Computer Engineering student, I'm constantly seeking to learn new technologies and improve my skills. I believe that good code is one that solves real problems in an elegant and efficient way."
+        "summary": "I started programming out of curiosity, wanting to automate tasks and solve everyday problems. I'm passionate about learning, with interests ranging from automation and tool development to game design and more. I'm proactive, creative, and my many projects reflect my enthusiasm for technology. Currently, I'm studying {course} and have experience with {skills}."
       },
-      "education": "Computer Engineering",
+      "education": "Software Engineering",
       "social": {
         "github": "GitHub",
         "linkedin": "LinkedIn",
@@ -92,12 +103,57 @@
     },
     "interests": {
       "title": "Interests",
-      "description": "Passionate about technology, I also cultivate various interests that inspire me and help me maintain a broad perspective:"
+      "loading": "Loading...",
+      "noData": "No data available.",
+      "music": {
+        "tab": "Music",
+        "nowPlaying": "Now Playing",
+        "totalScrobbles": "Total Scrobbles",
+        "topArtists": "Top Artists",
+        "recentTracks": "Recent Tracks",
+        "plays": "plays"
+      },
+      "games": {
+        "tab": "Games",
+        "totalGames": "Games Owned",
+        "totalPlaytime": "Total Playtime",
+        "online": "Online",
+        "recentGames": "Recent Games",
+        "mostPlayed": "Most Played",
+        "total": "total",
+        "recent": "recent"
+      },
+      "fitness": {
+        "tab": "Fitness",
+        "totalWorkouts": "Total Workouts",
+        "totalLiftedWeight": "Weight Lifted",
+        "weeks": "weeks",
+        "currentStreak": "Current Streak",
+        "longestStreak": "Longest Streak",
+        "favoriteExercise": "Favorite Exercise",
+        "lastWorkout": "Last Workout",
+        "volume": "Volume"
+      }
     },
     "cta": {
       "title": "Let's work together?",
-      "description": "I'm always open to new challenging projects and opportunities to apply my skills.",
-      "contact": "Contact me"
+      "description": "I'm always open to new challenging projects and opportunities to apply my best skills in technology and design. If you're looking for innovative and professional solutions, let's talk!",
+      "subtitle": "Turn your ideas into successful projects.",
+      "contact": "Contact me",
+      "benefits": {
+        "communication": {
+          "title": "Clear Communication",
+          "description": "Transparency and alignment at every stage of the project."
+        },
+        "collaboration": {
+          "title": "Professional Collaboration",
+          "description": "Working closely to ensure your needs are exceeded."
+        },
+        "delivery": {
+          "title": "Excellence in Delivery",
+          "description": "Commitment to deadlines, quality, and real results."
+        }
+      }
     },
     "testimonials": {
       "title": "What people say about me",
@@ -106,17 +162,12 @@
     },
     "stats": {
       "yearsExperience": "Years of Experience",
-      "yearsExperienceDesc": "Developing web solutions and modern applications",
-      "projectsCompleted": "Projects Completed",
-      "projectsCompletedDesc": "From concept to production with excellence",
-      "technologies": "Technologies",
-      "technologiesDesc": "Mastering from front-end to back-end",
-      "clientSatisfaction": "Client Satisfaction",
-      "clientSatisfactionDesc": "Focus on delivering value and quality",
-      "availability": "Availability",
-      "availabilityDesc": "Always ready for new challenges",
-      "learning": "Continuous Learning",
-      "learningDesc": "Always seeking new technologies"
+      "projectsCompleted": "Projects Delivered",
+      "technologies": "Technologies Mastered",
+      "githubStars": "GitHub Stars",
+      "certifications": "Certifications & Courses",
+      "multidisciplinary": "Multidisciplinary Profile",
+      "fullstack": "Full-stack"
     },
     "journey": {
       "professional": "Professional",
@@ -147,37 +198,17 @@
         "title": "Integrity",
         "description": "Transparency, honesty and commitment to deadlines and quality."
       }
-    },
-    "cta": {
-      "title": "Let's work together?",
-      "description": "I'm always open to new challenging projects and opportunities to apply my skills.",
-      "subtitle": "Let's turn your ideas into reality!",
-      "contact": "Contact me",
-      "benefits": {
-        "communication": {
-          "title": "Clear Communication",
-          "description": "Stay informed about every step of the project"
-        },
-        "collaboration": {
-          "title": "Efficient Collaboration",
-          "description": "Work closely to ensure your needs are met"
-        },
-        "delivery": {
-          "title": "Timely Delivery",
-          "description": "Commitment to deadlines and code quality"
-        }
-      }
     }
   },
   "Projects": {
     "title": "Projects",
     "description": "A showcase of my latest and best projects.",
-    "featured": "Featured",
     "viewProject": "View Project",
+    "allProjects": "All Projects",
+    "featured": "Featured",
     "viewDemo": "View Live Demo",
     "viewSource": "View Source Code",
     "techStack": "Tech Stack",
-    "allProjects": "All Projects",
     "contactMe": "Let's talk",
     "search": "Search projects...",
     "columns": "Columns",
@@ -193,11 +224,9 @@
     "cards": "Cards",
     "list": "List",
     "all": "All",
-    "description": "Description",
     "tags": "Tags",
     "status": "Status",
-    "viewCode": "View Code",
-    "viewDemo": "View Demo"
+    "viewCode": "View Code"
   },
   "Blog": {
     "title": "Blog",
@@ -221,14 +250,16 @@
     "support": "Support My Work"
   },
   "GuestBook": {
+    "locale": "en",
     "title": "Guest Book",
     "description": "Leave a message or comment.",
     "name": "Your Name",
     "email": "Your Email",
     "message": "Your Message",
     "submit": "Submit",
-    "successMessage": "Thank you for your message!",
-    "errorMessage": "There was an error submitting your message. Please try again.",
-    "locale": "en"
+    "messages": {
+      "success": "Message sent successfully!",
+      "error": "Error sending message. Please try again."
+    }
   }
 }

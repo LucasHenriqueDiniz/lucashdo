@@ -18,7 +18,16 @@ export default function ProfileHeader({
   name,
   title,
   imageUrl,
-  keywords = [],
+  keywords = [
+    'React',
+    'Next.js',
+    'Node.js',
+    'TypeScript',
+    'Python',
+    'Docker',
+    'UX/UI Design',
+    'Projetos de Destaque',
+  ],
   className = '',
 }: ProfileHeaderProps) {
   const [activeKeywords, setActiveKeywords] = useState<string[]>([]);

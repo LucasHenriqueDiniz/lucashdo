@@ -2,7 +2,6 @@ export { default as ProfileHeader } from './ProfileHeader';
 export { default as Section } from './Section';
 export { default as SkillsGrid } from './SkillsGrid';
 export { default as ExperienceTimeline } from './ExperienceTimeline';
-export { default as AboutNav } from './AboutNav';
 export { default as AboutHero } from './AboutHero';
 export { default as AboutProfile } from './AboutProfile';
 export { default as AboutProjects } from './AboutProjects';

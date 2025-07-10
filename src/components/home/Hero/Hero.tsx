@@ -5,31 +5,32 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './Hero.css';
 import { LuExternalLink, LuMail, LuChevronDown } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLanguage } from '@/components/language-switcher';
 import { skillsData } from '@/constants/skillsData';
 import { Button } from '@/components/ui/button';
+import { TranslatedField } from '@/types/experience.types';
 
 interface DeveloperCompletion {
-  role: { pt: string; en: string };
+  role: TranslatedField;
   emoji: string;
 }
 
 const developerCompletions: DeveloperCompletion[] = [
-  { role: { pt: 'front-end pleno', en: 'mid-level front-end' }, emoji: '💻' },
+  { role: { pt: 'front-end pleno', en: 'mid-level front-end developer' }, emoji: '💻' },
   { role: { pt: 'fã de back-end', en: 'back-end enthusiast' }, emoji: '🔨' },
   { role: { pt: 'entusiasta de UI/UX', en: 'UI/UX enthusiast' }, emoji: '🎨' },
-  { role: { pt: 'full-stack', en: 'full-stack' }, emoji: '🌐' },
+  { role: { pt: 'full-stack', en: 'full-stack developer' }, emoji: '🌐' },
   { role: { pt: 'mago do TypeScript', en: 'TypeScript wizard' }, emoji: '🧙‍♂️' },
-  { role: { pt: 'gamer nas horas vagas', en: 'gamer in my free time' }, emoji: '🎮' },
+  { role: { pt: 'gamer nas horas vagas', en: 'gamer in their free time' }, emoji: '🎮' },
   { role: { pt: 'eterno aprendiz', en: 'eternal learner' }, emoji: '🚀' },
-  { role: { pt: 'cátolico', en: 'Catholic' }, emoji: '✝️' },
+  { role: { pt: 'católico', en: 'Catholic' }, emoji: '✝️' },
   { role: { pt: 'estudante de 日本語', en: '日本語 language student' }, emoji: '🍙' },
-  { role: { pt: 'que ama música', en: 'that loves music' }, emoji: '🎶' },
+  { role: { pt: 'que ama música', en: 'who loves music' }, emoji: '🎶' },
   { role: { pt: 'rato de academia', en: 'gym rat' }, emoji: '🏋️‍♂️' },
   {
     role: {
       pt: 'que já chorou vendo Shigatsu wa Kimi no Uso',
-      en: 'that cried watching Shigatsu wa Kimi no Uso',
+      en: 'who cried watching Shigatsu wa Kimi no Uso',
     },
     emoji: '😭',
   },
@@ -39,7 +40,7 @@ function HeroComponent() {
   // State for typing effect
   const [displayText, setDisplayText] = useState('');
   const [roleIndex, setRoleIndex] = useState(0);
-  const locale = useLocale() || 'pt';
+  const { currentLanguage } = useLanguage();
   const router = useRouter();
 
   // Refs para controlar o estado da animação de digitação
@@ -61,10 +62,10 @@ function HeroComponent() {
   const currentRole = useMemo(() => {
     const role = developerCompletions[roleIndex];
     return {
-      text: role.role[locale as 'pt' | 'en'] || role.role.pt,
+      text: role.role[currentLanguage] || role.role.pt,
       emoji: role.emoji,
     };
-  }, [roleIndex, locale]);
+  }, [roleIndex, currentLanguage]);
 
   // Função para controlar o efeito de digitação
   const handleTypingEffect = useCallback(() => {
@@ -218,7 +219,7 @@ function HeroComponent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <span>{locale === 'pt' ? 'Um desenvolvedor ' : 'A developer '}</span>
+          <span>{currentLanguage === 'pt' ? 'Um desenvolvedor ' : 'A developer '}</span>
           <span className="inline-flex items-center role-container">
             <span className="role-text-wrapper">
               <AnimatePresence mode="wait">
@@ -284,7 +285,7 @@ function HeroComponent() {
             >
               <span className="flex items-center gap-2">
                 <LuMail className="w-5 h-5" />
-                {locale === 'pt' ? 'Contato' : 'Contact'}
+                {currentLanguage === 'pt' ? 'Contato' : 'Contact'}
               </span>
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-[color:var(--blue)] via-[color:var(--cyan)] to-[color:var(--blue)] -z-10"
@@ -312,7 +313,7 @@ function HeroComponent() {
             >
               <span className="flex items-center gap-2">
                 <LuExternalLink className="w-5 h-5" />
-                {locale === 'pt' ? 'Projetos' : 'Projects'}
+                {currentLanguage === 'pt' ? 'Projetos' : 'Projects'}
               </span>
             </Button>
             <div className="absolute -inset-[8px] rounded-xl z-0 overflow-hidden pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -338,7 +339,7 @@ function HeroComponent() {
         whileTap={{ scale: 0.95 }}
       >
         <span className="text-sm font-medium text-muted-foreground">
-          {locale === 'pt' ? 'Ver mais' : 'See more'}
+          {currentLanguage === 'pt' ? 'Ver mais' : 'See more'}
         </span>
 
         <motion.div

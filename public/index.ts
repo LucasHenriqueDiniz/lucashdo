@@ -24,3 +24,7 @@ export { default as RodrigoShardongAvatar } from './testimonials/rodrigo_shardon
 
 // Misc
 export { default as placeholderImage } from './placeholder.webp';
+export { default as VinylDisk } from './vinyl.webp';
+
+// Icons
+export { default as ZustandLogo } from './icons/zunstand.webp';

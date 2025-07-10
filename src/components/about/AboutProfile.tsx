@@ -8,17 +8,20 @@ import AboutTestimonials from './AboutTestimonials';
 import ProfileHeader from './ProfileHeader';
 
 const interests = [
-  'Desenvolvimento Web',
+  'React',
+  'Next.js',
+  'Node.js',
+  'TypeScript',
+  'Python',
+  'Docker',
   'UX/UI Design',
-  'Sistemas Embarcados',
-  'Automação',
-  'Música',
-  'Jogos',
-  'Academia',
+  'Projetos de Destaque',
 ];
 
 export default function AboutProfile() {
   const t = useTranslations('About.profile');
+  const course = t('education');
+  const skills = ['React', 'Next.js', 'Node.js', 'TypeScript', 'Python', 'Docker'].join(', ');
 
   return (
     <div className="space-y-8">
@@ -45,18 +48,7 @@ export default function AboutProfile() {
         viewport={{ once: true }}
         transition={{ delay: 0.4, duration: 0.6 }}
       >
-        <p>
-          {t('bio.part1')}
-          <span className="text-[color:var(--primary)] font-medium">React</span>,
-          <span className="text-[color:var(--primary)] font-medium">Next.js</span>,
-          <span className="text-[color:var(--primary)] font-medium">Node.js</span>
-          {t('bio.part2')}
-        </p>
-        <p>
-          {t('bio.part3')}
-          <span className="text-[color:var(--primary)] font-medium">{t('education')}</span>
-          {t('bio.part4')}
-        </p>
+        <p>{t('bio.summary', { course, skills })}</p>
       </motion.div>
 
       {/* Social links */}

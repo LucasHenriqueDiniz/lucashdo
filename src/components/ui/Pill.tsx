@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const pillVariants = cva(
-  'flex items-center justify-center rounded-full text-sm font-bold whitespace-nowrap transition-colors shadow-md',
+  'flex items-center justify-center rounded-full text-sm font-bold whitespace-nowrap transition-colors shadow-md max-w-[120px]',
   {
     variants: {
       variant: {

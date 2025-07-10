@@ -1,18 +1,18 @@
 'use client';
 import { motion, useScroll } from 'framer-motion';
-import { useEffect, useState, useCallback, useMemo, memo, useLayoutEffect, useRef } from 'react';
 import { BriefcaseBusiness, GraduationCap, LucideIcon } from 'lucide-react';
 import Image from 'next/image';
-import React from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { IconType } from 'react-icons/lib';
+import { useLanguage } from '@/components/language-switcher';
+import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
+import { Pill } from '@/components/ui/Pill';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { academicExperiences } from '@/constants/academicExperiences';
 import { jobExperiences } from '@/constants/jobExperiences';
 import { ExperienceProps, TimelineTagProps, TranslatedField } from '@/types/experience.types';
 import { formatExperienceDates, getFilteredAndSortedExperiences } from '@/utils/experienceUtils';
-import { Pill } from '@/components/ui/Pill';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import './Timeline.css';
-import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
 
 const TimelineArrow = memo(({ side }: { side: 'left' | 'right' }) => {
   return (
@@ -33,9 +33,15 @@ TimelineArrow.displayName = 'TimelineArrow';
 const DatePill = memo(({ date, side }: { date: string; side: 'left' | 'right' }) => {
   return (
     <div
-      className={`size-full flex items-center justify-${side === 'left' ? 'start' : 'end'} z-10`}
+      className={`size-full flex items-center justify-${side === 'left' ? 'start' : 'end'} z-10 max-w-[120px]`}
     >
-      <Pill size="sm" className="w-fit">
+      <Pill
+        size="sm"
+        className="w-fit"
+        style={{
+          minWidth: '135px',
+        }}
+      >
         {date.replace('/today/', 'Now')}
       </Pill>
     </div>
@@ -71,7 +77,7 @@ const ExperienceCardSkillsIcon = memo(
         } else {
           // Se for um componente LucideIcon, renderiza diretamente
           const IconComponent = iconProp as IconType;
-          return <IconComponent size={28} className="stroke-2" />;
+          return <IconComponent size={28} />;
         }
       },
       [title]
@@ -129,7 +135,7 @@ const ExperienceCard = memo(
     lang: 'pt' | 'en';
   }) => {
     return (
-      <div className="card-container mx-2 p-5 h-full rounded-xl transition-colors shadow-sm hover:shadow-md">
+      <div className="card-container mx-2 py-6 px-4 h-full rounded-xl transition-colors shadow-sm hover:shadow-md">
         <motion.div
           className={`top-tags ${side}`}
           initial="hidden"
@@ -160,7 +166,13 @@ const ExperienceCard = memo(
               },
             }}
           >
-            {isAcademic ? 'Education' : 'Job'}
+            {isAcademic
+              ? lang === 'pt'
+                ? 'Educação'
+                : 'Education'
+              : lang === 'pt'
+                ? 'Trabalho'
+                : 'Job'}
           </motion.div>
           <motion.div
             className="top-tag-pill institution"
@@ -238,6 +250,7 @@ function BallContainer({
   item,
   side,
   sectionTop = 0,
+  lang,
 }: {
   index: number;
   scrollY: { get: () => number; onChange: (callback: (value: number) => void) => () => void };
@@ -247,6 +260,7 @@ function BallContainer({
   item: ExperienceProps;
   side: 'left' | 'right';
   sectionTop?: number;
+  lang: 'pt' | 'en';
 }) {
   // Estados para controlar animações
   const [topPosition, setTopPosition] = useState<number | null>(0);
@@ -322,7 +336,7 @@ function BallContainer({
       {/* Card Esquerda */}
       <div className="size-full py-4 pr-8 md:pr-12 pl-2 md:pl-4" style={{ gridArea: 'left' }}>
         {side === 'left' ? (
-          <ExperienceCard item={item} side={side} isAcademic={isAcademic} lang="en" />
+          <ExperienceCard item={item} side={side} isAcademic={isAcademic} lang={lang} />
         ) : (
           <Blank />
         )}
@@ -353,7 +367,7 @@ function BallContainer({
             <TimelineArrow side={side} />
           </div>
         ) : (
-          <DatePill date={formatExperienceDates(item.startDate, item.endDate, 'en')} side={side} />
+          <DatePill date={formatExperienceDates(item.startDate, item.endDate, lang)} side={side} />
         )}
         <div className="size-full flex items-center justify-center">
           <Tooltip>
@@ -384,7 +398,7 @@ function BallContainer({
           </Tooltip>
         </div>
         {side === 'left' ? (
-          <DatePill date={formatExperienceDates(item.startDate, item.endDate, 'en')} side={side} />
+          <DatePill date={formatExperienceDates(item.startDate, item.endDate, lang)} side={side} />
         ) : (
           <div className="relative size-full">
             <TimelineArrow side={side} />
@@ -395,7 +409,7 @@ function BallContainer({
       {/* Card Direita */}
       <div className="size-full py-4 pl-8 md:pl-12 pr-2 md:pr-4" style={{ gridArea: 'right' }}>
         {side === 'right' ? (
-          <ExperienceCard item={item} side={side} isAcademic={isAcademic} lang="en" />
+          <ExperienceCard item={item} side={side} isAcademic={isAcademic} lang={lang} />
         ) : (
           <Blank />
         )}
@@ -407,6 +421,7 @@ function BallContainer({
 const MemoBallContainer = memo(BallContainer);
 
 const Timeline = () => {
+  const { currentLanguage } = useLanguage();
   const [windowHeight, setWindowHeight] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -508,6 +523,7 @@ const Timeline = () => {
               item={item}
               side={side}
               sectionTop={sectionTop}
+              lang={currentLanguage}
             />
           );
         })}

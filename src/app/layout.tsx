@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import { defaultLocale, locales } from '@/lib/i18n/config';
 import InteractiveTerminal from '@/components/about/InteractiveTerminal';
+import { LanguageProvider } from '@/components/language-switcher';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono' });
@@ -108,10 +109,12 @@ export default async function RootLayout({
       <body className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}>
         <NextIntlClientProvider locale={validLocale} messages={messages}>
           <TooltipProvider delayDuration={100}>
-            <Header />
-            {children}
-            <Footer />
-            <InteractiveTerminal />
+            <LanguageProvider>
+              <Header />
+              {children}
+              <Footer />
+              <InteractiveTerminal />
+            </LanguageProvider>
           </TooltipProvider>
         </NextIntlClientProvider>
         <SpeedInsights />

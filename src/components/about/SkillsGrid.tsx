@@ -6,53 +6,61 @@ import { LuBriefcase, LuCode, LuStar, LuX } from 'react-icons/lu';
 import { useTranslations } from 'next-intl';
 import { SkillDataType } from '@/constants/skillsData';
 
-interface SkillCategoryColors {
-  frontend: string;
-  backend: string;
-  mobile: string;
-  design: string;
-  devops: string;
-  other: string;
-}
-
-// Enhanced color palette for categories with better contrast
-const categoryColors: SkillCategoryColors = {
-  frontend: 'bg-blue-500/90 dark:bg-blue-600/90',
-  backend: 'bg-green-500/90 dark:bg-green-600/90',
-  mobile: 'bg-purple-500/90 dark:bg-purple-600/90',
-  design: 'bg-pink-500/90 dark:bg-pink-600/90',
-  devops: 'bg-amber-500/90 dark:bg-amber-600/90',
-  other: 'bg-gray-500/90 dark:bg-gray-600/90',
-};
-
-// Improved text colors for better accessibility
-const categoryTextColors: SkillCategoryColors = {
-  frontend: 'text-blue-600 dark:text-blue-400',
-  backend: 'text-green-600 dark:text-green-400',
-  mobile: 'text-purple-600 dark:text-purple-400',
-  design: 'text-pink-600 dark:text-pink-400',
-  devops: 'text-amber-600 dark:text-amber-400',
-  other: 'text-gray-600 dark:text-gray-400',
-};
-
-// Updated category background colors for card indicators
-const categoryBgColors: SkillCategoryColors = {
-  frontend: 'bg-blue-50 dark:bg-blue-900/20',
-  backend: 'bg-green-50 dark:bg-green-900/20',
-  mobile: 'bg-purple-50 dark:bg-purple-900/20',
-  design: 'bg-pink-50 dark:bg-pink-900/20',
-  devops: 'bg-amber-50 dark:bg-amber-900/20',
-  other: 'bg-gray-50 dark:bg-gray-900/20',
-};
-
-// Category labels with more descriptive names
-const categoryLabels: Record<string, string> = {
-  frontend: 'Frontend',
-  backend: 'Backend',
-  mobile: 'Mobile',
-  design: 'Design',
-  devops: 'DevOps',
-  other: 'Outros',
+const skillCategories = {
+  frontend: {
+    label: 'Frontend',
+    color: 'bg-blue-500/90 dark:bg-blue-600/90',
+    textColor: 'text-blue-600 dark:text-blue-400',
+    bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+  },
+  backend: {
+    label: 'Backend',
+    color: 'bg-green-500/90 dark:bg-green-600/90',
+    textColor: 'text-green-600 dark:text-green-400',
+    bgColor: 'bg-green-50 dark:bg-green-900/20',
+  },
+  mobile: {
+    label: 'Mobile',
+    color: 'bg-purple-500/90 dark:bg-purple-600/90',
+    textColor: 'text-purple-600 dark:text-purple-400',
+    bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+  },
+  desktop: {
+    label: 'Desktop',
+    color: 'bg-orange-500/90 dark:bg-orange-600/90',
+    textColor: 'text-orange-600 dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-900/20',
+  },
+  devops: {
+    label: 'DevOps',
+    color: 'bg-amber-500/90 dark:bg-amber-600/90',
+    textColor: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-50 dark:bg-amber-900/20',
+  },
+  database: {
+    label: 'Database',
+    color: 'bg-teal-500/90 dark:bg-teal-600/90',
+    textColor: 'text-teal-600 dark:text-teal-400',
+    bgColor: 'bg-teal-50 dark:bg-teal-900/20',
+  },
+  tools: {
+    label: 'Tooling',
+    color: 'bg-gray-500/90 dark:bg-gray-600/90',
+    textColor: 'text-gray-600 dark:text-gray-400',
+    bgColor: 'bg-gray-50 dark:bg-gray-900/20',
+  },
+  design: {
+    label: 'UI/UX',
+    color: 'bg-fuchsia-500/90 dark:bg-fuchsia-600/90',
+    textColor: 'text-fuchsia-600 dark:text-fuchsia-400',
+    bgColor: 'bg-fuchsia-50 dark:bg-fuchsia-900/20',
+  },
+  other: {
+    label: 'Other',
+    color: 'bg-slate-500/90 dark:bg-slate-600/90',
+    textColor: 'text-slate-600 dark:text-slate-400',
+    bgColor: 'bg-slate-50 dark:bg-slate-900/20',
+  },
 };
 
 interface SkillsGridProps {
@@ -92,24 +100,15 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
     ? skills.filter(skill => skill.category === selectedCategory)
     : skills;
 
+  // Ordenação otimizada: destaque > anos totais > ordem > nome
   const sortedSkills = [...filteredSkills].sort((a, b) => {
-    // Featured skills always come first
-    if (a.featured && !b.featured) return -1;
-    if (!a.featured && b.featured) return 1;
-
-    // Then sort by total experience years
+    if (!!a.featured !== !!b.featured) return a.featured ? -1 : 1;
     const expA = (a.proexp || 0) + (a.exp || 0);
     const expB = (b.proexp || 0) + (b.exp || 0);
     if (expA !== expB) return expB - expA;
-
-    // Then by specified order
-    if ((a.order || 999) !== (b.order || 999)) {
-      return (a.order || 999) - (b.order || 999);
-    }
-
-    // Finally alphabetically for consistent ordering
+    if ((a.order ?? 999) !== (b.order ?? 999)) return (a.order ?? 999) - (b.order ?? 999);
     return a.name.localeCompare(b.name);
-  }); // Track whether all skills have been shown for better animation control
+  });
 
   // Função simplificada para calcular delay com base apenas no índice
   const getStaggerDelay = (index: number) => {
@@ -166,7 +165,7 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
             className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all flex items-center gap-2
               ${
                 selectedCategory === category
-                  ? `${categoryColors[category as keyof SkillCategoryColors]} text-white shadow-md`
+                  ? `${skillCategories[category]?.color || ''} text-white shadow-md`
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             whileHover={{ scale: 1.03 }}
@@ -179,9 +178,9 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
             }}
           >
             <span
-              className={`w-2 h-2 rounded-full ${categoryColors[category as keyof SkillCategoryColors]}`}
+              className={`w-2 h-2 rounded-full ${skillCategories[category]?.color || ''}`}
             ></span>
-            {categoryLabels[category]}
+            {skillCategories[category]?.label || category}
             {selectedCategory === category && (
               <motion.span
                 className="ml-1 text-white/80 hover:text-white cursor-pointer"
@@ -207,9 +206,8 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
           </motion.button>
         ))}
       </motion.div>
-      {/* Enhanced skills grid with better layout and animations */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 relative">
-        {/* Shimmer effect simplificado - menos efeitos = menos bugs */}
+        {/* Shimmer effect */}
         {isFilterAnimating && (
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent z-10 pointer-events-none"
@@ -220,7 +218,7 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
             }}
           />
         )}
-        {/* Show a message if no skills match the filter */}
+        {/* No skills match the filter */}
         {sortedSkills.length === 0 && (
           <motion.div
             className="col-span-full text-center py-8 text-gray-500 dark:text-gray-400"
@@ -241,7 +239,6 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
                   ${skill.featured ? 'ring-1 ring-[color:var(--primary)]/20' : ''}
                   border border-gray-100 dark:border-gray-700/50
                 `}
-                // Usar layout="position" em vez de layout para melhorar performance
                 layout="position"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{
@@ -274,12 +271,12 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
                 {/* Enhanced category indicator with gradient */}
                 <div
                   className={`absolute top-0 left-0 w-full h-1 ${
-                    categoryColors[skill.category as keyof SkillCategoryColors]
+                    skillCategories[skill.category]?.color || ''
                   }`}
                 />
                 {/* Simplified skill icon display - menos animações = menos bugs */}
                 <div
-                  className={`mb-3 p-2.5 rounded-full ${categoryBgColors[skill.category as keyof SkillCategoryColors]} group`}
+                  className={`mb-3 p-2.5 rounded-full ${skillCategories[skill.category]?.bgColor || ''} group`}
                 >
                   <motion.div
                     whileHover={{ rotate: 15, scale: 1.1 }}
@@ -291,7 +288,7 @@ export default function SkillsGrid({ skills, className = '' }: SkillsGridProps) 
                   >
                     {
                       <skill.icon
-                        className={`w-6 h-6 ${categoryTextColors[skill.category as keyof SkillCategoryColors]}`}
+                        className={`w-6 h-6 ${skillCategories[skill.category]?.textColor || ''}`}
                       />
                     }
                   </motion.div>

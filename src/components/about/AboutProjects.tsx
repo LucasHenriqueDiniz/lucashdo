@@ -11,12 +11,13 @@ export default function AboutProjects() {
   const t = useTranslations('About.projects');
 
   // Select featured projects
-  const featuredProjects = projects
-    .filter(project => project.featured)
-    .slice(0, 3)
+  const featuredProjectIds = ['include-gurias', 'autowabba', 'weeb-profile'];
+  const featuredProjects = featuredProjectIds
+    .map(id => projects.find(project => project.id === id))
+    .filter(project => project !== undefined)
     .map(project => ({
       ...project,
-      highlight: project.id === 'windows-xp-online' ? t('featured') : null,
+      highlight: project.id === 'include-gurias' ? t('featured') : null,
     }));
 
   return (

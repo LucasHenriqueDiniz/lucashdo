@@ -291,29 +291,35 @@ const Browser = function Browser({
       {/* Browser header with tabs and controls */}
       <div className="browser-header">
         <div className="tab-container" role="tablist">
-          {internalTabs.map((tab: BrowserTab, index: number) => (
-            <Tab
-              key={tab.id}
-              tab={tab}
-              tabIndex={index}
-              isActive={index === activeTabIndex}
-              isInteractive={isInteractive}
-              onClick={handleTabClick}
-              onClose={handleTabClose}
-              onMouseEnter={e => {
-                setPreviewTabId(tab.id);
-                setPreviewRef(e.currentTarget);
-              }}
-              onMouseMove={e => {
-                setPreviewTabId(tab.id);
-                setPreviewRef(e.currentTarget);
-              }}
-              onMouseLeave={() => {
-                setPreviewTabId(null);
-                setPreviewRef(null);
-              }}
-            />
-          ))}
+          {internalTabs.map((tab: BrowserTab, index: number) =>
+            (() => {
+              const tabRef = React.createRef<HTMLDivElement>();
+              return (
+                <Tab
+                  key={tab.id}
+                  tab={tab}
+                  tabIndex={index}
+                  isActive={index === activeTabIndex}
+                  isInteractive={isInteractive}
+                  onClick={handleTabClick}
+                  onClose={handleTabClose}
+                  ref={tabRef}
+                  onMouseEnter={() => {
+                    setPreviewTabId(tab.id);
+                    setPreviewRef(tabRef.current);
+                  }}
+                  onMouseMove={() => {
+                    setPreviewTabId(tab.id);
+                    setPreviewRef(tabRef.current);
+                  }}
+                  onMouseLeave={() => {
+                    setPreviewTabId(null);
+                    setPreviewRef(null);
+                  }}
+                />
+              );
+            })()
+          )}
           {isInteractive && !hideNewTabButton && (
             <button
               className="new-tab-btn"

@@ -132,11 +132,11 @@
 }
 
 .top-tags.left {
-  left: 2rem;
+  left: 2.5rem;
 }
 
 .top-tags.right {
-  right: 2rem;
+  right: 2.5rem;
   flex-direction: row-reverse;
 }
 

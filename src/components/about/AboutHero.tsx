@@ -12,8 +12,11 @@ import {
   LuMapPin,
 } from 'react-icons/lu';
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
+import { selfie } from '../../../public';
 
 export default function AboutHero() {
+  const t = useTranslations('About.hero');
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -25,11 +28,11 @@ export default function AboutHero() {
   const yContent = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Stats that could come from your real data
+  // Stats - apenas 3 como solicitado
   const stats = [
-    { label: 'Anos de Experiência', value: '3+', icon: LuCalendar },
-    { label: 'Projetos Desenvolvidos', value: '15+', icon: LuCode },
-    { label: 'Tecnologias', value: '20+', icon: LuGraduationCap },
+    { label: t('stats.yearsExperience'), value: '3+', icon: LuCalendar },
+    { label: t('stats.projectsCompleted'), value: '20+', icon: LuCode },
+    { label: t('stats.technologies'), value: '25+', icon: LuGraduationCap },
   ];
 
   return (
@@ -40,8 +43,6 @@ export default function AboutHero() {
     >
       {/* Animated Background Grid */}
       <motion.div className="absolute inset-0" style={{ y: yBg }}>
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] bg-repeat"></div>
-
         {/* Dynamic Grid Pattern */}
         <div className="absolute inset-0 opacity-20">
           <div className="grid grid-cols-12 gap-4 h-full w-full">
@@ -109,10 +110,12 @@ export default function AboutHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-green-500/20 border border-green-500/30 rounded-full px-4 py-2 mb-6"
+              className="inline-flex items-center gap-2 bg-green-500/20 border border-green-500/30 rounded-full px-4 py-2 mb-6 group cursor-pointer hover:bg-green-500/30 transition"
+              onClick={() => (window.location.href = '/contact')}
             >
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-green-200">Disponível para projetos</span>
+              <span className="text-sm font-medium text-green-200 truncate">{t('available')}</span>
+              <LuArrowRight className="text-green-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200" />
             </motion.div>
 
             {/* Main Heading */}
@@ -123,15 +126,14 @@ export default function AboutHero() {
               className="mb-6"
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4">
-                <span className="block text-white">Olá, eu sou</span>
+                <span className="block text-white">{t('greeting')}</span>
                 <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-blue-300 bg-clip-text text-transparent">
                   Lucas HDO
                 </span>
               </h1>
-
               <div className="flex items-center gap-3 text-xl md:text-2xl text-gray-300 mb-4">
                 <LuMapPin className="text-blue-400" />
-                <span>Brasil • Desenvolvedor Full-stack</span>
+                <span>{t('locationAndRole')}</span>
               </div>
             </motion.div>
 
@@ -142,8 +144,7 @@ export default function AboutHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
             >
-              Estudante de Engenharia da Computação apaixonado por criar soluções tecnológicas que
-              fazem a diferença. Transformando ideias em experiências digitais memoráveis.
+              {t('description')}
             </motion.p>
 
             {/* Stats */}
@@ -159,7 +160,7 @@ export default function AboutHero() {
                     <stat.icon className="w-6 h-6 text-blue-400" />
                   </div>
                   <div className="text-2xl font-bold text-white">{stat.value}</div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
+                  <div className="text-xs sm:text-sm text-gray-400 truncate">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -176,7 +177,7 @@ export default function AboutHero() {
                   href="#projects"
                   className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-full font-semibold flex items-center gap-3 transition-all shadow-lg hover:shadow-xl group"
                 >
-                  Ver Projetos
+                  {t('viewProjects')}
                   <LuArrowRight className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
@@ -186,7 +187,7 @@ export default function AboutHero() {
                   href="/contact"
                   className="border-2 border-white/60 hover:border-white text-white hover:bg-white/10 px-8 py-4 rounded-full font-semibold transition-all flex items-center gap-3 group backdrop-blur-sm"
                 >
-                  Entrar em Contato
+                  {t('contact')}
                   <LuMail className="group-hover:scale-110 transition-transform" />
                 </Link>
               </motion.div>
@@ -208,13 +209,7 @@ export default function AboutHero() {
 
                 {/* Profile image */}
                 <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
-                  <Image
-                    src="/selfie.webp"
-                    alt="Lucas HDO"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
+                  <Image src={selfie} alt="Lucas HDO" fill className="object-cover" priority />
                 </div>
 
                 {/* Floating tech icons */}
@@ -275,7 +270,7 @@ export default function AboutHero() {
           <motion.div
             className="w-1 h-3 bg-white/60 rounded-full mt-2"
             animate={{
-              y: [0, 12, 0],
+              y: [0, 3, 0],
             }}
             transition={{
               duration: 2,

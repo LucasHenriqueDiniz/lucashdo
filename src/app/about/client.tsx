@@ -18,7 +18,7 @@ import AboutJourney from '@/components/about/AboutJourney';
 import AboutProfile from '@/components/about/AboutProfile';
 import AboutProjects from '@/components/about/AboutProjects';
 import AboutStats from '@/components/about/AboutStats';
-import InterestsTabs from '@/components/interests/InterestsTabs';
+import InterestsCards from '@/components/interests-cards/InterestsCards';
 import { skillsData } from '@/constants/skillsData';
 
 export default function AboutClient() {
@@ -80,7 +80,7 @@ export default function AboutClient() {
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <InterestsTabs />
+            <InterestsCards />
           </motion.div>
         </Section>
 
