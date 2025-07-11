@@ -17,6 +17,7 @@ import {
   SiVite,
 } from 'react-icons/si';
 import { ExperienceProps } from '@/types/experience.types';
+import ZustandIcon from '@/components/zustandIcon/ZustandIcon';
 
 export const jobExperiences: ExperienceProps[] = [
   {
@@ -85,7 +86,7 @@ export const jobExperiences: ExperienceProps[] = [
       { labels: { pt: 'Node.js', en: 'Node.js' }, icon: SiNodedotjs },
       { labels: { pt: 'AWS', en: 'AWS' }, icon: FaAws },
       { labels: { pt: 'Prisma', en: 'Prisma' }, icon: SiPrisma },
-      { labels: { pt: 'Zustand', en: 'Zustand' }, icon: SiC },
+      { labels: { pt: 'Zustand', en: 'Zustand' }, icon: ZustandIcon },
       { labels: { pt: 'TypeScript', en: 'TypeScript' }, icon: SiTypescript },
     ],
     description: {

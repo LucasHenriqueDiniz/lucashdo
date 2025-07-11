@@ -11,7 +11,7 @@ export interface TimelineTopTagProps {
 }
 
 export interface TimelineTagProps {
-  icon: LucideIcon | string | IconType;
+  icon: React.ElementType;
   labels: TranslatedField;
 }
 
