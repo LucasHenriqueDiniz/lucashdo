@@ -3,26 +3,41 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 
 const guestbookSchema = z.object({
-  name: z.string().min(1).max(100).trim(),
-  message: z.string().min(1).max(500).trim(),
-  github_username: z.string().max(39).optional(),
-  is_developer: z.boolean().default(false),
+  name: z.string().min(1).max(100),
+  message: z.string().min(1).max(500),
+  username: z.string().optional().nullable(),
+  is_developer: z.boolean(),
 });
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log('Received body:', body);
+
     const validated = guestbookSchema.safeParse(body);
 
     if (!validated.success) {
+      console.log('Validation failed:', validated.error.issues);
       return NextResponse.json(
         { error: 'Dados inválidos', details: validated.error.issues },
         { status: 400 }
       );
     }
 
-    const { name, message, github_username, is_developer } = validated.data;
+    const { name, message, username, is_developer } = validated.data;
     const supabase = await createClient();
+
+    // Gerar URL do avatar baseado no tipo de usuário
+    let avatar_url: string | null = null;
+    if (username) {
+      if (is_developer) {
+        // GitHub avatar
+        avatar_url = `https://github.com/${username}.png`;
+      } else {
+        // Boring avatars para Instagram/visitantes
+        avatar_url = `https://source.boringavatars.com/beam/120/${encodeURIComponent(username)}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`;
+      }
+    }
 
     // Inserir no Supabase
     const { data, error } = await supabase
@@ -30,9 +45,9 @@ export async function POST(request: NextRequest) {
       .insert({
         name,
         message,
-        github_username: github_username || null,
+        username: username || null,
         is_developer,
-        avatar_url: github_username ? `https://github.com/${github_username}.png` : null,
+        avatar_url,
       })
       .select()
       .single();

@@ -75,15 +75,6 @@ export async function getWorkouts(limit = 5, page = 1): Promise<LyftaWorkout[]> 
 
     const data = await response.json();
 
-    // Log first 2 workouts if data is an array
-    if (Array.isArray(data)) {
-      console.log('📦 Lyfta API Response:', JSON.stringify(data.slice(0, 2), null, 2));
-    } else if (data.workouts && Array.isArray(data.workouts)) {
-      console.log('📦 Lyfta API Response:', JSON.stringify(data.workouts.slice(0, 2), null, 2));
-    } else {
-      console.log('📦 Lyfta API Response:', JSON.stringify(data, null, 2));
-    }
-
     // Return workouts array or empty array if not found
     return Array.isArray(data) ? data : data.workouts || [];
   } catch (error) {

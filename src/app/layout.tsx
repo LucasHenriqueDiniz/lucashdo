@@ -1,14 +1,11 @@
-import type { Metadata } from 'next';
-import './globals.css';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { Locale, NextIntlClientProvider } from 'next-intl';
-import { Inter, Roboto_Mono } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import Footer from '@/components/layout/Footer';
+import type { Metadata } from 'next';
+import { Inter, Roboto_Mono } from 'next/font/google';
 import Header from '@/components/layout/Header';
-import { defaultLocale, locales } from '@/lib/i18n/config';
-import InteractiveTerminal from '@/components/about/InteractiveTerminal';
-import { LanguageProvider } from '@/components/language-switcher';
+import Footer from '@/components/layout/Footer';
+import { IntlProviderClient } from '@/lib/i18n/IntlProviderClient';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono' });
@@ -75,48 +72,18 @@ export const metadata: Metadata = {
   },
 };
 
-export function generateStaticParams() {
-  return locales.map(locale => ({ locale }));
-}
-
-// Helper to check if a value is a valid Locale
-function isValidLocale(val: string): val is Locale {
-  return (locales as readonly string[]).includes(val);
-}
-
-export default async function RootLayout({
-  children,
-  params: { locale },
-}: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
-  // Use default locale if the provided one is invalid
-  const localeStr = String(locale);
-  const validLocale: Locale = isValidLocale(localeStr) ? localeStr : defaultLocale;
-
-  let messages;
-  try {
-    messages = (await import(`@/messages/${validLocale}.json`)).default;
-  } catch (error) {
-    console.error(error);
-    messages = (await import(`@/messages/${defaultLocale}.json`)).default;
-  }
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={validLocale} suppressHydrationWarning>
+    <html lang="pt" suppressHydrationWarning>
       <head>{/* Add any additional head elements here */}</head>
       <body className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}>
-        <NextIntlClientProvider locale={validLocale} messages={messages}>
+        <IntlProviderClient>
           <TooltipProvider delayDuration={100}>
-            <LanguageProvider>
-              <Header />
-              {children}
-              <Footer />
-              <InteractiveTerminal />
-            </LanguageProvider>
+            <Header />
+            {children}
+            <Footer />
           </TooltipProvider>
-        </NextIntlClientProvider>
+        </IntlProviderClient>
         <SpeedInsights />
       </body>
     </html>

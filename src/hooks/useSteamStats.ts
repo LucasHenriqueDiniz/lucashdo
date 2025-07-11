@@ -12,17 +12,19 @@ export function useSteamStats() {
   } = useSWR<SteamStats>('/api/steam/stats', fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
-    dedupingInterval: 30000, // 30s deduping - evita múltiplas chamadas simultâneas
+    dedupingInterval: 30000, // 30s deduping
     errorRetryCount: 3,
     errorRetryInterval: 5000,
-    // Fallback para dados em cache quando offline
+    refreshInterval: 120000, // Revalidar a cada 2 minutos
     shouldRetryOnError: true,
+    // Sempre ativo, mesmo quando não visível
+    isPaused: () => false,
   });
 
   return {
     stats,
     isLoading,
     error,
-    mutate, // Para forçar revalidação se necessário
+    mutate,
   };
 }

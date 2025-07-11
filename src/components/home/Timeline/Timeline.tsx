@@ -1,10 +1,11 @@
 'use client';
 import { motion, useScroll } from 'framer-motion';
-import { BriefcaseBusiness, GraduationCap, LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, GraduationCap, LucideArrowRight, LucideIcon } from 'lucide-react';
 import Image from 'next/image';
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { IconType } from 'react-icons/lib';
-import { useLanguage } from '@/components/language-switcher';
+import { useTranslations } from 'next-intl';
+import { useLanguageStore } from '@/lib/i18n/languageStore';
 import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
 import { Pill } from '@/components/ui/Pill';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -42,7 +43,7 @@ const DatePill = memo(({ date, side }: { date: string; side: 'left' | 'right' })
           minWidth: '135px',
         }}
       >
-        {date.replace('/today/', 'Now')}
+        {date}
       </Pill>
     </div>
   );
@@ -60,6 +61,8 @@ const ExperienceCardSkillsIcon = memo(
     title?: TranslatedField;
     index?: number;
   }) => {
+    const lang = useLanguageStore(state => state.lang);
+
     // Função para renderizar o ícone correto com useCallback
     const getIcon = useCallback(
       (iconProp: string | LucideIcon | IconType) => {
@@ -90,7 +93,7 @@ const ExperienceCardSkillsIcon = memo(
       <Tooltip>
         <TooltipTrigger asChild>
           <motion.div
-            className="timeline-tags-icon flex items-center justify-center size-12 rounded-lg bg-[var(--primary)]/10 backdrop-blur-sm border border-[var(--primary)]/20 shadow-sm text-[var(--accent)] hover:border-[var(--accent)]/40"
+            className="timeline-tags-icon flex items-center justify-center size-12 rounded-lg bg-[var(--primary)]/10 backdrop-blur-sm border border-[var(--primary)]/20 text-[var(--accent)] hover:border-[var(--accent)]/40"
             variants={{
               hidden: { opacity: 0, scale: 0.5, y: 10 },
               visible: {
@@ -113,7 +116,9 @@ const ExperienceCardSkillsIcon = memo(
           </motion.div>
         </TooltipTrigger>
         <TooltipContent>
-          <p className="font-medium">{title ? title.pt || title.en : 'No title'}</p>
+          <p className="font-medium">
+            {title ? title[lang as keyof TranslatedField] || title.en || title.pt : 'Skill'}
+          </p>
         </TooltipContent>
       </Tooltip>
     );
@@ -135,7 +140,7 @@ const ExperienceCard = memo(
     lang: 'pt' | 'en';
   }) => {
     return (
-      <div className="card-container mx-2 py-6 px-4 h-full rounded-xl transition-colors shadow-sm hover:shadow-md">
+      <div className="card-container mx-2 py-6 px-4 h-full rounded-xl transition-colors">
         <motion.div
           className={`top-tags ${side}`}
           initial="hidden"
@@ -262,15 +267,14 @@ function BallContainer({
   sectionTop?: number;
   lang: 'pt' | 'en';
 }) {
-  // Estados para controlar animações
   const [topPosition, setTopPosition] = useState<number | null>(0);
   const [bottomPosition, setBottomPosition] = useState<number | null>(null);
 
-  // Otimizado: useMemo para cálculos que não dependem do scroll
   const isAcademic = useMemo(
     () => jobExperiences.findIndex(exp => exp.id === item.id) === -1,
     [item.id]
   );
+
   const TypeIcon = isAcademic ? GraduationCap : BriefcaseBusiness;
   const containerTop = useMemo(() => index * ballSpacing, [index, ballSpacing]);
 
@@ -297,6 +301,7 @@ function BallContainer({
     },
     [centerY, containerHeight, containerTop, sectionTop]
   );
+
   useLayoutEffect(() => {
     const initialScroll = scrollY.get();
     setTimeout(() => {
@@ -304,6 +309,7 @@ function BallContainer({
     }, 10);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
     let lastTime = 0;
     const throttleTime = 16;
@@ -318,6 +324,7 @@ function BallContainer({
     });
     return () => unsubscribe();
   }, [scrollY, updatePositionState]);
+
   const containerStyle = useMemo(
     () => ({
       height: `${containerHeight}px`,
@@ -328,6 +335,7 @@ function BallContainer({
     }),
     [containerHeight, containerTop]
   );
+
   return (
     <div
       className="absolute w-full gap-4 md:gap-8 lg:gap-12 items-center justify-center z-10 grid"
@@ -362,6 +370,7 @@ function BallContainer({
         }}
       >
         <Blank />
+
         {side === 'left' ? (
           <div className="relative size-full">
             <TimelineArrow side={side} />
@@ -369,10 +378,11 @@ function BallContainer({
         ) : (
           <DatePill date={formatExperienceDates(item.startDate, item.endDate, lang)} side={side} />
         )}
+
         <div className="size-full flex items-center justify-center">
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="flex items-center justify-center size-12 bg-[var(--primary)] rounded-full shadow-lg hover:scale-110 transition-transform hover-bg-[var(--primary-hover)]">
+              <div className="flex items-center justify-center size-12 bg-[var(--primary)] rounded-full hover:scale-110">
                 <TypeIcon className="w-8 h-8 text-white" />
               </div>
             </TooltipTrigger>
@@ -405,7 +415,7 @@ function BallContainer({
           </div>
         )}
         <Blank />
-      </motion.div>{' '}
+      </motion.div>
       {/* Card Direita */}
       <div className="size-full py-4 pl-8 md:pl-12 pr-2 md:pr-4" style={{ gridArea: 'right' }}>
         {side === 'right' ? (
@@ -421,10 +431,11 @@ function BallContainer({
 const MemoBallContainer = memo(BallContainer);
 
 const Timeline = () => {
-  const { currentLanguage } = useLanguage();
+  const lang = useLanguageStore(state => state.lang);
   const [windowHeight, setWindowHeight] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations('Timeline');
 
   // Vamos usar o scroll padrão do window para ter o comportamento esperado em todas as páginas
   const { scrollY } = useScroll();
@@ -442,10 +453,8 @@ const Timeline = () => {
       }
     };
 
-    // Atualizamos a posição inicial
     updatePosition();
 
-    // Otimizado: throttling para o evento resize
     let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
       clearTimeout(resizeTimeout);
@@ -476,7 +485,7 @@ const Timeline = () => {
   const timelineItems = useMemo(
     () => getFilteredAndSortedExperiences([...academicExperiences, ...jobExperiences]),
     []
-  ); // Use a smaller spacing for mobile and standard for desktop
+  );
   const ballSpacing = useMemo(() => {
     return typeof window !== 'undefined' && window.innerWidth < 768 ? 240 : 300;
   }, []);
@@ -487,10 +496,8 @@ const Timeline = () => {
   // Usando metade da altura da janela como ponto de referência para o centro da tela
   // Isso faz com que o scroll fique sincronizado com o centro da viewport
   const centerY = useMemo(() => windowHeight / 2, [windowHeight]);
-  const totalHeight = useMemo(
-    () => `${ballCount * ballSpacing}px`, // Usando a altura da janela para garantir espaço adequado no final
-    [ballCount, ballSpacing]
-  );
+  const totalHeight = useMemo(() => `${ballCount * ballSpacing}px`, [ballCount, ballSpacing]);
+
   return (
     <section ref={sectionRef} className="w-full flex flex-col items-center justify-center">
       <HomeSectionTitle
@@ -498,7 +505,6 @@ const Timeline = () => {
         titleWhitePart="My"
         titleBluePart="Career"
       />
-
       <div
         ref={timelineRef}
         className="relative w-full max-w-[1400px] mx-auto px-4 md:px-8 timeline-container"
@@ -509,7 +515,7 @@ const Timeline = () => {
           className="absolute left-1/2 top-0 w-1 bg-gray-900 transform -translate-x-1/2 z-0"
           style={{ height: '100%' }}
         />
-        {/* Containers das bolas - Renderização condicional baseada na visibilidade */}{' '}
+        {/* Containers das bolas - Renderização condicional baseada na visibilidade */}
         {timelineItems.map((item, index) => {
           const side: 'left' | 'right' = index % 2 === 0 ? 'left' : 'right';
           return (
@@ -523,11 +529,39 @@ const Timeline = () => {
               item={item}
               side={side}
               sectionTop={sectionTop}
-              lang={currentLanguage}
+              lang={lang}
             />
           );
         })}
       </div>
+      {/* Mini Linha para criar um espaçamento */}
+      <div className="w-1 bg-gray-900 z-0" style={{ height: '25px' }} />
+      {/* CTA */}
+      <motion.div
+        key={lang}
+        className="mb-8 flex flex-col items-center justify-center gap-2"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+      >
+        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary)]/10 backdrop-blur-sm border border-[var(--primary)]/20">
+          <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></div>
+          <p className="text-sm font-medium text-[var(--foreground)]">{t('join_timeline')}</p>
+        </div>
+        <motion.p
+          className="text-xs text-gray-500 hover:text-[var(--accent)] transition-colors cursor-pointer flex items-center"
+          whileHover={{ scale: 1.05 }}
+          onClick={() => {
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+              contactSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        >
+          <span className="font-semibold">{t('click_here')}</span>
+          <LucideArrowRight className="inline-block ml-1" size={16} />
+        </motion.p>
+      </motion.div>
     </section>
   );
 };

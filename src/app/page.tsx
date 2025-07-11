@@ -3,7 +3,7 @@ import ExpGraph from '@/components/home/ExpGraph';
 import Hero from '@/components/home/Hero';
 import Timeline from '@/components/home/Timeline/Timeline';
 import ProjectsShowcase from '@/components/ProjectsShowcase/FeaturedProjects';
-import GuestBook from '@/components/home/GuestBook/GuestBook';
+import ModernGuestBook from '@/components/home/ModernGuestBook';
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
       {/* PROJECTS SHOWCASE */}
       <ProjectsShowcase />
       {/* GUESTBOOK */}
-      <GuestBook />
+      <ModernGuestBook />
     </main>
   );
 }

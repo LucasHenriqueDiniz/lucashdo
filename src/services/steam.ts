@@ -82,7 +82,6 @@ export async function getSteamProfile(): Promise<SteamProfile | null> {
     }
 
     const data = await response.json();
-    console.log('📦 Steam Profile Response:', JSON.stringify(data, null, 2));
     return data.response?.players?.[0] || null;
   } catch (error) {
     console.error('❌ Error fetching Steam profile:', error);
@@ -111,7 +110,6 @@ export async function getRecentGames(count = 5): Promise<SteamGame[]> {
     }
 
     const data = await response.json();
-    console.log('📦 Recent Games Response:', JSON.stringify(data, null, 2));
     return data.response?.games || [];
   } catch (error) {
     console.error('❌ Error fetching recent games:', error);
@@ -140,7 +138,6 @@ export async function getOwnedGames(): Promise<{ games: SteamGame[]; total: numb
     }
 
     const data = await response.json();
-    console.log('📦 Owned Games Response:', JSON.stringify(data, null, 2));
     const games = data.response?.games || [];
 
     // Sort by playtime
@@ -161,6 +158,7 @@ export async function getOwnedGames(): Promise<{ games: SteamGame[]; total: numb
  */
 export async function getSteamStats(): Promise<SteamStats> {
   console.log('📊 Getting Steam stats...');
+
   const [profile, recentGames, ownedGamesData] = await Promise.all([
     getSteamProfile(),
     getRecentGames(5),
@@ -208,6 +206,5 @@ export async function getSteamStats(): Promise<SteamStats> {
     lastPlayed,
   };
 
-  console.log('📊 Final Steam stats:', JSON.stringify(stats, null, 2));
   return stats;
 }

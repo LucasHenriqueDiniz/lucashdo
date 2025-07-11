@@ -71,5 +71,5 @@ export function getFilteredAndSortedExperiences(
     filtered = experiences.filter(exp => exp.showInTimeline);
   }
 
-  return sortExperiences(filtered);
+  return sortExperiences(filtered).reverse();
 }

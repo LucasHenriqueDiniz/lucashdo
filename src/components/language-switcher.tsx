@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, createContext, useContext } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Languages } from 'lucide-react';
+import { useState } from 'react';
+import { useLanguageStore } from '@/lib/i18n/languageStore';
 
 // Configuração de idiomas
 const languages = {
@@ -12,51 +13,15 @@ const languages = {
 
 type Locale = 'pt' | 'en';
 
-// Contexto para gerenciar o idioma globalmente
-interface LanguageContextType {
-  currentLanguage: Locale;
-  setLanguage: (lang: Locale) => void;
-}
-
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [currentLanguage, setCurrentLanguage] = useState<Locale>('pt');
-
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') as Locale;
-    if (savedLanguage && (savedLanguage === 'pt' || savedLanguage === 'en')) {
-      setCurrentLanguage(savedLanguage);
-    }
-  }, []);
-
-  const setLanguage = (lang: Locale) => {
-    setCurrentLanguage(lang);
-    localStorage.setItem('language', lang);
-  };
-
-  return (
-    <LanguageContext.Provider value={{ currentLanguage, setLanguage }}>
-      {children}
-    </LanguageContext.Provider>
-  );
-}
-
-export function useLanguage() {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-}
-
 export function LanguageSwitcher() {
-  const { currentLanguage, setLanguage } = useLanguage();
+  const lang = useLanguageStore(state => state.lang);
+  const setLang = useLanguageStore(state => state.setLang);
   const [isHovered, setIsHovered] = useState(false);
   const [previewLanguage, setPreviewLanguage] = useState<Locale | null>(null);
 
   const handleLanguageChange = (newLanguage: Locale) => {
-    setLanguage(newLanguage);
+    setLang(newLanguage);
+    localStorage.setItem('language', newLanguage);
   };
 
   const handleMouseEnter = (language: Locale) => {
@@ -69,7 +34,7 @@ export function LanguageSwitcher() {
     setPreviewLanguage(null);
   };
 
-  const otherLanguage = currentLanguage === 'pt' ? 'en' : 'pt';
+  const otherLanguage = lang === 'pt' ? 'en' : 'pt';
 
   return (
     <div className="relative">
@@ -108,7 +73,7 @@ export function LanguageSwitcher() {
                 className="flex items-center"
               >
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {languages[currentLanguage].name}
+                  {languages[lang].name}
                 </span>
               </motion.div>
             )}

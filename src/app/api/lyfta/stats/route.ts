@@ -6,21 +6,28 @@ export async function GET() {
   const cacheKey = 'lyfta:stats:main';
 
   try {
+    console.log('📦 Verificando cache Lyfta...');
     const { data: cachedData, isStale, shouldRevalidate } = await cache.get(cacheKey);
+    console.log('- Cache Lyfta encontrado:', !!cachedData);
+    console.log('- Cache Lyfta stale:', isStale);
+    console.log('- Deve revalidar Lyfta:', shouldRevalidate);
 
-    if (cachedData && !isStale) {
+    if (cachedData && !shouldRevalidate) {
+      console.log('✅ Retornando Lyfta do cache');
       return NextResponse.json(cachedData, {
         headers: {
           'Cache-Control': 'public, max-age=1800, stale-while-revalidate=3600',
-          'X-Cache-Status': 'HIT',
+          'X-Cache-Status': isStale ? 'STALE' : 'HIT',
         },
       });
     }
 
     if (shouldRevalidate || !cachedData) {
+      console.log('🔄 Fetching fresh Lyfta data...');
       const freshData = await getLyftaStats();
+      console.log('✅ Lyfta dados obtidos com sucesso');
 
-      cache.set(cacheKey, freshData).catch(console.error);
+      await cache.set(cacheKey, freshData);
 
       return NextResponse.json(freshData, {
         headers: {
@@ -30,6 +37,7 @@ export async function GET() {
       });
     }
 
+    console.log('📦 Retornando Lyfta do cache (stale)');
     return NextResponse.json(cachedData, {
       headers: {
         'Cache-Control': 'public, max-age=900, stale-while-revalidate=1800',

@@ -19,7 +19,7 @@ import {
   Zap,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLastFmArtists, useLastFmTracks, useLastFmUser } from '@/hooks/useLastFm';
 import { useLyftaStats } from '@/hooks/useLyfta';
 import { useSteamStats } from '@/hooks/useSteamStats';
@@ -115,6 +115,13 @@ const InterestsCards = () => {
   const { stats: steamStats } = useSteamStats();
   const { stats: lyftaStats } = useLyftaStats();
 
+  // Debug logs para verificar se os dados estão sendo carregados
+  useEffect(() => {
+    console.log('🎵 LastFM User:', lastfmUser);
+    console.log('🎮 Steam Stats:', steamStats);
+    console.log('💪 Lyfta Stats:', lyftaStats);
+  }, [lastfmUser, steamStats, lyftaStats]);
+
   const cards = [
     { id: 'music', label: 'Music', icon: Music, colors: colors.music },
     { id: 'games', label: 'Games', icon: Gamepad2, colors: colors.games },
@@ -189,6 +196,8 @@ const InterestsCards = () => {
                 src={VinylDisk}
                 alt="Vinyl disk"
                 className="object-cover"
+                priority
+                quality={75}
               />
             </motion.div>
             <div className="absolute inset-0 bg-black/20 rounded-lg flex items-center justify-center translate-x-5">

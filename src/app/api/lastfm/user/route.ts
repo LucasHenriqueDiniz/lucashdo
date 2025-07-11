@@ -25,12 +25,12 @@ export async function GET() {
     console.log('- Cache stale:', isStale);
     console.log('- Deve revalidar:', shouldRevalidate);
 
-    if (cachedData && !isStale) {
-      console.log('✅ Retornando dados do cache (fresco)');
+    if (cachedData && !shouldRevalidate) {
+      console.log('✅ Retornando dados do cache (não precisa revalidar)');
       return NextResponse.json(cachedData, {
         headers: {
           'Cache-Control': 'public, max-age=900, stale-while-revalidate=1800',
-          'X-Cache-Status': 'HIT',
+          'X-Cache-Status': isStale ? 'STALE' : 'HIT',
         },
       });
     }
@@ -39,8 +39,12 @@ export async function GET() {
       console.log('🔄 Fetching fresh LastFM user data...');
       const freshData = await getUserInfo(LASTFM_USERNAME);
       console.log('✅ Dados obtidos com sucesso');
+      console.log('📄 Dados atualizados:', {
+        playcount: freshData.playcount,
+        artist_count: freshData.artist_count,
+      });
 
-      cache.set(cacheKey, freshData).catch(console.error);
+      await cache.set(cacheKey, freshData);
 
       return NextResponse.json(freshData, {
         headers: {

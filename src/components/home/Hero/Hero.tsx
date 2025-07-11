@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './Hero.css';
 import { LuExternalLink, LuMail, LuChevronDown } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
-import { useLanguage } from '@/components/language-switcher';
+import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { skillsData } from '@/constants/skillsData';
 import { Button } from '@/components/ui/button';
 import { TranslatedField } from '@/types/experience.types';
@@ -40,7 +40,7 @@ function HeroComponent() {
   // State for typing effect
   const [displayText, setDisplayText] = useState('');
   const [roleIndex, setRoleIndex] = useState(0);
-  const { currentLanguage } = useLanguage();
+  const lang = useLanguageStore(state => state.lang);
   const router = useRouter();
 
   // Refs para controlar o estado da animação de digitação
@@ -62,10 +62,10 @@ function HeroComponent() {
   const currentRole = useMemo(() => {
     const role = developerCompletions[roleIndex];
     return {
-      text: role.role[currentLanguage] || role.role.pt,
+      text: role.role[lang as keyof TranslatedField] || role.role.pt,
       emoji: role.emoji,
     };
-  }, [roleIndex, currentLanguage]);
+  }, [roleIndex, lang]);
 
   // Função para controlar o efeito de digitação
   const handleTypingEffect = useCallback(() => {
@@ -187,7 +187,7 @@ function HeroComponent() {
           <span className="inline-block w-2 h-5 ml-1 bg-[color:var(--blue)] cursor"></span>
         </motion.div>
 
-        {/* Main heading - centered */}
+        {/* Main heading */}
         <motion.h1
           className="text-5xl md:text-6xl font-bold text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -212,14 +212,14 @@ function HeroComponent() {
           </span>
         </motion.h1>
 
-        {/* Subtitle with changing roles - properly aligned */}
+        {/* Subtitle with changing roles */}
         <motion.h2
           className="text-2xl font-medium flex flex-wrap items-center justify-center gap-2 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <span>{currentLanguage === 'pt' ? 'Um desenvolvedor ' : 'A developer '}</span>
+          <span>{lang === 'pt' ? 'Um desenvolvedor ' : 'A developer '}</span>
           <span className="inline-flex items-center role-container">
             <span className="role-text-wrapper">
               <AnimatePresence mode="wait">
@@ -285,7 +285,7 @@ function HeroComponent() {
             >
               <span className="flex items-center gap-2">
                 <LuMail className="w-5 h-5" />
-                {currentLanguage === 'pt' ? 'Contato' : 'Contact'}
+                {lang === 'pt' ? 'Contato' : 'Contact'}
               </span>
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-[color:var(--blue)] via-[color:var(--cyan)] to-[color:var(--blue)] -z-10"
@@ -313,7 +313,7 @@ function HeroComponent() {
             >
               <span className="flex items-center gap-2">
                 <LuExternalLink className="w-5 h-5" />
-                {currentLanguage === 'pt' ? 'Projetos' : 'Projects'}
+                {lang === 'pt' ? 'Projetos' : 'Projects'}
               </span>
             </Button>
             <div className="absolute -inset-[8px] rounded-xl z-0 overflow-hidden pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -324,7 +324,7 @@ function HeroComponent() {
         </motion.div>
       </div>
 
-      {/* "See more projects" indicator - fixed at bottom */}
+      {/* "See more projects" indicator  */}
       <motion.div
         className="absolute bottom-8 left-0 right-0 mx-auto w-fit flex flex-col items-center gap-2 cursor-pointer"
         initial={{ opacity: 0, y: 10 }}
@@ -339,7 +339,7 @@ function HeroComponent() {
         whileTap={{ scale: 0.95 }}
       >
         <span className="text-sm font-medium text-muted-foreground">
-          {currentLanguage === 'pt' ? 'Ver mais' : 'See more'}
+          {lang === 'pt' ? 'Ver mais' : 'See more'}
         </span>
 
         <motion.div

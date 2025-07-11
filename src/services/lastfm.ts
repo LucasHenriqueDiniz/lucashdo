@@ -29,7 +29,6 @@ export async function getUserInfo(username: string): Promise<LastFmUser> {
   }
 
   const data = await response.json();
-  console.log('📦 Last.fm User Info Response:', JSON.stringify(data, null, 2));
   return data.user;
 }
 
@@ -63,7 +62,6 @@ export async function getRecentTracks(
   }
 
   const data = await response.json();
-  console.log('📦 Last.fm Recent Tracks Response:', JSON.stringify(data, null, 2));
   return data.recenttracks.track;
 }
 
@@ -100,7 +98,6 @@ export async function getTopTracks(
   }
 
   const data = await response.json();
-  console.log('📦 Last.fm Top Tracks Response:', JSON.stringify(data, null, 2));
   return data.toptracks.track;
 }
 
@@ -136,6 +133,5 @@ export async function getTopArtists(
   }
 
   const data = await response.json();
-  console.log('📦 Last.fm Top Artists Response:', JSON.stringify(data, null, 2));
   return data.topartists.artist;
 }

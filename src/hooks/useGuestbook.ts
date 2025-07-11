@@ -4,7 +4,7 @@ interface GuestbookEntry {
   id: string;
   name: string;
   message: string;
-  github_username?: string | null;
+  username?: string | null;
   is_developer: boolean;
   avatar_url?: string | null;
   created_at: string;
@@ -22,9 +22,14 @@ export function useGuestbook() {
   } = useSWR<GuestbookEntry[]>('/api/guestbook', fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
+    refreshInterval: 30000, // Revalidar a cada 30 segundos
+    dedupingInterval: 10000, // 10s deduping
+    errorRetryCount: 3,
   });
 
   const addEntry = async (entry: AddEntryData) => {
+    console.log('Sending entry:', entry);
+
     const response = await fetch('/api/guestbook', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

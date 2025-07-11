@@ -6,13 +6,13 @@ interface CacheConfig {
 }
 
 const CACHE_CONFIGS: Record<string, CacheConfig> = {
-  'steam:profile': { ttl: 3600, staleWhileRevalidate: 1800 },
-  'steam:games': { ttl: 86400, staleWhileRevalidate: 43200 },
-  'steam:stats': { ttl: 3600, staleWhileRevalidate: 1800 },
-  'lastfm:user': { ttl: 1800, staleWhileRevalidate: 900 },
-  'lastfm:tracks': { ttl: 300, staleWhileRevalidate: 150 },
-  'lastfm:artists': { ttl: 1800, staleWhileRevalidate: 900 },
-  'lyfta:stats': { ttl: 3600, staleWhileRevalidate: 1800 },
+  'steam:profile': { ttl: 3600, staleWhileRevalidate: 1800 }, // 1h + 30min
+  'steam:games': { ttl: 86400, staleWhileRevalidate: 43200 }, // 24h + 12h
+  'steam:stats': { ttl: 3600, staleWhileRevalidate: 1800 }, // 1h + 30min
+  'lastfm:user': { ttl: 900, staleWhileRevalidate: 300 }, // 15min + 5min
+  'lastfm:tracks': { ttl: 120, staleWhileRevalidate: 60 }, // 2min + 1min
+  'lastfm:artists': { ttl: 900, staleWhileRevalidate: 300 }, // 15min + 5min
+  'lyfta:stats': { ttl: 3600, staleWhileRevalidate: 1800 }, // 1h + 30min
 };
 
 export class SupabaseCache {
@@ -67,7 +67,7 @@ export class SupabaseCache {
     return {
       data: cacheData.data as T,
       isStale,
-      shouldRevalidate: isExpired && !isStale,
+      shouldRevalidate: isExpired, // Corrigido: sempre revalidar se expirou
     };
   }
 
@@ -78,13 +78,31 @@ export class SupabaseCache {
     try {
       const supabase = await createClient();
 
-      const { error } = await supabase.from('api_cache').upsert({
-        cache_key: key,
-        data: data as Record<string, unknown>,
-        expires_at: expiresAt.toISOString(),
-      });
+      // Tentar upsert primeiro, se falhar, delete e insert
+      const { error: upsertError } = await supabase.from('api_cache').upsert(
+        {
+          cache_key: key,
+          data: data as Record<string, unknown>,
+          expires_at: expiresAt.toISOString(),
+        },
+        {
+          onConflict: 'cache_key',
+        }
+      );
 
-      if (error) throw error;
+      if (upsertError) {
+        console.log('Upsert failed, trying delete + insert:', upsertError.message);
+        // Se upsert falhar, delete e insert
+        await supabase.from('api_cache').delete().eq('cache_key', key);
+
+        const { error: insertError } = await supabase.from('api_cache').insert({
+          cache_key: key,
+          data: data as Record<string, unknown>,
+          expires_at: expiresAt.toISOString(),
+        });
+
+        if (insertError) throw insertError;
+      }
 
       this.memoryCache.set(key, {
         data,

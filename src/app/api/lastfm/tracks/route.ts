@@ -15,13 +15,18 @@ export async function GET() {
   }
 
   try {
+    console.log('📦 Verificando cache tracks...');
     const { data: cachedData, isStale, shouldRevalidate } = await cache.get(cacheKey);
+    console.log('- Cache tracks encontrado:', !!cachedData);
+    console.log('- Cache tracks stale:', isStale);
+    console.log('- Deve revalidar tracks:', shouldRevalidate);
 
-    if (cachedData && !isStale) {
+    if (cachedData && !shouldRevalidate) {
+      console.log('✅ Retornando tracks do cache');
       return NextResponse.json(cachedData, {
         headers: {
           'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
-          'X-Cache-Status': 'HIT',
+          'X-Cache-Status': isStale ? 'STALE' : 'HIT',
         },
       });
     }
@@ -29,8 +34,9 @@ export async function GET() {
     if (shouldRevalidate || !cachedData) {
       console.log('🔄 Fetching fresh LastFM tracks data...');
       const freshData = await getRecentTracks(LASTFM_USERNAME, 10);
+      console.log('✅ Tracks obtidos com sucesso, total:', freshData?.length || 0);
 
-      cache.set(cacheKey, freshData).catch(console.error);
+      await cache.set(cacheKey, freshData);
 
       return NextResponse.json(freshData, {
         headers: {
@@ -40,6 +46,7 @@ export async function GET() {
       });
     }
 
+    console.log('📦 Retornando tracks do cache (stale)');
     return NextResponse.json(cachedData, {
       headers: {
         'Cache-Control': 'public, max-age=150, stale-while-revalidate=300',

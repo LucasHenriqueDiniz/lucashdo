@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { SkillDataType, skillsData } from '@/constants';
 import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
-import { useLanguage } from '@/components/language-switcher';
+import { useLanguageStore } from '@/lib/i18n/languageStore';
 import './ExpGraph.css';
 
 // Simplified skill icon component for the grid
@@ -239,7 +239,7 @@ const ExpGraph = () => {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
   const [showAllSkills, setShowAllSkills] = useState(false);
-  const { currentLanguage } = useLanguage();
+  const lang = useLanguageStore(state => state.lang);
 
   // Sort skills by order for display
   const orderedSkills = [...skillsData].sort((a, b) => (a.order || 999) - (b.order || 999));
@@ -356,10 +356,10 @@ const ExpGraph = () => {
                   >
                     <span>
                       {showAllSkills
-                        ? currentLanguage === 'pt'
+                        ? lang === 'pt'
                           ? 'Mostrar Menos'
                           : 'Show Less'
-                        : currentLanguage === 'pt'
+                        : lang === 'pt'
                           ? `Mostrar Todos ${orderedSkills.length} Skills`
                           : `Show All ${orderedSkills.length} Skills`}
                     </span>
@@ -389,7 +389,7 @@ const ExpGraph = () => {
                   style={{ backgroundColor: 'var(--primary)' }}
                 ></div>
                 <span className="text-xs text-gray-400">
-                  {currentLanguage === 'pt' ? 'Trabalhando' : 'Working'}
+                  {lang === 'pt' ? 'Trabalhando' : 'Working'}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
@@ -397,14 +397,12 @@ const ExpGraph = () => {
                   className="w-3 h-3 rounded"
                   style={{ backgroundColor: 'var(--popover)' }}
                 ></div>
-                <span className="text-xs text-gray-400">
-                  {currentLanguage === 'pt' ? 'Total' : 'Total'}
-                </span>
+                <span className="text-xs text-gray-400">{lang === 'pt' ? 'Total' : 'Total'}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 rounded" style={{ backgroundColor: 'var(--cyan)' }}></div>
                 <span className="text-xs text-gray-400">
-                  {currentLanguage === 'pt' ? 'Favorito' : 'Favorite'}
+                  {lang === 'pt' ? 'Favorito' : 'Favorite'}
                 </span>
               </div>
             </div>
@@ -456,9 +454,9 @@ const ExpGraph = () => {
             </AnimatePresence>
             <div className="relative z-10">
               <HomeSectionTitle
-                subTitle={currentLanguage === 'pt' ? 'Onde sou bom' : 'Where I excel'}
-                titleWhitePart={currentLanguage === 'pt' ? 'Minhas' : 'My'}
-                titleBluePart={currentLanguage === 'pt' ? 'Skills' : 'Skills'}
+                subTitle={lang === 'pt' ? 'Onde sou bom' : 'Where I excel'}
+                titleWhitePart={lang === 'pt' ? 'Minhas' : 'My'}
+                titleBluePart={lang === 'pt' ? 'Skills' : 'Skills'}
                 icon={
                   <motion.div
                     key={currentSkillIndex}

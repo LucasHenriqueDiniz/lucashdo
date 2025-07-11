@@ -39,27 +39,17 @@
       "locationAndRole": "Brazil • Full-stack Developer",
       "description": "Code with purpose. Design with logic. Solutions that work.",
       "viewProjects": "View Projects",
-      "contact": "Contact Me",
-      "stats": {
-        "yearsExperience": "Years of Experience",
-        "yearsExperienceDesc": "From landing pages to complete platforms, focusing on performance, design and usability.",
-        "projectsCompleted": "Projects Delivered",
-        "projectsCompletedDesc": "From landing pages to complete platforms, focusing on performance, design and usability.",
-        "technologies": "Technologies Mastered",
-        "technologiesDesc": "Modern stack: React, Next.js, Node.js, TypeScript, Python, AWS, Docker and more.",
-        "certifications": "Certifications & Courses",
-        "certificationsDesc": "Continuous training in web development, design, cloud and agile methodologies by Microsoft, Udemy, LinkedIn and others.",
-        "multidisciplinary": "Multidisciplinary Profile",
-        "multidisciplinaryDesc": "From design to backend and infrastructure, I deliver complete solutions."
-      }
+      "contact": "Contact Me"
     },
     "profile": {
       "title": "Who I Am",
       "role": "Full-stack Developer",
       "bio": {
-        "summary": "I started programming out of curiosity, wanting to automate tasks and solve everyday problems. I'm passionate about learning, with interests ranging from automation and tool development to game design and more. I'm proactive, creative, and my many projects reflect my enthusiasm for technology. Currently, I'm studying {course} and have experience with {skills}."
+        "part1": "Passionate developer creating technological solutions that positively impact people. With experience in",
+        "part2": "and interface design, I combine technical and creative skills to develop modern and intuitive web applications.",
+        "part3": "Computer Engineering student, I'm constantly seeking to learn new technologies and improve my skills. I believe that good code is one that solves real problems in an elegant and efficient way."
       },
-      "education": "Software Engineering",
+      "education": "Computer Engineering",
       "social": {
         "github": "GitHub",
         "linkedin": "LinkedIn",
@@ -135,26 +125,6 @@
         "volume": "Volume"
       }
     },
-    "cta": {
-      "title": "Let's work together?",
-      "description": "I'm always open to new challenging projects and opportunities to apply my best skills in technology and design. If you're looking for innovative and professional solutions, let's talk!",
-      "subtitle": "Turn your ideas into successful projects.",
-      "contact": "Contact me",
-      "benefits": {
-        "communication": {
-          "title": "Clear Communication",
-          "description": "Transparency and alignment at every stage of the project."
-        },
-        "collaboration": {
-          "title": "Professional Collaboration",
-          "description": "Working closely to ensure your needs are exceeded."
-        },
-        "delivery": {
-          "title": "Excellence in Delivery",
-          "description": "Commitment to deadlines, quality, and real results."
-        }
-      }
-    },
     "testimonials": {
       "title": "What people say about me",
       "subtitle": "Testimonials from clients and colleagues who worked with me",
@@ -198,17 +168,37 @@
         "title": "Integrity",
         "description": "Transparency, honesty and commitment to deadlines and quality."
       }
+    },
+    "cta": {
+      "title": "Let's work together?",
+      "description": "I'm always open to new challenging projects and opportunities to apply my skills.",
+      "subtitle": "Let's turn your ideas into reality!",
+      "contact": "Contact me",
+      "benefits": {
+        "communication": {
+          "title": "Clear Communication",
+          "description": "Stay informed about every step of the project"
+        },
+        "collaboration": {
+          "title": "Efficient Collaboration",
+          "description": "Work closely to ensure your needs are met"
+        },
+        "delivery": {
+          "title": "Timely Delivery",
+          "description": "Commitment to deadlines and code quality"
+        }
+      }
     }
   },
   "Projects": {
     "title": "Projects",
     "description": "A showcase of my latest and best projects.",
-    "viewProject": "View Project",
-    "allProjects": "All Projects",
     "featured": "Featured",
+    "viewProject": "View Project",
     "viewDemo": "View Live Demo",
     "viewSource": "View Source Code",
     "techStack": "Tech Stack",
+    "allProjects": "All Projects",
     "contactMe": "Let's talk",
     "search": "Search projects...",
     "columns": "Columns",
@@ -250,16 +240,42 @@
     "support": "Support My Work"
   },
   "GuestBook": {
-    "locale": "en",
     "title": "Guest Book",
     "description": "Leave a message or comment.",
     "name": "Your Name",
     "email": "Your Email",
     "message": "Your Message",
     "submit": "Submit",
-    "messages": {
-      "success": "Message sent successfully!",
-      "error": "Error sending message. Please try again."
-    }
+    "successMessage": "Thank you for your message!",
+    "errorMessage": "There was an error submitting your message. Please try again.",
+    "locale": "en"
+  },
+  "ModernGuestBook": {
+    "title": "Guest Book",
+    "subtitle": "Leave your message",
+    "description": "Share your thoughts, feedback, or just say hello!",
+    "latestMessages": "Latest messages",
+    "addMessage": "Add Message",
+    "developer": "Developer",
+    "visitor": "Visitor",
+    "yourName": "Your name",
+    "github": "GitHub (optional)",
+    "sharethoughts": "Share your thoughts...",
+    "sendMessage": "Send Message",
+    "sending": "Sending...",
+    "successMessage": "Message sent successfully! 🎉",
+    "errorMessage": "Error sending message. Please try again.",
+    "nameRequired": "Name and message are required",
+    "loadingMessages": "Loading messages...",
+    "firstMessage": "Be the first to leave a message!",
+    "messages": "messages",
+    "developers": "developers",
+    "errorLoading": "Error loading comments",
+    "tryReload": "Try reloading the page",
+    "instagram": "Instagram (optional)"
+  },
+  "Timeline": {
+    "join_timeline": "Want to be the next company in my timeline?",
+    "click_here": "Click here to get in touch"
   }
 }

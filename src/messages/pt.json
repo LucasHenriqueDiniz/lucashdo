@@ -202,6 +202,10 @@
     "status": "Status",
     "viewCode": "Ver Código"
   },
+  "Timeline": {
+    "join_timeline": "Quer ser a próxima empresa na minha timeline?",
+    "click_here": "Clique aqui para entrar em contato"
+  },
   "Blog": {
     "title": "Blog",
     "description": "Pensamentos, ideias e tutoriais.",
@@ -235,5 +239,34 @@
       "success": "Mensagem enviada com sucesso!",
       "error": "Erro ao enviar a mensagem. Tente novamente."
     }
+  },
+  "ModernGuestBook": {
+    "title": "Livro de Visitas",
+    "subtitle": "Deixe seu recado",
+    "addMessage": "Adicionar Mensagem",
+    "yourName": "Seu nome",
+    "yourMessage": "Sua mensagem...",
+    "githubOptional": "GitHub (opcional)",
+    "developer": "Desenvolvedor",
+    "visitor": "Visitante",
+    "send": "Enviar",
+    "sending": "Enviando...",
+    "messagesCount": "mensagens",
+    "developers": "desenvolvedores",
+    "noMessagesYet": "Nenhuma mensagem ainda",
+    "beTheFirst": "Seja o primeiro a deixar uma mensagem!",
+    "loadingMessages": "Carregando mensagens...",
+    "errorLoading": "Erro ao carregar comentários",
+    "tryReload": "Tente recarregar a página",
+    "nameRequired": "Nome é obrigatório",
+    "messageRequired": "Mensagem é obrigatória",
+    "errorSending": "Erro ao enviar mensagem",
+    "sharethoughts": "Compartilhe seus pensamentos...",
+    "sendMessage": "Enviar Mensagem",
+    "successMessage": "Mensagem enviada com sucesso! 🎉",
+    "messages": "Mensagens",
+    "firstMessage": "Seja o primeiro a deixar uma mensagem!",
+    "github": "GitHub (opcional)",
+    "instagram": "Instagram (opcional)"
   }
 }
