@@ -28,7 +28,7 @@ export default function AboutHero() {
   const yContent = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // Stats - apenas 3 como solicitado
+  // Stats
   const stats = [
     { label: t('stats.yearsExperience'), value: '3+', icon: LuCalendar },
     { label: t('stats.projectsCompleted'), value: '20+', icon: LuCode },
@@ -38,7 +38,7 @@ export default function AboutHero() {
   return (
     <motion.div
       ref={containerRef}
-      className="pt-[150px] relative w-full min-h-[85vh] mb-12 overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
+      className="pt-[110px] relative w-full min-h-[85vh] mb-12 overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
       style={{ opacity }}
     >
       {/* Animated Background Grid */}

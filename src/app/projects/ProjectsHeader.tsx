@@ -62,7 +62,7 @@ export const ProjectsHeader = ({
 }: ProjectsHeaderProps) => {
   return (
     <motion.div
-      className="relative my-16 pt-[150px]"
+      className="relative mt-[110px]"
       initial="initial"
       animate="animate"
       variants={staggerChildrenVariants}

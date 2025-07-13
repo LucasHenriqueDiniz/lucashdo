@@ -1,0 +1,28 @@
+/* Header-specific styles extracted from globals.css */
+
+.header-nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  will-change: transform;
+}
+
+.header-nav-button .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-nav-button .icon-secondary {
+  position: absolute;
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+/* Only keep what is truly static, move all dynamic/variant styles to inline style or motion */

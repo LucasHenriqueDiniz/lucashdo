@@ -405,8 +405,8 @@ export default function ContactClient() {
   return (
     <>
       {/* Simplified Contact Header */}
-      <div className="relative my-16 pt-[150px]">
-        <div className="text-center z-10 relative">
+      <div className="relative mt-[115px]">
+        <div className="text-center z-10 relative py-12">
           <motion.h1
             className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[color:var(--primary)] via-[color:var(--blue)] to-[color:var(--primary)] bg-clip-text text-transparent"
             initial={{ opacity: 0, y: 20 }}

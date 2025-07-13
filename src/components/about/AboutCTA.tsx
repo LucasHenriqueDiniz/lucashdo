@@ -35,7 +35,7 @@ export default function AboutCTA() {
       viewport={{ once: true }}
     >
       {/* Background effects */}
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 bg-repeat"></div>
+      <div className="absolute inset-0 opacity-10 bg-repeat"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
 
       {/* Floating elements */}

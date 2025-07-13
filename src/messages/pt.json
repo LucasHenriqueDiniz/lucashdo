@@ -5,17 +5,16 @@
     "contact": "Contato"
   },
   "Footer": {
-    "aboutTitle": "Sobre",
-    "aboutText": "Um portfólio único e criativo inspirado em designs modernos e não-convencionais.",
     "links": "Links",
     "home": "Início",
     "about": "Sobre",
     "projects": "Projetos",
     "blog": "Blog",
+    "contact": "Contato",
     "connect": "Conecte-se",
-    "rightsReserved": "Todos os direitos reservados.",
-    "contactTitle": "Contato",
-    "projectsTitle": "Projetos"
+    "contactTitle": "Vamos trabalhar juntos?",
+    "projectsTitle": "Projetos em destaque",
+    "makeContact": "Entrar em contato"
   },
   "Home": {
     "title": "Olá, sou Lucas",
@@ -214,7 +213,19 @@
   },
   "Gallery": {
     "title": "Galeria",
-    "description": "Uma coletânea de trabalhos visuais e fotografias."
+    "description": "Uma coletânea de trabalhos visuais, vetores, logos e modelos Live2D.",
+    "featured": "Destaques",
+    "featuredDescription": "Trabalhos selecionados que representam melhor meu estilo e habilidades.",
+    "browseByType": "Navegar por Tipo",
+    "browseDescription": "Filtre os trabalhos por categoria para encontrar exatamente o que procura.",
+    "allTypes": "Todos os Tipos",
+    "types": {
+      "vector": "Vetores",
+      "logo": "Logos",
+      "drawing": "Desenhos",
+      "live2d": "Live2D"
+    },
+    "noItems": "Nenhum item encontrado nesta categoria."
   },
   "NotFound": {
     "title": "Página Não Encontrada",

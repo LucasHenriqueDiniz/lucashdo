@@ -38,7 +38,7 @@ export function GradientCard({
       }}
     >
       {/* Subtle noise texture */}
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay"></div>
+      <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay"></div>
       {children}
     </motion.div>
   );

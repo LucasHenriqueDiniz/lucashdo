@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import MainLayout from '@/components/layout/MainLayout';
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -56,7 +55,7 @@ export default function Blog() {
   const t = useTranslations('Blog');
 
   return (
-    <MainLayout>
+    <>
       <section className="py-16 max-w-5xl mx-auto">
         <h1 className="text-5xl font-bold mb-4">{t('title')}</h1>
         <p className="text-xl text-muted-foreground mb-12 max-w-3xl">{t('description')}</p>
@@ -95,6 +94,6 @@ export default function Blog() {
           })}
         </div>
       </section>
-    </MainLayout>
+    </>
   );
 }

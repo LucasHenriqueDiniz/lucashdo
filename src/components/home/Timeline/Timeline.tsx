@@ -1,16 +1,22 @@
 'use client';
 import { motion, useScroll } from 'framer-motion';
-import { BriefcaseBusiness, GraduationCap, LucideArrowRight, LucideIcon } from 'lucide-react';
-import Image from 'next/image';
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { IconType } from 'react-icons/lib';
+import { BriefcaseBusiness, GraduationCap, LucideArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
 import { Pill } from '@/components/ui/Pill';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { academicExperiences } from '@/constants/academicExperiences';
 import { jobExperiences } from '@/constants/jobExperiences';
+import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { ExperienceProps, TimelineTagProps, TranslatedField } from '@/types/experience.types';
 import { formatExperienceDates, getFilteredAndSortedExperiences } from '@/utils/experienceUtils';
 import './Timeline.css';
@@ -57,34 +63,11 @@ const ExperienceCardSkillsIcon = memo(
     title,
     index = 0,
   }: {
-    icon: LucideIcon | string | IconType;
+    icon: React.ElementType;
     title?: TranslatedField;
     index?: number;
   }) => {
     const lang = useLanguageStore(state => state.lang);
-
-    // Função para renderizar o ícone correto com useCallback
-    const getIcon = useCallback(
-      (iconProp: string | LucideIcon | IconType) => {
-        if (typeof iconProp === 'string') {
-          // Se for uma string, assume que é um caminho de ícone SVG
-          return (
-            <Image
-              src={iconProp}
-              alt={title?.pt || title?.en || 'Skill'}
-              width={28}
-              height={28}
-              className="object-contain"
-            />
-          );
-        } else {
-          // Se for um componente LucideIcon, renderiza diretamente
-          const IconComponent = iconProp as IconType;
-          return <IconComponent size={28} />;
-        }
-      },
-      [title]
-    );
 
     // Memoize o delay de animação para evitar recálculos
     const animationDelay = useMemo(() => Math.min(index * 0.07, 0.8), [index]);
@@ -112,7 +95,7 @@ const ExperienceCardSkillsIcon = memo(
               transition: { duration: 0.2 },
             }}
           >
-            {getIcon(icon)}
+            {icon && React.createElement(icon)}
           </motion.div>
         </TooltipTrigger>
         <TooltipContent>

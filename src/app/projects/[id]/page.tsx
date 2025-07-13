@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 import { useLocale, useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
-import MainLayout from '@/components/layout/MainLayout';
-import { projects } from '@/constants';
 import { Locale } from '@/lib/i18n/config';
+import { projects } from '@/constants';
 import { AnimatedProjectsLayout } from '../AnimatedProjects';
 import { ProjectDetail } from './client';
 
@@ -49,18 +48,16 @@ function ProjectPageContent({ project }: { project: (typeof projects)[number] })
   const locale = useLocale() as Locale;
 
   return (
-    <MainLayout>
-      <AnimatedProjectsLayout>
-        <ProjectDetail
-          project={project}
-          locale={locale}
-          translations={{
-            viewSource: t('viewSource'),
-            viewDemo: t('viewDemo'),
-            techStack: t('techStack'),
-          }}
-        />
-      </AnimatedProjectsLayout>
-    </MainLayout>
+    <AnimatedProjectsLayout>
+      <ProjectDetail
+        project={project}
+        locale={locale}
+        translations={{
+          viewSource: t('viewSource'),
+          viewDemo: t('viewDemo'),
+          techStack: t('techStack'),
+        }}
+      />
+    </AnimatedProjectsLayout>
   );
 }

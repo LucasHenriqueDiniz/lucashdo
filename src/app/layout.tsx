@@ -2,9 +2,9 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Inter, Roboto_Mono } from 'next/font/google';
+import { IntlProviderClient } from '@/lib/i18n/IntlProviderClient';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { IntlProviderClient } from '@/lib/i18n/IntlProviderClient';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -17,44 +17,42 @@ export const metadata: Metadata = {
   },
   description:
     'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
-  keywords: [
-    'portfolio',
-    'web development',
-    'software engineer',
-    'frontend developer',
-    'fullstack developer',
-  ],
+  keywords: ['portfolio', 'web development', 'software engineering', 'creative coding'],
   authors: [{ name: 'Lucas Hdo' }],
   creator: 'Lucas Hdo',
   publisher: 'Lucas Hdo',
   formatDetection: {
-    email: false,
+    email: true,
     address: false,
-    telephone: false,
+    telephone: true,
   },
-  metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL('https://lucashdo.com'),
   alternates: {
     canonical: '/',
-    languages: {
-      en: '/en',
-      pt: '/pt',
-    },
   },
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: '/',
     title: 'Lucas Hdo - Portfolio',
     description:
       'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
-    siteName: 'Lucas Hdo Portfolio',
+    url: 'https://lucashdo.dev',
+    siteName: 'Lucas Hdo - Portfolio',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Lucas Hdo - Portfolio',
+      },
+    ],
+    locale: 'pt_BR',
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Lucas Hdo - Portfolio',
     description:
       'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
-    creator: '@yourtwitterhandle',
+    images: ['/logo.png'],
   },
   robots: {
     index: true,
@@ -68,23 +66,33 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-site-verification',
+    google: 'google-site-verification-code',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt" suppressHydrationWarning>
-      <head>{/* Add any additional head elements here */}</head>
+    <html lang="pt-BR">
+      {/* <head>
+        <Script
+          src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"
+          strategy="beforeInteractive"
+        />
+        <Script
+          id="live2d-widget-cdn"
+          src="https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js"
+          strategy="beforeInteractive"
+        />
+      </head> */}
       <body className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}>
         <IntlProviderClient>
-          <TooltipProvider delayDuration={100}>
+          <TooltipProvider>
             <Header />
             {children}
             <Footer />
+            <SpeedInsights />
           </TooltipProvider>
         </IntlProviderClient>
-        <SpeedInsights />
       </body>
     </html>
   );

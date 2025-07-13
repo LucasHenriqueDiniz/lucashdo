@@ -1,84 +1,56 @@
 'use client';
 
-import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   RiArrowRightUpLine,
-  RiChat2Line,
+  RiDiscordFill,
   RiGithubFill,
-  RiHeartFill,
   RiLinkedinFill,
   RiMailLine,
   RiMessage2Line,
-  RiTwitterXFill,
 } from 'react-icons/ri';
 import { Project, projects } from '@/constants/projects';
+import { ContactLinks, ContactNames } from '@/constants/contacts';
 
-// Contact button component with simplified animations
 const ContactButton = memo(() => {
   const [isHovered, setIsHovered] = useState(false);
+  const t = useTranslations('Footer');
+
   const router = useRouter();
 
   const handleClick = useCallback(() => {
-    router.push('/#contact');
+    router.push('/contact');
   }, [router]);
 
   return (
-    <div
-      className="relative flex justify-center items-center"
+    <motion.button
+      className="relative py-3 px-6 rounded-xl bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] text-white font-medium shadow-lg hover:shadow-xl transition-shadow duration-300"
+      onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2 }}
     >
-      {/* Main button */}
-      <motion.button
-        className="relative py-3 px-6 rounded-xl bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] text-white font-medium z-20"
-        onClick={handleClick}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ duration: 0.2 }}
-      >
-        <span className="flex items-center gap-2">
-          <span>Entrar em contato</span>
-          <motion.span
-            animate={{
-              x: isHovered ? 2 : 0,
-            }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          >
-            <RiArrowRightUpLine size={18} />
-          </motion.span>
-        </span>
-      </motion.button>
-
-      {/* Simplified expanding icons animation */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            className="absolute pointer-events-none z-0"
-            initial={{ opacity: 0, scale: 0.2, right: 0, top: 0 }}
-            animate={{
-              opacity: 0.1,
-              scale: 4,
-              right: '-60%',
-              top: '-100%',
-            }}
-            exit={{ opacity: 0, scale: 0.2 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-          >
-            <RiChat2Line size={48} className="text-[var(--cyan)]" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+      <span className="flex items-center gap-2">
+        <motion.span
+          animate={{ x: isHovered ? -2 : 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        >
+          <RiArrowRightUpLine size={18} />
+        </motion.span>
+        <span>{t('makeContact')}</span>
+      </span>
+    </motion.button>
   );
 });
 
 ContactButton.displayName = 'ContactButton';
 
-// Social link component with simplified animations
 const SocialLink = memo(
   ({
     href,
@@ -114,26 +86,26 @@ const SocialLink = memo(
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Icon container */}
         <div className="relative">
           <motion.div
             className="p-2 rounded-full relative z-10"
-            animate={{
+            style={{
               backgroundColor: isHovered
                 ? `color-mix(in srgb, ${hoverColor} 20%, transparent)`
                 : 'transparent',
+              transition: 'background-color 0.2s',
             }}
           >
             <Icon className="w-6 h-6 transition-all duration-300" />
           </motion.div>
         </div>
 
-        {/* Label with animated underline */}
         <div className="relative overflow-hidden">
           <motion.span
             className="text-muted-foreground"
-            animate={{
+            style={{
               color: isHovered ? hoverColor : 'var(--muted-foreground)',
+              transition: 'color 0.2s',
             }}
           >
             {label}
@@ -154,7 +126,6 @@ const SocialLink = memo(
 
 SocialLink.displayName = 'SocialLink';
 
-// Footer link component with simplified animations
 const FooterLink = memo(({ href, label }: { href: string; label: string }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -167,26 +138,25 @@ const FooterLink = memo(({ href, label }: { href: string; label: string }) => {
         transition={{ type: 'spring', stiffness: 300, damping: 15 }}
       >
         <Link href={href} className="relative flex items-center gap-3 group">
-          {/* Animated indicator dot */}
           <motion.span
             className="w-2 h-2 rounded-full"
-            animate={{
+            animate={{ scale: isHovered ? 1.2 : 1 }}
+            style={{
               backgroundColor: isHovered ? 'var(--primary)' : 'var(--muted-foreground)',
-              scale: isHovered ? 1.2 : 1,
+              transition: 'background-color 0.2s',
             }}
             transition={{ duration: 0.2 }}
           />
 
-          {/* Label with color transition */}
           <motion.span
-            animate={{
+            style={{
               color: isHovered ? 'var(--primary)' : 'var(--muted-foreground)',
+              transition: 'color 0.2s',
             }}
           >
             {label}
           </motion.span>
 
-          {/* Subtle arrow that appears on hover */}
           <motion.div
             className="text-[var(--primary)]"
             initial={{ opacity: 0, x: -3 }}
@@ -209,19 +179,16 @@ const Footer = memo(() => {
   const footerRef = useRef<HTMLDivElement>(null);
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
 
-  // Get featured projects from projects.ts
   useEffect(() => {
     const featured = projects.filter(project => project.featured).slice(0, 4);
     setFeaturedProjects(featured);
   }, []);
 
-  // Scroll animations
   const { scrollYProgress } = useScroll({
     target: footerRef,
     offset: ['0 1', '1 1'],
   });
 
-  // Transform values based on scroll
   const patternOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 0.05]);
 
   const handleSetHoveredIcon = useCallback((name: string | null) => {
@@ -231,27 +198,27 @@ const Footer = memo(() => {
   const socialLinks = useMemo(
     () => [
       {
-        href: 'https://github.com/yourusername',
+        href: ContactLinks.github,
         icon: RiGithubFill,
-        label: 'GitHub',
+        label: ContactNames.github,
         hoverColor: 'var(--primary)',
       },
       {
-        href: 'https://linkedin.com/in/yourusername',
+        href: ContactLinks.linkedin,
         icon: RiLinkedinFill,
-        label: 'LinkedIn',
+        label: ContactNames.linkedin,
         hoverColor: 'var(--blue)',
       },
       {
-        href: 'https://twitter.com/yourusername',
-        icon: RiTwitterXFill,
-        label: 'Twitter',
+        href: `https://discord.com/users/${ContactLinks.discord}`,
+        icon: RiDiscordFill,
+        label: ContactNames.discord,
         hoverColor: 'var(--cyan)',
       },
       {
-        href: 'mailto:your.email@example.com',
+        href: `mailto:${ContactLinks.email}`,
         icon: RiMailLine,
-        label: 'Email',
+        label: ContactNames.email,
         hoverColor: 'var(--green)',
       },
     ],
@@ -267,7 +234,6 @@ const Footer = memo(() => {
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
-      {/* Simplified entrance line */}
       <motion.div
         className="absolute top-0 left-0 right-0 h-px"
         style={{
@@ -278,9 +244,7 @@ const Footer = memo(() => {
         transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
       />
 
-      {/* Background with simplified gradients */}
       <div className="absolute inset-0 -z-10 bg-[rgb(12,12,12)]">
-        {/* Simplified grid pattern */}
         <motion.div
           className="absolute inset-0"
           style={{
@@ -291,7 +255,6 @@ const Footer = memo(() => {
           }}
         />
 
-        {/* Simplified glow spots */}
         <motion.div
           className="absolute inset-0 blur-3xl"
           style={{
@@ -354,6 +317,7 @@ const Footer = memo(() => {
               <FooterLink href="/about" label={t('about')} />
               <FooterLink href="/projects" label={t('projects')} />
               <FooterLink href="/blog" label={t('blog')} />
+              <FooterLink href="/contact" label={t('contact')} />
             </ul>
           </motion.div>
 
@@ -390,7 +354,6 @@ const Footer = memo(() => {
           </motion.div>
         </div>
 
-        {/* Simplified contact call to action section */}
         <motion.div
           className="mt-12 relative backdrop-blur-sm bg-[rgba(30,30,40,0.4)] p-8 rounded-2xl border border-[rgba(255,255,255,0.08)] overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
@@ -398,7 +361,6 @@ const Footer = memo(() => {
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
-          {/* Simplified background gradient */}
           <motion.div
             className="absolute -inset-[1px] -z-10 rounded-2xl opacity-20"
             style={{
@@ -417,7 +379,6 @@ const Footer = memo(() => {
 
           <div className="flex items-center justify-between gap-8 relative">
             <div className="flex items-center gap-6 z-10">
-              {/* Simplified icon container */}
               <div className="relative flex items-center justify-center w-14 h-14">
                 <motion.div
                   className="relative z-20"
@@ -432,20 +393,15 @@ const Footer = memo(() => {
                 </motion.div>
               </div>
 
-              {/* Title */}
-              <h3 className="text-xl md:text-2xl font-semibold">
-                {t('contactTitle') || 'Vamos trabalhar juntos?'}
-              </h3>
+              <h3 className="text-xl md:text-2xl font-semibold">{t('contactTitle')}</h3>
             </div>
 
-            {/* Contact button */}
             <div className="relative">
               <ContactButton />
             </div>
           </div>
         </motion.div>
 
-        {/* Simplified copyright section */}
         <motion.div
           className="relative mt-12 pt-8 text-center text-sm text-muted-foreground overflow-hidden"
           initial={{ opacity: 0, y: 10 }}
@@ -453,7 +409,6 @@ const Footer = memo(() => {
           viewport={{ once: true, margin: '-20px' }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {/* Simplified separator line */}
           <motion.div
             className="absolute top-0 left-0 w-full h-px"
             style={{
@@ -466,22 +421,39 @@ const Footer = memo(() => {
             transition={{ duration: 0.8, ease: 'easeOut' }}
           />
 
-          <div className="flex items-center justify-center gap-2 py-4">
-            <span>&copy; {currentYear} Lucas</span>
-            <motion.span
-              animate={{
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                repeatDelay: 2,
-              }}
-              className="inline-flex"
+          <div className="flex items-center justify-center gap-4 py-6">
+            <motion.div
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
-              <RiHeartFill className="text-red-500" />
-            </motion.span>
-            <span>{t('rightsReserved')}</span>
+              <span className="font-medium text-[var(--foreground)]">
+                Lucas Henrique Diniz Ostroski
+              </span>
+              <motion.span
+                animate={{
+                  scale: [1, 1.2, 1],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatDelay: 3,
+                }}
+                className="inline-flex"
+              ></motion.span>
+            </motion.div>
+
+            <div className="w-px h-4 bg-[var(--border)]" />
+
+            <motion.div
+              className="flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            >
+              <span className="text-[var(--muted-foreground)]">
+                {currentYear} • Desenvolvedor Full Stack
+              </span>
+            </motion.div>
           </div>
         </motion.div>
       </div>

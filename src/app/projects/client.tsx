@@ -24,7 +24,7 @@ interface ProjectCardProps {
   };
 }
 
-// Variantes de animação simplificadas para os cartões de projeto
+// Variantes de animação para os cartões de projeto
 const cardVariants: Variants = {
   hidden: {
     opacity: 0,

@@ -5,17 +5,16 @@
     "projects": "Projects"
   },
   "Footer": {
-    "aboutTitle": "About",
-    "aboutText": "A unique and creative portfolio inspired by modern and non-conventional designs.",
     "links": "Links",
     "home": "Home",
     "about": "About",
     "projects": "Projects",
     "blog": "Blog",
+    "contact": "Contact",
     "connect": "Connect",
-    "rightsReserved": "All rights reserved.",
-    "contactTitle": "Contact",
-    "projectsTitle": "Projects"
+    "contactTitle": "Let's work together?",
+    "projectsTitle": "Featured Projects",
+    "makeContact": "Get in touch"
   },
   "Home": {
     "title": "Hello, I'm Lucas",
@@ -226,7 +225,19 @@
   },
   "Gallery": {
     "title": "Gallery",
-    "description": "A collection of visual works and photography."
+    "description": "A collection of visual works, vectors, logos and Live2D models.",
+    "featured": "Featured",
+    "featuredDescription": "Selected works that best represent my style and skills.",
+    "browseByType": "Browse by Type",
+    "browseDescription": "Filter works by category to find exactly what you're looking for.",
+    "allTypes": "All Types",
+    "types": {
+      "vector": "Vectors",
+      "logo": "Logos",
+      "drawing": "Drawings",
+      "live2d": "Live2D"
+    },
+    "noItems": "No items found in this category."
   },
   "NotFound": {
     "title": "Page Not Found",
