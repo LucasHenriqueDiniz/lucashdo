@@ -55,7 +55,7 @@ export default function GalleryTabs({ types, selectedType, onSelectType }: Galle
               ? 'bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] text-white shadow-lg shadow-[var(--primary)]/25'
               : 'bg-[rgba(255,255,255,0.05)] text-[var(--muted-foreground)] border border-[rgba(255,255,255,0.1)] hover:border-[var(--primary)] hover:text-[var(--primary)]'
           }`}
-          onClick={() => onSelectType?.(undefined as any)}
+          onClick={() => onSelectType?.(undefined as unknown as ArtType)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

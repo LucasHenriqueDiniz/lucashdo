@@ -1,58 +1,110 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Roboto_Mono } from 'next/font/google';
 import { IntlProviderClient } from '@/lib/i18n/IntlProviderClient';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
 import './globals.css';
+import { logo } from '../../public';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const robotoMono = Roboto_Mono({ subsets: ['latin'], variable: '--font-roboto-mono' });
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+const robotoMono = Roboto_Mono({
+  subsets: ['latin'],
+  variable: '--font-roboto-mono',
+  display: 'swap',
+});
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
+};
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://lucashdo.com'),
   title: {
-    default: 'Lucas Hdo - Portfolio',
+    default: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
     template: '%s | Lucas Hdo - Portfolio',
   },
   description:
-    'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
-  keywords: ['portfolio', 'web development', 'software engineering', 'creative coding'],
-  authors: [{ name: 'Lucas Hdo' }],
+    'Portfólio de Lucas Hdo - Desenvolvedor Full Stack especializado em React, Next.js, TypeScript e design criativo. Projetos inovadores e soluções web modernas.',
+  keywords: [
+    'desenvolvedor full stack',
+    'react developer',
+    'next.js',
+    'typescript',
+    'web development',
+    'frontend developer',
+    'backend developer',
+    'portfolio',
+    'lucas hdo',
+    'brasil',
+    'são paulo',
+    'desenvolvimento web',
+    'programação',
+    'designer',
+    'creative coding',
+    'software engineering',
+  ],
+  authors: [
+    {
+      name: 'Lucas Hdo',
+      url: 'https://lucashdo.com',
+    },
+  ],
   creator: 'Lucas Hdo',
   publisher: 'Lucas Hdo',
+  category: 'technology',
+  classification: 'portfolio',
   formatDetection: {
     email: true,
     address: false,
     telephone: true,
   },
-  metadataBase: new URL('https://lucashdo.com'),
   alternates: {
     canonical: '/',
+    languages: {
+      'pt-BR': '/pt-BR',
+      en: '/en',
+    },
   },
   openGraph: {
-    title: 'Lucas Hdo - Portfolio',
-    description:
-      'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
-    url: 'https://lucashdo.dev',
+    type: 'website',
+    locale: 'pt_BR',
+    url: 'https://lucashdo.com',
     siteName: 'Lucas Hdo - Portfolio',
+    title: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
+    description:
+      'Portfólio de Lucas Hdo - Desenvolvedor Full Stack especializado em React, Next.js, TypeScript e design criativo. Projetos inovadores e soluções web modernas.',
     images: [
       {
-        url: '/logo.png',
+        url: logo.src,
         width: 1200,
         height: 630,
-        alt: 'Lucas Hdo - Portfolio',
+        alt: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
+        type: 'image/webp',
       },
     ],
-    locale: 'pt_BR',
-    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Lucas Hdo - Portfolio',
+    site: '@lucashdo',
+    creator: '@lucashdo',
+    title: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
     description:
-      'Portfolio website showcasing my projects and skills in web development, software engineering, and creative coding.',
-    images: ['/logo.png'],
+      'Portfólio de Lucas Hdo - Desenvolvedor Full Stack especializado em React, Next.js, TypeScript e design criativo.',
+    images: [logo.src],
   },
   robots: {
     index: true,
@@ -67,23 +119,29 @@ export const metadata: Metadata = {
   },
   verification: {
     google: 'google-site-verification-code',
+    yandex: 'yandex-verification-code',
+    yahoo: 'yahoo-verification-code',
+  },
+  other: {
+    'msapplication-TileColor': '#000000',
+    'theme-color': '#000000',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
-      {/* <head>
-        <Script
-          src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"
-          strategy="beforeInteractive"
-        />
-        <Script
-          id="live2d-widget-cdn"
-          src="https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js"
-          strategy="beforeInteractive"
-        />
-      </head> */}
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" type="image/webp" href="/logo.webp" />
+        <link rel="apple-touch-icon" href="/logo.webp" />
+      </head>
       <body className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}>
         <IntlProviderClient>
           <TooltipProvider>
@@ -91,6 +149,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
             <Footer />
             <SpeedInsights />
+            <GoogleAnalytics
+              gaId={process.env.NEXT_PUBLIC_GA_ID}
+              gtmId={process.env.NEXT_PUBLIC_GTM_ID}
+            />
           </TooltipProvider>
         </IntlProviderClient>
       </body>

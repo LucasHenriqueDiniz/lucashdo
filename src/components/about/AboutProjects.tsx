@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { LuArrowRight, LuExternalLink, LuGithub } from 'react-icons/lu';
 import { useTranslations } from 'next-intl';
 import { projects } from '@/constants/projects';
+import { logo } from '../../../public';
 
 export default function AboutProjects() {
   const t = useTranslations('About.projects');
@@ -47,7 +48,7 @@ export default function AboutProjects() {
 
             <div className="relative h-48 overflow-hidden">
               <Image
-                src={project.image || '/logo.png'}
+                src={project.image || logo}
                 alt={project.title}
                 fill
                 className="object-cover group-hover:scale-110 transition-transform duration-700"

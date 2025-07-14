@@ -15,6 +15,7 @@ import {
 } from 'react-icons/hi';
 import { LanguageSwitcher } from '../language-switcher';
 import './header.css';
+import { logo } from '../../../public';
 
 export default function Header() {
   const t = useTranslations('Navigation');
@@ -150,7 +151,7 @@ export default function Header() {
                   className="relative z-10"
                 >
                   <Image
-                    src="/logo.png"
+                    src={logo}
                     alt="LHDO Logo"
                     width={42}
                     height={42}

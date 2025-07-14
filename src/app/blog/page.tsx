@@ -1,10 +1,56 @@
 import { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { BlogPostStructuredData } from '@/components/SEO/StructuredData';
 
 export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'Thoughts, ideas, tutorials and insights.',
+  title: 'Blog | Lucas Hdo - Desenvolvedor Full Stack',
+  description:
+    'Artigos, tutoriais e insights sobre desenvolvimento web, React, Next.js, TypeScript e tecnologia. Compartilhando conhecimento e experiências da jornada como desenvolvedor.',
+  keywords: [
+    'blog lucas hdo',
+    'desenvolvimento web',
+    'react tutorial',
+    'next.js tutorial',
+    'typescript tutorial',
+    'programação',
+    'tecnologia',
+    'frontend development',
+    'backend development',
+    'web development',
+    'coding blog',
+    'developer blog',
+    'tech articles',
+    'programming tips',
+    'software engineering',
+  ],
+  openGraph: {
+    title: 'Blog | Lucas Hdo - Desenvolvedor Full Stack',
+    description:
+      'Artigos, tutoriais e insights sobre desenvolvimento web, React, Next.js, TypeScript e tecnologia.',
+    url: 'https://lucashdo.com/blog',
+    siteName: 'Lucas Hdo - Portfolio',
+    images: [
+      {
+        url: '/logo.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Blog - Lucas Hdo Portfolio',
+      },
+    ],
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Blog | Lucas Hdo - Desenvolvedor Full Stack',
+    description:
+      'Artigos, tutoriais e insights sobre desenvolvimento web, React, Next.js, TypeScript e tecnologia.',
+    images: ['/logo.webp'],
+  },
+  alternates: {
+    canonical: 'https://lucashdo.com/blog',
+  },
 };
 
 // Dados simulados - Depois será substituído por dados reais de um CMS ou API
@@ -56,6 +102,27 @@ export default function Blog() {
 
   return (
     <>
+      {/* Structured Data for featured blog posts */}
+      {posts.slice(0, 3).map(post => (
+        <BlogPostStructuredData
+          key={post.id}
+          title={post.title}
+          description={post.description}
+          url={`https://lucashdo.com/blog/${post.id}`}
+          image="https://lucashdo.com/logo.webp"
+          datePublished={post.date}
+          dateModified={post.date}
+          author={{
+            name: 'Lucas Hdo',
+            url: 'https://lucashdo.com',
+          }}
+          publisher={{
+            name: 'Lucas Hdo',
+            url: 'https://lucashdo.com',
+          }}
+        />
+      ))}
+
       <section className="py-16 max-w-5xl mx-auto">
         <h1 className="text-5xl font-bold mb-4">{t('title')}</h1>
         <p className="text-xl text-muted-foreground mb-12 max-w-3xl">{t('description')}</p>

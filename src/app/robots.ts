@@ -1,14 +1,27 @@
-// https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
+import { MetadataRoute } from 'next';
 
-export default function robots() {
-  const baseUrl = process.env.SITE_URL || 'http://localhost:3000';
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl = 'https://lucashdo.com';
 
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/api/', '/admin/'],
-    },
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/api/', '/_next/', '/admin/', '/private/', '/*.json$', '/*.xml$'],
+      },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: ['/api/', '/_next/', '/admin/', '/private/'],
+      },
+      {
+        userAgent: 'Bingbot',
+        allow: '/',
+        disallow: ['/api/', '/_next/', '/admin/', '/private/'],
+      },
+    ],
     sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   };
 }

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { LuQuote, LuStar, LuExternalLink } from 'react-icons/lu';
 import { aboutTestimonials } from '@/constants/aboutTestimonials';
+import { placeholderAvatar } from '../../../public';
 
 export default function AboutTestimonials() {
   const t = useTranslations('About.testimonials');
@@ -67,7 +68,7 @@ export default function AboutTestimonials() {
             <div className="flex items-center justify-center gap-4">
               <div className="relative">
                 <Image
-                  src={aboutTestimonials[currentTestimonial].image ?? '/placeholder_avatar.png'}
+                  src={aboutTestimonials[currentTestimonial].image ?? placeholderAvatar}
                   alt={aboutTestimonials[currentTestimonial].name}
                   width={64}
                   height={64}

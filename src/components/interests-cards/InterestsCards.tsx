@@ -27,7 +27,7 @@ import { LyftaExercise } from '@/services/lyfta';
 import { LastFmArtist, LastFmImage, LastFmTrack } from '@/types/lastfm.types';
 import { SteamGame } from '@/services/steam';
 import { MusicalBar } from '@/components/MusicalBar';
-import { VinylDisk } from '../../../public';
+import { vinylDisk } from '../../../public';
 import styles from './InterestsCards.module.css';
 
 // Types
@@ -193,11 +193,11 @@ const InterestsCards = () => {
               <Image
                 width={80}
                 height={80}
-                src={VinylDisk}
+                src={vinylDisk}
                 alt="Vinyl disk"
                 className="object-cover"
                 priority
-                quality={75}
+                quality={60}
               />
             </motion.div>
             <div className="absolute inset-0 bg-black/20 rounded-lg flex items-center justify-center translate-x-5">

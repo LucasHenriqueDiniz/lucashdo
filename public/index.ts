@@ -15,8 +15,12 @@ export { default as skoobAutojoin } from './projects/skoob_autojoin.webp';
 export { default as botschannelPlatform } from './projects/botschannel_plataform.webp';
 export { default as botschannelWeb } from './projects/botschannel_landingpage.webp';
 
+//Main
+export { default as logo } from './logo.webp';
+
 // About
 export { default as selfie } from './selfie.webp';
+export { default as pixelart } from './pixel-art.webp';
 
 // Testimonials
 export { default as GabrielSoaresAvatar } from './testimonials/gabriel_soares.webp';
@@ -24,7 +28,8 @@ export { default as RodrigoShardongAvatar } from './testimonials/rodrigo_shardon
 
 // Misc
 export { default as placeholderImage } from './placeholder.webp';
-export { default as VinylDisk } from './vinyl.webp';
+export { default as vinylDisk } from './vinyl.webp';
+export { default as placeholderAvatar } from './placeholder_avatar.webp';
 
 // Icons
 export { default as ZustandLogo } from './icons/zunstand.webp';
