@@ -199,27 +199,21 @@
   transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.mac-project-cover-image:hover {
-  transform: scale(1.05);
-}
-
 .mac-project-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.95) 0%,
+    0deg,
+    rgba(0, 0, 0, 0.95) 0,
     rgba(0, 0, 0, 0.8) 30%,
     rgba(0, 0, 0, 0.4) 60%,
-    rgba(0, 0, 0, 0.1) 80%,
-    transparent 100%
+    rgba(0, 0, 0, 0.1) 80%
   );
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-end;
-  padding: 40px;
-  animation: fadeIn 0.5s ease-in-out;
+  padding: 25px;
+  justify-content: flex-start;
 }
 
 @keyframes fadeIn {
@@ -260,9 +254,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 204, 0, 0.2);
-  border: 1px solid rgba(255, 204, 0, 0.4);
-  color: #ffcc00;
+  background: rgba(255, 204, 0, 0.65);
+  border: 1px solid rgba(255, 204, 0, 0.75);
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 13px;
