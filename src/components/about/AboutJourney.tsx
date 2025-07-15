@@ -1,17 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { LuGraduationCap, LuBriefcase, LuCalendar, LuExternalLink } from 'react-icons/lu';
-import { useTranslations, useLocale } from 'next-intl';
+import { useState } from 'react';
+import { LuBriefcase, LuCalendar, LuExternalLink, LuGraduationCap } from 'react-icons/lu';
+import { formatExperienceDates, getFilteredAndSortedExperiences } from '@/utils/experienceUtils';
+import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { jobExperiences } from '@/constants/jobExperiences';
 import { academicExperiences } from '@/constants/academicExperiences';
-import { getFilteredAndSortedExperiences, formatExperienceDates } from '@/utils/experienceUtils';
 
 export default function AboutJourney() {
   const t = useTranslations('About.journey');
-  const locale = useLocale() as 'pt' | 'en';
+  const locale = useLanguageStore(state => state.lang);
   const [activeTab, setActiveTab] = useState<'academic' | 'professional'>('professional');
 
   // Filtrar e ordenar experiências

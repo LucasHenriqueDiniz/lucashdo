@@ -410,48 +410,6 @@ const ExpGraph = () => {
           {/* SKILLS SECTION */}
           <div className="w-full lg:w-96 p-8 relative bg-[rgb(12,12,12)]">
             {/* Single large background icon */}
-            <AnimatePresence>
-              <motion.div
-                key={currentSkillIndex}
-                className="absolute w-64 h-64"
-                style={{
-                  top: '50%',
-                  left: '50%',
-                  zIndex: 0,
-                }}
-                initial={{
-                  opacity: 0,
-                  scale: 0.8,
-                  rotate: -15,
-                  x: '-50%',
-                  y: '-50%',
-                }}
-                animate={{
-                  opacity: 0.04,
-                  scale: 1,
-                  rotate: 0,
-                  x: '-50%',
-                  y: '-50%',
-                }}
-                exit={{
-                  opacity: 0,
-                  scale: 1.1,
-                  rotate: 15,
-                  x: '-50%',
-                  y: '-50%',
-                }}
-                transition={{
-                  opacity: { duration: 0.8, ease: 'easeInOut' },
-                  scale: { duration: 0.8, ease: 'backOut' },
-                  rotate: { duration: 0.8, ease: 'easeInOut' },
-                }}
-              >
-                {React.createElement(skillsData[currentSkillIndex].icon, {
-                  size: '100%',
-                  color: 'white',
-                })}
-              </motion.div>
-            </AnimatePresence>
             <div className="relative z-10">
               <HomeSectionTitle
                 subTitle={lang === 'pt' ? 'Onde sou bom' : 'Where I excel'}

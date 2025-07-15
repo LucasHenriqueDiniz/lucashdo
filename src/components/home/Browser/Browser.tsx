@@ -125,7 +125,32 @@ const Browser = function Browser({
   } = useBrowserTabs(
     initialTabs,
     initialActiveTab || (initialOpenTabs.length > 0 ? initialOpenTabs[0] : undefined),
-    !!homeContent && !initialActiveTab
+    false // Desabilitar criação automática de home tab
+  );
+
+  // Garantir que sempre há pelo menos uma aba quando há homeContent
+  const initializedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (internalTabs.length === 0 && homeContent && !initializedRef.current) {
+      const homeTab = createHomeTab();
+      addTab(homeTab);
+      setActiveTab(0);
+      setHomeScreen(true);
+      initializedRef.current = true;
+    }
+  }, [internalTabs.length, homeContent, createHomeTab, addTab, setActiveTab, setHomeScreen]);
+
+  // Fallback tab para o AddressBar quando não há abas ainda
+  const fallbackTab = React.useMemo(
+    () => ({
+      id: 'loading',
+      title: 'Home',
+      url: 'home://loading',
+      content: null,
+      type: 'home' as const,
+    }),
+    []
   );
 
   // Tooltip state para Floating UI
@@ -254,14 +279,23 @@ const Browser = function Browser({
   const handleTabClose = useCallback(
     (tabIndex: number): void => {
       if (!isInteractive) return;
-      if (internalTabs.length <= 1) return;
+      // Não permitir fechar se só há uma aba - em vez disso, transforma em home
+      if (internalTabs.length <= 1) {
+        const homeTab = createHomeTab();
+        transformTab(0, {
+          ...homeTab,
+          id: internalTabs[0]?.id || 'home-tab', // Mantém o ID original ou usa um padrão
+        });
+        setHomeScreen(true);
+        return;
+      }
       const tabId = internalTabs[tabIndex]?.id;
       if (onTabClose && tabId) {
         onTabClose(tabId);
       }
       removeTab(tabIndex);
     },
-    [isInteractive, internalTabs, onTabClose, removeTab]
+    [isInteractive, internalTabs, onTabClose, removeTab, createHomeTab, transformTab, setHomeScreen]
   );
 
   // Show restore button when browser is minimized/closed
@@ -342,7 +376,7 @@ const Browser = function Browser({
         )}
       </div>
       <AddressBar
-        tab={activeTab || internalTabs[0]}
+        tab={activeTab || internalTabs[0] || fallbackTab}
         availableTabs={tabs}
         onTabSelect={openTab}
         onTransformToHome={handleTransformToHome}

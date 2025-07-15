@@ -5,7 +5,10 @@ import { motion, Variants } from 'framer-motion';
 import { ArrowLeft, ExternalLink, Github, Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { Project } from '@/constants';
+import { AnimatedProjectsLayout } from '../AnimatedProjects';
 
 // Enhanced animations
 const fadeIn: Variants = {
@@ -52,25 +55,20 @@ const tagVariants: Variants = {
 
 interface ProjectDetailProps {
   project: Project;
-  locale: 'pt' | 'en';
-  translations: {
-    viewSource: string;
-    viewDemo: string;
-    techStack: string;
-  };
 }
 
-export const ProjectDetail = ({ project, locale, translations }: ProjectDetailProps) => {
+export const ProjectDetail = ({ project }: ProjectDetailProps) => {
   const [imageLoading, setImageLoading] = useState(true);
+  const t = useTranslations('Projects');
+  const locale = useLanguageStore(state => state.lang);
 
   return (
     <motion.div
       initial="initial"
       animate="animate"
       variants={staggerContainer}
-      className="max-w-7xl mx-auto px-4 py-12 md:py-16"
+      className="max-w-7xl mx-auto px-4 py-12 md:py-16 mt-[150px]"
     >
-      {' '}
       {/* Back button with enhanced animation */}
       <motion.div variants={fadeIn} className="mb-8">
         <motion.div whileHover={{ x: -5 }} whileTap={{ scale: 0.95 }}>
@@ -161,7 +159,7 @@ export const ProjectDetail = ({ project, locale, translations }: ProjectDetailPr
               whileTap={{ scale: 0.97 }}
             >
               <Github size={18} />
-              {translations.viewSource}
+              {t('viewSource')}
             </motion.a>
             {project.demoUrl && (
               <motion.a
@@ -173,7 +171,7 @@ export const ProjectDetail = ({ project, locale, translations }: ProjectDetailPr
                 whileTap={{ scale: 0.97 }}
               >
                 <ExternalLink size={18} />
-                {translations.viewDemo}
+                {t('viewDemo')}
               </motion.a>
             )}
           </motion.div>
@@ -207,7 +205,7 @@ export const ProjectDetail = ({ project, locale, translations }: ProjectDetailPr
 
           {/* Tech stack with new staggered animations */}
           <motion.div variants={slideUp} className="space-y-4">
-            <h3 className="text-xl font-semibold">{translations.techStack}</h3>
+            <h3 className="text-xl font-semibold">{t('techStack')}</h3>
             <div className="flex flex-wrap gap-3">
               {project.tags.map((tag, index) => (
                 <motion.span
@@ -248,8 +246,10 @@ export const ProjectDetail = ({ project, locale, translations }: ProjectDetailPr
                 <p>
                   <strong className="text-gray-700 dark:text-gray-300">Status:</strong>
                   <br />
-                  <span className={`${project.featured ? 'text-green-500' : 'text-amber-500'}`}>
-                    {project.featured ? '✓ Featured Project' : '○ Regular Project'}
+                  <span
+                    className={`capitalize ${project.featured ? 'text-green-500' : 'text-amber-500'}`}
+                  >
+                    {project.status}
                   </span>
                 </p>
               </motion.div>
@@ -260,3 +260,12 @@ export const ProjectDetail = ({ project, locale, translations }: ProjectDetailPr
     </motion.div>
   );
 };
+
+// Main component that wraps ProjectDetail with AnimatedProjectsLayout
+export default function ProjectDetailClient({ project }: { project: Project }) {
+  return (
+    <AnimatedProjectsLayout>
+      <ProjectDetail project={project} />
+    </AnimatedProjectsLayout>
+  );
+}

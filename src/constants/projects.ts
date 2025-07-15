@@ -29,6 +29,7 @@ export interface Project {
   repoUrl: string;
   demoUrl?: string;
   featured: boolean;
+  status?: 'workInProgress' | 'discontinued' | 'experimental' | 'completed';
 }
 
 export type ProjectId = string;
@@ -46,13 +47,14 @@ export const projects: Project[] = [
     repoUrl: 'https://github.com/LucasHenriqueDiniz/windowx-xp-online',
     demoUrl: 'https://w-xp-online.web.app/',
     featured: true,
+    status: 'experimental',
   },
   {
     id: 'weeb-profile',
     title: 'Weeb Profile',
     description: {
-      pt: 'Gere SVGs dinâmicos para perfis do GitHub com estatísticas de anime, música e código. Automatize com GitHub Actions, integre APIs como Last.fm e MyAnimeList, e personalize badges para ostentar seu perfil.',
-      en: 'Generate dynamic SVGs for GitHub profiles with anime, music, and code stats. Automate with GitHub Actions, integrate APIs like Last.fm and MyAnimeList, and customize badges to flex your profile.',
+      pt: 'Gere SVGs dinâmicos para perfis do GitHub exibindo dados de anime, música e contribuições de código. Personalize e automatize via GitHub Actions, com scrapping de dados dos seus perfils como Last.fm e MyAnimeList.',
+      en: 'Generate dynamic SVGs for GitHub profiles displaying anime, music, and code contributions data. Customize and automate via GitHub Actions, scraping data from your Last.fm and MyAnimeList profiles.',
     },
     image: weebprofile.src,
     tags: [
@@ -66,6 +68,7 @@ export const projects: Project[] = [
     repoUrl: 'https://github.com/LucasHenriqueDiniz/WeebProfile',
     demoUrl: 'https://weeb-profile-web-client.vercel.app/',
     featured: true,
+    status: 'workInProgress',
   },
   {
     id: 'mannco-store-enhancer-extension',
@@ -90,6 +93,7 @@ export const projects: Project[] = [
     ],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/mannco.store-enhancer-extension',
     featured: true,
+    status: 'experimental',
   },
   {
     id: 'mannco-store-enhancer',
@@ -102,6 +106,7 @@ export const projects: Project[] = [
     tags: ['Tampermonkey', 'JavaScript', 'Browser Scripting'],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/Mannco.Store-Enhancer',
     featured: false,
+    status: 'discontinued',
   },
   {
     id: 'fornite-afk-pass',
@@ -114,6 +119,7 @@ export const projects: Project[] = [
     tags: ['Python', 'Tkinter', 'pyautogui', 'pywinauto', 'Automation', 'Game Enhancement'],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/fornite-afk-pass',
     featured: false,
+    status: 'discontinued',
   },
   {
     id: 'backpack-tf-ws-service',
@@ -126,6 +132,7 @@ export const projects: Project[] = [
     tags: ['Python', 'MongoDB', 'WebSocket', 'API Integration', 'Async', 'Logging'],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/backpack.tf-ws-service',
     featured: false,
+    status: 'completed',
   },
   {
     id: 'skoob-autojoin',
@@ -138,6 +145,7 @@ export const projects: Project[] = [
     tags: ['JavaScript', 'Tampermonkey', 'Automation', 'Skoob'],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/skoob-autojoin',
     featured: false,
+    status: 'completed',
   },
   {
     id: 'include-gurias',
@@ -162,6 +170,7 @@ export const projects: Project[] = [
     repoUrl: 'https://github.com/include-gurias/includegurias-website',
     demoUrl: 'https://www.includegurias.com.br',
     featured: true,
+    status: 'completed',
   },
   {
     id: 'hypixel-auto-skip-daily',
@@ -174,6 +183,7 @@ export const projects: Project[] = [
     tags: ['JavaScript', 'Tampermonkey', 'jQuery', 'Browser Scripting', 'Automation'],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/HypixelAutoSkipDaily',
     featured: false,
+    status: 'completed',
   },
   {
     id: 'basicao-fullstack',
@@ -199,6 +209,7 @@ export const projects: Project[] = [
     ],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/BasicaoFullstack-End',
     featured: false,
+    status: 'completed',
   },
   {
     id: 'botschannel-platform',
@@ -212,6 +223,7 @@ export const projects: Project[] = [
     repoUrl: 'https://github.com/BotsChannel',
     demoUrl: 'https://platform.botschannel.com/en',
     featured: false,
+    status: 'discontinued',
   },
   {
     id: 'botschannel-landing',
@@ -225,6 +237,7 @@ export const projects: Project[] = [
     repoUrl: 'https://github.com/BotsChannel',
     demoUrl: 'https://botschannel.com/',
     featured: false,
+    status: 'discontinued',
   },
   {
     id: 'siot-web-flasher',
@@ -257,6 +270,7 @@ export const projects: Project[] = [
     ],
     repoUrl: 'https://github.com/BotsChannel/resgate-rs',
     featured: true,
+    status: 'completed',
   },
   {
     id: 'autowabba',
@@ -269,5 +283,6 @@ export const projects: Project[] = [
     tags: ['Electron', 'Node.js', 'Playwright', 'Automation', 'Nexus Mods', 'Windows'],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/AutoWabba',
     featured: true,
+    status: 'completed',
   },
 ];

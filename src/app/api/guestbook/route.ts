@@ -1,16 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { rateLimiter, getClientIP } from '@/utils/rateLimiter';
+import { containsBlockedTerms, getFoundBlockedTerms } from '@/constants/guestbookBlockedTerms';
 
 const guestbookSchema = z.object({
-  name: z.string().min(1).max(100),
-  message: z.string().min(1).max(500),
+  name: z.string().min(1, 'Nome é obrigatório').max(50, 'Nome muito longo (máximo 50 caracteres)'),
+  message: z
+    .string()
+    .min(1, 'Mensagem é obrigatória')
+    .max(280, 'Mensagem muito longa (máximo 280 caracteres)'),
   username: z.string().optional().nullable(),
   is_developer: z.boolean(),
+  emoji: z.string().min(1, 'Emoji é obrigatório').max(10),
 });
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar rate limiting por IP
+    const clientIP = getClientIP(request);
+    const rateLimitResult = rateLimiter.check(clientIP);
+
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        {
+          error: rateLimitResult.message,
+          retryAfter: rateLimitResult.retryAfter,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': rateLimitResult.retryAfter?.toString() || '60',
+          },
+        }
+      );
+    }
+
     const body = await request.json();
     console.log('Received body:', body);
 
@@ -24,30 +49,60 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, message, username, is_developer } = validated.data;
+    const { name, message, username, is_developer, emoji } = validated.data;
+
+    // Validações adicionais de segurança
+    const trimmedName = name.trim();
+    const trimmedMessage = message.trim();
+    const trimmedUsername = username?.trim();
+
+    // Verificar conteúdo spam/malicioso
+    const hasUrls = /https?:\/\//gi.test(trimmedMessage) || /https?:\/\//gi.test(trimmedName);
+    const hasRepeatedChars =
+      /(.)\1{10,}/gi.test(trimmedMessage) || /(.)\1{10,}/gi.test(trimmedName);
+    const hasBlockedTerms =
+      containsBlockedTerms(trimmedMessage) || containsBlockedTerms(trimmedName);
+
+    if (hasUrls || hasRepeatedChars || hasBlockedTerms) {
+      // Log para debugging em desenvolvimento
+      if (process.env.NODE_ENV === 'development') {
+        const foundTerms = [
+          ...getFoundBlockedTerms(trimmedMessage),
+          ...getFoundBlockedTerms(trimmedName),
+        ];
+        console.log('Spam detected:', {
+          hasUrls,
+          hasRepeatedChars,
+          hasBlockedTerms,
+          foundTerms: foundTerms.length > 0 ? foundTerms : undefined,
+          message: trimmedMessage,
+          name: trimmedName,
+        });
+      }
+
+      return NextResponse.json({ error: 'Conteúdo não permitido detectado.' }, { status: 400 });
+    }
+
     const supabase = await createClient();
 
     // Gerar URL do avatar baseado no tipo de usuário
     let avatar_url: string | null = null;
-    if (username) {
-      if (is_developer) {
-        // GitHub avatar
-        avatar_url = `https://github.com/${username}.png`;
-      } else {
-        // Boring avatars para Instagram/visitantes
-        avatar_url = `https://source.boringavatars.com/beam/120/${encodeURIComponent(username)}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`;
-      }
+    if (trimmedUsername && is_developer) {
+      // GitHub avatar apenas para desenvolvedores com username
+      avatar_url = `https://github.com/${trimmedUsername}.png`;
     }
+    // Para todos os outros casos (visitantes, sem username, etc.), deixamos null
 
     // Inserir no Supabase
     const { data, error } = await supabase
       .from('guestbook_entries')
       .insert({
-        name,
-        message,
-        username: username || null,
+        name: trimmedName,
+        message: trimmedMessage,
+        username: trimmedUsername || null,
         is_developer,
         avatar_url,
+        emoji,
       })
       .select()
       .single();

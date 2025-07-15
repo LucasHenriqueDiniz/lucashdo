@@ -228,7 +228,7 @@ const Footer = memo(() => {
   return (
     <motion.footer
       ref={footerRef}
-      className="relative mt-24 pt-12 overflow-hidden"
+      className="relative pt-12 overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}

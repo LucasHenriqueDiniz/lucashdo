@@ -1180,3 +1180,88 @@
   overflow: hidden;
   z-index: 1;
 }
+
+/* Introduction Section */
+.mac-browser-intro-section {
+  text-align: center;
+  margin-bottom: 45px;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, rgba(0, 119, 255, 0.05), rgba(251, 84, 43, 0.05));
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.mac-browser-intro-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  background: linear-gradient(45deg, #0077ff, #fb542b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: -0.02em;
+}
+
+.mac-browser-intro-description {
+  font-size: 16px;
+  color: #a1a1aa;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Project Status Badges */
+.mac-project-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.mac-project-badges {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.mac-project-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Project Links */
+.mac-project-link.info-link {
+  background: linear-gradient(135deg, #0077ff, #0066dd);
+  color: white;
+  order: -1; /* Aparece primeiro */
+}
+
+.mac-project-link.info-link:hover {
+  background: linear-gradient(135deg, #0066dd, #0055bb);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 119, 255, 0.3);
+}

@@ -156,7 +156,7 @@ const HomeSectionTitle = memo(
           </motion.span>
 
           <motion.span
-            className="font-extrabold text-[var(--foreground)] gap-4 inline-flex align-middle"
+            className="font-extrabold text-[var(--foreground)] gap-2 inline-flex align-middle"
             variants={fadeInLeftVariants}
             initial="hidden"
             whileInView="visible"

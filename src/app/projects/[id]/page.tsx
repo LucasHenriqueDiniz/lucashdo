@@ -1,10 +1,7 @@
 import { Metadata } from 'next';
-import { useLocale, useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { Locale } from '@/lib/i18n/config';
 import { projects } from '@/constants';
-import { AnimatedProjectsLayout } from '../AnimatedProjects';
-import { ProjectDetail } from './client';
+import ProjectDetailClient from './client';
 
 export async function generateStaticParams() {
   return projects.map(p => ({
@@ -40,24 +37,5 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     notFound();
   }
 
-  return <ProjectPageContent project={project} />;
-}
-
-function ProjectPageContent({ project }: { project: (typeof projects)[number] }) {
-  const t = useTranslations('Projects');
-  const locale = useLocale() as Locale;
-
-  return (
-    <AnimatedProjectsLayout>
-      <ProjectDetail
-        project={project}
-        locale={locale}
-        translations={{
-          viewSource: t('viewSource'),
-          viewDemo: t('viewDemo'),
-          techStack: t('techStack'),
-        }}
-      />
-    </AnimatedProjectsLayout>
-  );
+  return <ProjectDetailClient project={project} />;
 }

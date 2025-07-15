@@ -11,19 +11,21 @@ import {
   ExternalLink,
   MousePointer,
 } from 'lucide-react';
-import { useLocale } from 'next-intl';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { type Locale } from '@/lib/i18n/config';
+import { BsBookmarkFill } from 'react-icons/bs';
+import { MdFeaturedPlayList } from 'react-icons/md';
+import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { Project, projects } from '@/constants/projects';
+import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
 import Browser from '../home/Browser/Browser';
-import ProjectBrowserTab from './ProjectBrowserTab';
 import './FeaturedProjects.css';
+import ProjectBrowserTab from './ProjectBrowserTab';
 
 const ProjectsShowcase = () => {
-  const locale = useLocale() as Locale;
   const [activeTabId, setActiveTabId] = useState<string>('');
   const [activeProjectIndex, setActiveProjectIndex] = useState<number>(0);
+  const lang = useLanguageStore(state => state.lang);
 
   // Sort projects to get featured ones first
   const featuredProjects = projects.filter(project => project.featured);
@@ -130,33 +132,27 @@ const ProjectsShowcase = () => {
 
   return (
     <section className="w-full max-w-7xl mx-auto my-24 px-4 sm:px-6">
-      <motion.div
-        className="text-center mb-16"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        <motion.span
-          className="text-muted-foreground block text-lg font-normal mb-2"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-        >
-          Check out my work
-        </motion.span>
-        <motion.h2
-          className="text-3xl md:text-4xl font-bold"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.0, delay: 0.7 }}
-        >
-          <span className="font-extrabold text-white">My </span>
-          <span className="text-blue-400">Projects</span>
-        </motion.h2>
-      </motion.div>
+      <HomeSectionTitle
+        subTitle={
+          lang === 'pt'
+            ? 'Veja alguns dos meus projetos em destaque'
+            : 'Check out some of my featured projects'
+        }
+        titleWhitePart={lang === 'pt' ? 'Projetos em' : 'Projects'}
+        titleBluePart={lang === 'pt' ? 'Destaque' : 'Featured'}
+        icon={
+          <motion.div
+            key={1}
+            className="w-10 h-10 mr-3 flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1, rotate: 360 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.5 }}
+          >
+            <MdFeaturedPlayList className="w-6 h-6 text-[var(--primary)]" />
+          </motion.div>
+        }
+      />
 
       {/* Featured projects in browser */}
       {topFeaturedProjects.length > 0 && (
@@ -398,9 +394,7 @@ const ProjectsShowcase = () => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3, duration: 0.3 }}
                     >
-                      {locale === 'pt'
-                        ? activeProject.description.pt
-                        : activeProject.description.en}
+                      {lang === 'pt' ? activeProject.description.pt : activeProject.description.en}
                     </motion.p>
 
                     {/* Action buttons with hover effects and icons */}

@@ -117,9 +117,9 @@ const AddressBar: React.FC<AddressBarProps> = ({
           <button
             className="nav-btn home-btn"
             onClick={handleHomeClick}
-            disabled={tab.type === 'home'}
+            disabled={tab?.type === 'home' || !tab}
             aria-label="Ir para Home"
-            title={tab.type === 'home' ? 'Já está na Home' : 'Ir para Home'}
+            title={tab?.type === 'home' ? 'Já está na Home' : 'Ir para Home'}
           >
             <Home size={16} />
           </button>
@@ -129,10 +129,16 @@ const AddressBar: React.FC<AddressBarProps> = ({
       {/* URL/Search container */}
       <div className="url-container">
         <div className="url-icon">
-          {typeof tab.icon === 'string' ? (
-            <Image src={tab.icon} alt={tab.title} width={16} height={16} className="url-icon-img" />
+          {typeof tab?.icon === 'string' ? (
+            <Image
+              src={tab.icon}
+              alt={tab?.title || ''}
+              width={16}
+              height={16}
+              className="url-icon-img"
+            />
           ) : (
-            tab.icon || <span>{tab.title.charAt(0).toUpperCase()}</span>
+            tab?.icon || <span>{tab?.title?.charAt(0)?.toUpperCase() || 'H'}</span>
           )}
         </div>
 
@@ -159,7 +165,7 @@ const AddressBar: React.FC<AddressBarProps> = ({
           </div>
         ) : (
           <div className="url-display" onClick={isInteractive ? handleUrlClick : undefined}>
-            <span className="url-text">{tab.url}</span>
+            <span className="url-text">{tab?.url || 'loading...'}</span>
             {isInteractive && <span className="url-hint">Clique para pesquisar</span>}
           </div>
         )}

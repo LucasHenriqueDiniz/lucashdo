@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
-import MacBrowser from '@/components/home/HeroBrowser/HeroBrowser';
 import ExpGraph from '@/components/home/ExpGraph';
+import GuestBook from '@/components/home/GuestBook';
 import Hero from '@/components/home/Hero';
+import HeroBrowser from '@/components/home/HeroBrowser/HeroBrowser';
 import Timeline from '@/components/home/Timeline/Timeline';
 import ProjectsShowcase from '@/components/ProjectsShowcase/FeaturedProjects';
-import ModernGuestBook from '@/components/home/ModernGuestBook';
 import {
+  OrganizationStructuredData,
   PersonStructuredData,
   WebsiteStructuredData,
-  OrganizationStructuredData,
 } from '@/components/SEO/StructuredData';
 import { ContactLinks } from '@/constants/contacts';
 
@@ -92,16 +92,21 @@ export default function Home() {
       <main className="min-h-screen w-full flex flex-col items-center mt-[--navbar-height]">
         {/* HERO */}
         <Hero />
-        {/* MAC BROWSER */}
-        <MacBrowser />
+
+        {/* Hero Browser */}
+        <HeroBrowser />
+
         {/* EXPERIENCE GRAPH */}
         <ExpGraph />
+
         {/* TIMELINE */}
         <Timeline />
+
         {/* PROJECTS SHOWCASE */}
         <ProjectsShowcase />
+
         {/* GUESTBOOK */}
-        <ModernGuestBook />
+        <GuestBook />
       </main>
     </>
   );
