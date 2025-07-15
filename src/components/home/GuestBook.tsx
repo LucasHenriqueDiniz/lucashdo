@@ -42,7 +42,7 @@ const GuestBook: React.FC = () => {
     name: '',
     message: '',
     username: '',
-    is_developer: false,
+    is_developer: true,
     emoji: GUESTBOOK_EMOJIS[0],
     avatar_url: '',
   });
