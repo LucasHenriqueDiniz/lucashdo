@@ -122,7 +122,7 @@ export const ProjectDetail = ({ project }: ProjectDetailProps) => {
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
             />
 
-            {/* Overlay with buttons on hover - enhanced interactive elements */}
+            {/* Overlay with buttons on hover  */}
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6">
               <motion.a
                 href={project.repoUrl}
@@ -177,8 +177,8 @@ export const ProjectDetail = ({ project }: ProjectDetailProps) => {
             )}
 
             <GitHubStarsButton
-              username="LucasHenriqueDiniz"
-              repo={project.repoUrl.split('/').pop() || ''}
+              username={project.repoUrl.split('/')[3] || 'LucasHenriqueDiniz'}
+              repo={project.repoUrl.split('/')[4] || 'lucashdo'}
             />
           </motion.div>
         </div>
