@@ -92,7 +92,7 @@ export const projects: Project[] = [
       'CI/CD',
     ],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/mannco.store-enhancer-extension',
-    featured: true,
+    featured: false,
     status: 'experimental',
   },
   {
@@ -151,8 +151,8 @@ export const projects: Project[] = [
     id: 'include-gurias',
     title: 'Include Gurias',
     description: {
-      pt: 'Plataforma completa para empoderamento feminino em STEM. Site institucional, área de eventos, equipe, materiais e integração com Supabase e Prisma. Design responsivo, acessível e premiado em hackathons.',
-      en: 'Comprehensive platform for empowering women in STEM. Institutional site, events, team, materials, and Supabase/Prisma integration. Responsive, accessible design, awarded in hackathons.',
+      pt: 'Plataforma institucional para empoderamento feminino em STEM. Inclui páginas para eventos, equipe e materiais, com design responsivo e acessível. Possui área de administração construída sobre Supabase + Prisma, permitindo gerenciar todo o conteúdo diretamente no painel.',
+      en: 'Institutional platform empowering women in STEM. Includes event, team, and resources sections, with responsive, accessible design. Equipped with an admin area powered by Supabase + Prisma, enabling full content management from the dashboard.',
     },
     image: includeGurias.src,
     tags: [
@@ -189,8 +189,8 @@ export const projects: Project[] = [
     id: 'basicao-fullstack',
     title: 'Basicão Fullstack',
     description: {
-      pt: 'Projeto fullstack com backend Flask e frontend React+Vite. Backend gerencia livros, frontend exibe e adiciona livros.',
-      en: 'Fullstack project with Flask backend and React+Vite frontend. Backend manages books, frontend displays and adds books.',
+      pt: 'Aplicação fullstack desenvolvida para o workshop Basicão Fullstack promovido pela Engenharia do Futuro. O backend, feito com Flask e SQLAlchemy, gerencia um catálogo de livros com API RESTful. O frontend, construído com React, Vite e Ant Design, permite visualizar e adicionar livros à base. Projeto educativo com foco prático em integração frontend-backend.',
+      en: 'Fullstack application developed for the Basic Fullstack workshop hosted by Engenharia do Futuro. The backend (Flask + SQLAlchemy) provides a RESTful API to manage a book catalog. The frontend (React + Vite + Ant Design) enables users to view and add books. Educational project focused on hands-on fullstack integration.',
     },
     image: basicaoWorkshop.src,
     tags: [
@@ -205,7 +205,6 @@ export const projects: Project[] = [
       'Axios',
       'Fullstack',
       'Workshop',
-      'Educational',
     ],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/BasicaoFullstack-End',
     featured: false,
@@ -215,30 +214,42 @@ export const projects: Project[] = [
     id: 'botschannel-platform',
     title: 'BotsChannel Platform',
     description: {
-      pt: 'Plataforma para criação, gerenciamento e publicação de bots para múltiplas plataformas. Empresa parou de operar, mas o projeto segue open source.',
-      en: 'Platform for creating, managing, and publishing bots for multiple platforms. Company is no longer operating, but the project remains open source.',
+      pt: 'Plataforma SaaS serverless para criação e gerenciamento de chatbots em múltiplos canais (WhatsApp, Telegram, Instagram). Contava com sistema próprio de autenticação, painel de controle para gestão de equipes, e suporte a bots dinâmicos via JSON. Possui arquitetura baseada em microsserviços com AWS Lambda, PostgreSQL e CI/CD. Apesar do encerramento da empresa, o projeto segue open source.',
+      en: 'Serverless SaaS platform for creating and managing chatbots across multiple channels (WhatsApp, Telegram, Instagram). Included custom auth, team management dashboard, and dynamic JSON-based bot building. Built with microservices architecture using AWS Lambda, PostgreSQL, and CI/CD. The company has ceased operations, but the project remains open source.',
     },
     image: botschannelPlatform.src,
-    tags: ['Bots', 'Platform', 'Node.js', 'TypeScript', 'Microservices', 'SaaS', 'Serverless'],
+    tags: [
+      'Bots',
+      'Platform',
+      'Node.js',
+      'TypeScript',
+      'Microservices',
+      'SaaS',
+      'Serverless',
+      'PostgreSQL',
+      'AWS',
+    ],
     repoUrl: 'https://github.com/BotsChannel',
     demoUrl: 'https://platform.botschannel.com/en',
-    featured: false,
+    featured: true,
     status: 'discontinued',
   },
+
   {
     id: 'botschannel-landing',
     title: 'BotsChannel Landing Page',
     description: {
-      pt: 'Landing page institucional da BotsChannel. Empresa parou de operar, mas o site segue disponível.',
-      en: 'Institutional landing page for BotsChannel. Company is no longer operating, but the site remains available.',
+      pt: 'Landing page institucional da BotsChannel com foco em marketing digital e conversão. Desenvolvida com Next.js e design limpo e responsivo. Continua online como vitrine do antigo serviço.',
+      en: 'Institutional landing page for BotsChannel, focused on digital marketing and lead conversion. Built with Next.js and a clean, responsive design. Still online as a showcase of the former service.',
     },
     image: botschannelWeb.src,
-    tags: ['Landing Page', 'Next.js', 'React', 'TypeScript', 'Marketing'],
+    tags: ['Landing Page', 'Next.js', 'React', 'TypeScript', 'Marketing', 'Responsive Design'],
     repoUrl: 'https://github.com/BotsChannel',
     demoUrl: 'https://botschannel.com/',
     featured: false,
     status: 'discontinued',
   },
+
   {
     id: 'siot-web-flasher',
     title: 'SIOT Web Flasher',
@@ -249,7 +260,7 @@ export const projects: Project[] = [
     image: siotFlashInstaller.src,
     tags: ['ESP32', 'ESP8266', 'Web Serial', 'Firmware', 'TypeScript', 'IoT', 'Electron'],
     repoUrl: 'https://github.com/LucasHenriqueDiniz/siot-web-flasher',
-    featured: true,
+    featured: false,
   },
   {
     id: 'resgate-rs',
