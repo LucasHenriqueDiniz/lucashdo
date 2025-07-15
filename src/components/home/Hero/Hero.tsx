@@ -1,26 +1,92 @@
 'use client';
 
-import type { Container } from '@tsparticles/engine';
+import type { Container, ISourceOptions } from '@tsparticles/engine';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FaChevronRight } from 'react-icons/fa';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { HiOutlineArrowNarrowDown } from 'react-icons/hi';
 import { LuExternalLink, LuMail } from 'react-icons/lu';
 import { MdOutlineMouse } from 'react-icons/md';
-import { TranslatedField } from '@/types/experience.types';
 import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { skillsData } from '@/constants/skillsData';
 import { Button } from '@/components/ui/button';
+import { TypingText } from '@/components/animate-ui/text/typing';
 import AnimatedRole from './AnimatedRole';
 import './Hero.css';
-import { networkPreset } from './particlePresets';
-import { TypingText } from '@/components/animate-ui/text/typing';
+
+export const networkPreset: ISourceOptions = {
+  background: {
+    color: {
+      value: 'transparent',
+    },
+  },
+  fpsLimit: 120,
+  interactivity: {
+    events: {
+      onClick: {
+        enable: true,
+        mode: 'push',
+      },
+      onHover: {
+        enable: true,
+        mode: 'repulse',
+      },
+    },
+    modes: {
+      push: {
+        quantity: 2,
+      },
+      repulse: {
+        distance: 100,
+        duration: 0.4,
+      },
+    },
+  },
+  particles: {
+    color: {
+      value: ['#60A5FA', '#22D3EE', '#3B82F6'],
+    },
+    links: {
+      color: '#60A5FA',
+      distance: 150,
+      enable: true,
+      opacity: 0.3,
+      width: 1,
+    },
+    move: {
+      direction: 'none',
+      enable: true,
+      outModes: {
+        default: 'out',
+      },
+      random: false,
+      speed: 1,
+      straight: false,
+    },
+    number: {
+      density: {
+        enable: true,
+      },
+      value: 40,
+    },
+    opacity: {
+      value: 0.5,
+    },
+    shape: {
+      type: 'circle',
+    },
+    size: {
+      value: { min: 1, max: 3 },
+    },
+  },
+  detectRetina: true,
+};
 
 const MemoizedParticles = React.memo(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ({ options, particlesLoaded }: { options: any; particlesLoaded: any }) => (
     <Particles
       id="tsparticles"
@@ -38,14 +104,6 @@ function HeroComponent() {
   const lang = useLanguageStore(state => state.lang);
   const router = useRouter();
   const t = useTranslations();
-
-  // Particle presets map
-  const particlePresets = useMemo(
-    () => ({
-      network: networkPreset,
-    }),
-    []
-  );
 
   // Initialize tsParticles
   useEffect(() => {
@@ -97,7 +155,7 @@ function HeroComponent() {
         <Particles
           id="tsparticles"
           particlesLoaded={particlesLoaded}
-          options={particlePresets.network}
+          options={networkPreset}
           className="absolute inset-0 -z-10"
         />
       )}
