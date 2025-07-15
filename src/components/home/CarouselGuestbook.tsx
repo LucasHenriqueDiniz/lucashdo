@@ -126,7 +126,7 @@ const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({
                 right: 0,
                 margin: '0 auto',
                 width: '100%',
-                maxWidth: '600px',
+                maxWidth: 'min(800px, calc(100vw - 32px))',
                 cursor: isCenter ? 'default' : 'pointer',
                 zIndex: isCenter ? 10 : 1,
               }}
