@@ -12,9 +12,9 @@ class RateLimiter {
   private readonly cooldownMs: number;
 
   constructor(
-    maxRequests: number = 3, // 3 posts por janela de tempo
+    maxRequests: number = 1, // 1 posts por janela de tempo
     windowMs: number = 15 * 60 * 1000, // 15 minutos
-    cooldownMs: number = 2 * 60 * 1000 // 2 minutos entre posts
+    cooldownMs: number = 15 * 60 * 1000 // 2 minutos entre posts
   ) {
     this.maxRequests = maxRequests;
     this.windowMs = windowMs;

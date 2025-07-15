@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { Project } from '@/constants';
+import { GitHubStarsButton } from '@/components/animate-ui/buttons/github-stars';
 import { AnimatedProjectsLayout } from '../AnimatedProjects';
 
 // Enhanced animations
@@ -174,6 +175,11 @@ export const ProjectDetail = ({ project }: ProjectDetailProps) => {
                 {t('viewDemo')}
               </motion.a>
             )}
+
+            <GitHubStarsButton
+              username="LucasHenriqueDiniz"
+              repo={project.repoUrl.split('/').pop() || ''}
+            />
           </motion.div>
         </div>
 

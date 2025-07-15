@@ -1,29 +1,26 @@
-import { motion } from 'framer-motion';
+import * as React from 'react';
 import { Github, User } from 'lucide-react';
 import Image from 'next/image';
-import React from 'react';
 import Avatar from 'boring-avatars';
+import Autoplay from 'embla-carousel-autoplay';
 import { GuestbookEntry } from '@/types/guestbook.types';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import styles from './GuestBook.module.css';
 
 interface CarouselGuestbookProps {
   entries: GuestbookEntry[];
-  featuredIndex: number;
-  navigateNext: () => void;
-  navigatePrev: () => void;
-  entriesLength: number;
 }
 
-const ITEM_HEIGHT = 140;
+const AUTOPLAY_DELAY = 4000;
 
-const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({
-  entries,
-  featuredIndex,
-  navigateNext,
-  navigatePrev,
-}) => {
-  // Função para gerar avatar com boring-avatars como fallback
-  const getAvatarContent = (entry: GuestbookEntry, isCenter: boolean) => {
+const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({ entries }) => {
+  // O carousel do shadcn/embla controla o index internamente
+  const plugins = React.useMemo(
+    () => [Autoplay({ delay: AUTOPLAY_DELAY, stopOnInteraction: false })],
+    []
+  );
+
+  const getAvatarContent = (entry: GuestbookEntry) => {
     if (entry.avatar_url) {
       return (
         <Image
@@ -31,13 +28,10 @@ const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({
           alt={entry.name}
           fill
           className={styles.testimonialAvatarImage}
-          style={{
-            objectFit: 'cover',
-          }}
+          style={{ objectFit: 'cover' }}
         />
       );
     }
-
     return (
       <div
         style={{
@@ -50,114 +44,37 @@ const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({
           justifyContent: 'center',
         }}
       >
-        <Avatar size={isCenter ? 90 : 70} name={entry.name} variant={'beam'} square={true} />
+        <Avatar size={90} name={entry.name} variant={'beam'} square={true} />
       </div>
     );
   };
 
-  // Função para navegar quando clica em um item não central
-  const handleItemClick = (offset: number) => {
-    if (offset === 0) return; // Não fazer nada se clicar no item central
-
-    if (offset < 0) {
-      navigatePrev(); // Item anterior (em cima)
-    } else {
-      navigateNext(); // Próximo item (embaixo)
-    }
-  };
-
-  // Função para pegar o item do carrossel com offset
-  const getItem = (offset: number) => {
-    if (entries.length === 0) return null;
-    const idx = (featuredIndex + offset + entries.length) % entries.length;
-    return entries[idx];
-  };
-
   return (
-    <div
-      className={styles.carouselContainer}
-      style={
-        {
-          position: 'relative',
-          minHeight: ITEM_HEIGHT * 2,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'visible',
-          '--primary': '#3b82f6', // Definindo a variável CSS
-        } as React.CSSProperties
-      }
-    >
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: ITEM_HEIGHT * 2.8,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'visible',
-        }}
+    <div className="relative w-full max-w-4xl mx-auto flex flex-col items-center">
+      <Carousel
+        orientation="vertical"
+        opts={{ align: 'start', loop: true }}
+        plugins={plugins}
+        className="w-full h-[420px]"
       >
-        {[-1, 0, 1].map(offset => {
-          const entry = getItem(offset);
-          if (!entry) return null;
-
-          const isCenter = offset === 0;
-          const isPrev = offset < 0;
-
-          return (
-            <motion.div
+        <CarouselContent className="-mt-1 h-[420px]">
+          {entries.map(entry => (
+            <CarouselItem
               key={entry.id}
-              animate={{
-                y: offset * ITEM_HEIGHT * 1.1,
-                opacity: isCenter ? 1 : 0.5,
-                scale: isCenter ? 1 : 0.85,
-                zIndex: isCenter ? 10 : 1,
-              }}
-              transition={{
-                duration: 0.4,
-                ease: 'easeOut',
-              }}
-              style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                margin: '0 auto',
-                width: '100%',
-                maxWidth: 'min(800px, calc(100vw - 32px))',
-                cursor: isCenter ? 'default' : 'pointer',
-                zIndex: isCenter ? 10 : 1,
-              }}
-              onClick={() => handleItemClick(offset)}
-              whileHover={
-                !isCenter
-                  ? {
-                      scale: 0.9,
-                      opacity: 0.7,
-                      transition: { duration: 0.2 },
-                    }
-                  : {}
-              }
+              className="pt-1 h-[420px] flex flex-col items-center justify-center"
             >
-              {/* Removido o wrapper do card - conteúdo direto */}
               <div className={styles.testimonialContent}>
                 <div
                   className={styles.testimonialAvatar}
                   style={{
                     position: 'relative',
-                    width: isCenter ? '90px' : '70px',
-                    height: isCenter ? '90px' : '70px',
-                    borderRadius: '12px', // Avatar quadrado
-                    overflow: 'visible', // Changed from 'hidden' to allow emoji to show
+                    width: '90px',
+                    height: '90px',
+                    borderRadius: '12px',
+                    overflow: 'visible',
                     flexShrink: 0,
-                    border: isCenter
-                      ? '3px solid rgba(59, 130, 246, 0.5)'
-                      : '2px solid rgba(75, 85, 99, 0.3)',
-                    boxShadow: isCenter
-                      ? '0 8px 25px rgba(59, 130, 246, 0.3)'
-                      : '0 4px 15px rgba(0, 0, 0, 0.2)',
+                    border: '3px solid rgba(59, 130, 246, 0.5)',
+                    boxShadow: '0 8px 25px rgba(59, 130, 246, 0.3)',
                   }}
                 >
                   <div
@@ -165,111 +82,53 @@ const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({
                       width: '100%',
                       height: '100%',
                       borderRadius: '12px',
-                      overflow: 'hidden', // Avatar content still clipped
+                      overflow: 'hidden',
                     }}
                   >
-                    {getAvatarContent(entry, isCenter)}
+                    {getAvatarContent(entry)}
                   </div>
                   {entry.emoji && (
-                    <motion.div
+                    <div
                       style={{
                         position: 'absolute',
                         bottom: '-8px',
                         right: '-8px',
-                        width: isCenter ? '32px' : '24px',
-                        height: isCenter ? '32px' : '24px',
+                        width: '32px',
+                        height: '32px',
                         borderRadius: '8px',
                         background: 'rgba(0, 0, 0, 0.8)',
                         border: '2px solid rgba(255, 255, 255, 0.2)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: isCenter ? '16px' : '12px',
+                        fontSize: '16px',
                         backdropFilter: 'blur(8px)',
                       }}
-                      animate={{
-                        scale: 1,
-                        rotate: 0,
-                      }}
-                      whileHover={
-                        isCenter
-                          ? {
-                              scale: 1.1,
-                              rotate: [0, -5, 5, -5, 0],
-                              transition: { duration: 0.5 },
-                            }
-                          : {}
-                      }
                     >
                       {entry.emoji}
-                    </motion.div>
+                    </div>
                   )}
                 </div>
-
                 <div className={styles.testimonialTextArea}>
-                  <div
-                    className={`${styles.testimonialQuoteContainer} ${
-                      isCenter ? styles.testimonialQuoteContainerCurrent : ''
-                    }`}
-                  >
-                    {/* Aspas de abertura */}
+                  <div className={styles.testimonialQuoteContainer}>
                     <span
-                      className={`${styles.testimonialQuoteMark} ${styles.testimonialQuoteMarkLeft} ${
-                        isCenter
-                          ? styles.testimonialQuoteMarkLeftCurrent
-                          : isPrev
-                            ? styles.testimonialQuoteMarkPrev
-                            : styles.testimonialQuoteMarkNext
-                      }`}
+                      className={`${styles.testimonialQuoteMark} ${styles.testimonialQuoteMarkLeft} ${styles.testimonialQuoteMarkLeftCurrent}`}
                     >
                       &ldquo;
                     </span>
-
-                    <motion.p
-                      className={`${styles.testimonialQuote} ${
-                        isCenter
-                          ? styles.testimonialQuoteCurrent
-                          : isPrev
-                            ? styles.testimonialQuotePrev
-                            : styles.testimonialQuoteNext
-                      }`}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.1 }}
-                    >
+                    <p className={`${styles.testimonialQuote} ${styles.testimonialQuoteCurrent}`}>
                       {entry.message}
-                    </motion.p>
-
-                    {/* Aspas de fechamento */}
+                    </p>
                     <span
-                      className={`${styles.testimonialQuoteMark} ${styles.testimonialQuoteMarkRight} ${
-                        isCenter
-                          ? styles.testimonialQuoteMarkRightCurrent
-                          : isPrev
-                            ? styles.testimonialQuoteMarkPrev
-                            : styles.testimonialQuoteMarkNext
-                      }`}
+                      className={`${styles.testimonialQuoteMark} ${styles.testimonialQuoteMarkRight} ${styles.testimonialQuoteMarkRightCurrent}`}
                     >
                       &rdquo;
                     </span>
                   </div>
-
-                  <motion.div
-                    className={`${styles.testimonialAuthor} ${
-                      isCenter
-                        ? styles.testimonialAuthorCurrent
-                        : isPrev
-                          ? styles.testimonialAuthorPrev
-                          : styles.testimonialAuthorNext
-                    }`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 0.2 }}
-                  >
+                  <div className={`${styles.testimonialAuthor} ${styles.testimonialAuthorCurrent}`}>
                     <span>{entry.name}</span>
-
-                    {isCenter && entry.username && (
-                      <motion.a
+                    {entry.username && (
+                      <a
                         href={
                           entry.is_developer
                             ? `https://github.com/${entry.username}`
@@ -278,23 +137,19 @@ const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         className={styles.testimonialHandle}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: 0.3 }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
                       >
                         {entry.is_developer ? <Github size={16} /> : <User size={16} />}@
                         {entry.username}
-                      </motion.a>
+                      </a>
                     )}
-                  </motion.div>
+                  </div>
                 </div>
               </div>
-            </motion.div>
-          );
-        })}
-      </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {/* Sem CarouselPrevious/CarouselNext */}
+      </Carousel>
     </div>
   );
 };

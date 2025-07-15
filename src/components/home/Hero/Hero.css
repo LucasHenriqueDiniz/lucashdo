@@ -29,24 +29,6 @@
   z-index: 10;
 }
 
-/* Gradient animations */
-.hero-bg-animate {
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 /* Shine effect for buttons */
 .shine-effect {
   position: relative;
@@ -89,7 +71,7 @@
 /* Role animation container styling */
 .role-container {
   position: relative;
-  height: 36px; /* Fixed height to prevent layout shifts */
+  height: 36px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -100,41 +82,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 160px; /* Adjust based on your longest role */
   height: 100%;
 }
 
 .role-text-wrapper span {
   display: inline-block;
   text-align: center;
-}
-
-/* Glowing border animation for Projects button */
-@keyframes border-glow {
-  0% {
-    background-position: 0% 50%;
-    opacity: 0.5;
-  }
-  50% {
-    background-position: 100% 50%;
-    opacity: 0.8;
-  }
-  100% {
-    background-position: 0% 50%;
-    opacity: 0.5;
-  }
-}
-
-.glowing-border {
-  background: linear-gradient(
-    rgba(56, 189, 248, 0),
-    var(--cyan),
-    var(--blue),
-    rgba(56, 189, 248, 0)
-  );
-  background-size: 400% 100%;
-  animation: border-glow 3s ease infinite;
-  z-index: -1;
 }
 
 /* Animated glowing effect for the Projects button border */
@@ -223,10 +176,6 @@
 
 /* Responsive container styling */
 @media (max-width: 640px) {
-  .role-text-wrapper {
-    min-width: 140px;
-  }
-
   .role-container {
     height: auto;
     min-height: 36px;

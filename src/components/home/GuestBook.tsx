@@ -37,7 +37,6 @@ const GuestBook: React.FC = () => {
   const t = useTranslations('ModernGuestBook');
   const lang = useLanguageStore(state => state.lang);
   const { entries, isLoading, error, fetchEntries, addEntry } = useGuestbookStore();
-  const [featuredIndex, setFeaturedIndex] = useState(0);
   const [formData, setFormData] = useState({
     name: '',
     message: '',
@@ -66,34 +65,39 @@ const GuestBook: React.FC = () => {
     fetchEntries();
   }, [fetchEntries]);
 
-  // Carrossel de 3 comentários - usa apenas os últimos 9 comentários
-  const getCarouselEntries = useCallback(() => {
-    if (entries.length === 0) return [];
-
-    // Pega apenas os últimos 9 comentários
-    const recentEntries = entries.slice(0, Math.min(9, entries.length));
-
-    const center = featuredIndex % recentEntries.length;
-    const up = (center - 1 + recentEntries.length) % recentEntries.length;
-    const down = (center + 1) % recentEntries.length;
-
-    return [recentEntries[up], recentEntries[center], recentEntries[down]];
-  }, [entries, featuredIndex]);
-
-  const carouselEntries = getCarouselEntries();
+  // Carousel agora mostra todos os comentários
+  const carouselEntries = entries;
 
   // Grid de avatares/comentários no fundo (mais entradas) - reutiliza se necessário
   const gridEntries = useMemo(() => {
     const totalSlots = 100; // Mais slots para preencher melhor
     if (entries.length === 0) return [];
-    if (entries.length >= totalSlots) return entries.slice(0, totalSlots);
 
-    // Reutiliza entradas para preencher todos os slots
-    const repeated = [];
-    for (let i = 0; i < totalSlots; i++) {
-      repeated.push(entries[i % entries.length]);
+    // Função para embaralhar array (Fisher-Yates shuffle)
+    const shuffleArray = <T,>(array: T[]): T[] => {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    };
+
+    if (entries.length >= totalSlots) {
+      // Se temos entradas suficientes, embaralha e pega os primeiros totalSlots
+      return shuffleArray(entries).slice(0, totalSlots);
     }
-    return repeated;
+
+    // Reutiliza entradas embaralhadas para preencher todos os slots
+    const repeated = [];
+    const shuffledEntries = shuffleArray(entries);
+
+    for (let i = 0; i < totalSlots; i++) {
+      repeated.push(shuffledEntries[i % shuffledEntries.length]);
+    }
+
+    // Embaralha novamente o array final para distribuição ainda mais aleatória
+    return shuffleArray(repeated);
   }, [entries]);
 
   // Buscar avatar do github automaticamente com debounce
@@ -188,9 +192,6 @@ const GuestBook: React.FC = () => {
           emoji: formData.emoji,
         });
 
-        // Selecionar o novo comentário (último adicionado)
-        setFeaturedIndex(0); // O novo comentário será o primeiro na lista
-
         setFormData({
           name: '',
           message: '',
@@ -234,31 +235,6 @@ const GuestBook: React.FC = () => {
     },
     [formData, addEntry, t]
   );
-
-  const navigateNext = useCallback(() => {
-    const recentCount = Math.min(9, entries.length);
-    if (recentCount > 1) {
-      setFeaturedIndex(prev => (prev + 1) % recentCount);
-    }
-  }, [entries.length]);
-
-  const navigatePrev = useCallback(() => {
-    const recentCount = Math.min(9, entries.length);
-    if (recentCount > 1) {
-      setFeaturedIndex(prev => (prev - 1 + recentCount) % recentCount);
-    }
-  }, [entries.length]);
-
-  // Auto-rotate comentários com pausa mais curta - apenas entre os últimos 9
-  useEffect(() => {
-    const recentCount = Math.min(9, entries.length);
-    if (recentCount > 1) {
-      const interval = setInterval(() => {
-        setFeaturedIndex(prev => (prev + 1) % recentCount);
-      }, 5000); // 5 segundos
-      return () => clearInterval(interval);
-    }
-  }, [entries.length]);
 
   // Função para scroll horizontal do emoji selector
   const handleEmojiWheel = (e: React.WheelEvent<HTMLDivElement>) => {
@@ -335,13 +311,7 @@ const GuestBook: React.FC = () => {
         </div>
 
         {/* Carrossel de comentários extraído */}
-        <CarouselGuestbook
-          entries={carouselEntries}
-          featuredIndex={featuredIndex}
-          navigateNext={navigateNext}
-          navigatePrev={navigatePrev}
-          entriesLength={entries.length}
-        />
+        <CarouselGuestbook entries={carouselEntries} />
 
         {/* Formulário melhorado */}
         <motion.div

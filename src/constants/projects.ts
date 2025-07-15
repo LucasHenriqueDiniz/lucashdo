@@ -39,8 +39,8 @@ export const projects: Project[] = [
     id: 'windows-xp-online',
     title: 'Windows XP Online',
     description: {
-      pt: 'Recriação fiel do Windows XP no navegador, com multitarefa, janelas arrastáveis, temas, sons clássicos e até jogos. Tudo em tempo real para múltiplos usuários, usando WebSockets e React. Projeto viral no Twitter e destaque em comunidades de front-end.',
-      en: 'A faithful Windows XP recreation in the browser, featuring multitasking, draggable windows, classic themes, sounds, and even games. Real-time for multiple users via WebSockets and React. Went viral on Twitter and featured in frontend communities.',
+      pt: 'Recriação fiel do Windows XP no navegador, com multitarefa, janelas arrastáveis, temas, sons clássicos e até jogos. Tudo em tempo real para múltiplos usuários, usando WebSockets e React.',
+      en: 'A faithful Windows XP recreation in the browser, featuring multitasking, draggable windows, classic themes, sounds, and even games. Real-time for multiple users via WebSockets and React.',
     },
     image: windowsxponline.src,
     tags: ['React', 'WebSocket', 'Node.js', 'Real-time', 'Frontend', 'OS Simulation', 'TypeScript'],

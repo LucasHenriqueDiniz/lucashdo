@@ -1,52 +1,64 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import './Hero.css';
-import { LuExternalLink, LuMail, LuChevronDown } from 'react-icons/lu';
+import type { Container } from '@tsparticles/engine';
+import Particles, { initParticlesEngine } from '@tsparticles/react';
+import { loadSlim } from '@tsparticles/slim';
+import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FaChevronRight } from 'react-icons/fa';
+import { HiOutlineArrowNarrowDown } from 'react-icons/hi';
+import { LuExternalLink, LuMail } from 'react-icons/lu';
+import { MdOutlineMouse } from 'react-icons/md';
+import { TranslatedField } from '@/types/experience.types';
 import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { skillsData } from '@/constants/skillsData';
 import { Button } from '@/components/ui/button';
-import { TranslatedField } from '@/types/experience.types';
+import AnimatedRole from './AnimatedRole';
+import './Hero.css';
+import { networkPreset } from './particlePresets';
+import { TypingText } from '@/components/animate-ui/text/typing';
 
-interface DeveloperCompletion {
-  role: TranslatedField;
-  emoji: string;
-}
-
-const developerCompletions: DeveloperCompletion[] = [
-  { role: { pt: 'front-end pleno', en: 'mid-level front-end developer' }, emoji: '💻' },
-  { role: { pt: 'fã de back-end', en: 'back-end enthusiast' }, emoji: '🔨' },
-  { role: { pt: 'entusiasta de UI/UX', en: 'UI/UX enthusiast' }, emoji: '🎨' },
-  { role: { pt: 'full-stack', en: 'full-stack developer' }, emoji: '🌐' },
-  { role: { pt: 'mago do TypeScript', en: 'TypeScript wizard' }, emoji: '🧙‍♂️' },
-  { role: { pt: 'gamer nas horas vagas', en: 'gamer in their free time' }, emoji: '🎮' },
-  { role: { pt: 'eterno aprendiz', en: 'eternal learner' }, emoji: '🚀' },
-  { role: { pt: 'católico', en: 'Catholic' }, emoji: '✝️' },
-  { role: { pt: 'estudante de 日本語', en: '日本語 language student' }, emoji: '🍙' },
-  { role: { pt: 'que ama música', en: 'who loves music' }, emoji: '🎶' },
-  { role: { pt: 'rato de academia', en: 'gym rat' }, emoji: '🏋️‍♂️' },
-  {
-    role: {
-      pt: 'que já chorou vendo Shigatsu wa Kimi no Uso',
-      en: 'who cried watching Shigatsu wa Kimi no Uso',
-    },
-    emoji: '😭',
-  },
-];
+const MemoizedParticles = React.memo(
+  ({ options, particlesLoaded }: { options: any; particlesLoaded: any }) => (
+    <Particles
+      id="tsparticles"
+      particlesLoaded={particlesLoaded}
+      options={options}
+      className="absolute inset-0 -z-10"
+    />
+  )
+);
+MemoizedParticles.displayName = 'MemoizedParticles';
 
 function HeroComponent() {
   // State for typing effect
-  const [displayText, setDisplayText] = useState('');
-  const [roleIndex, setRoleIndex] = useState(0);
+  const [init, setInit] = useState(false);
   const lang = useLanguageStore(state => state.lang);
   const router = useRouter();
+  const t = useTranslations();
 
-  // Refs para controlar o estado da animação de digitação
-  const skillIndexRef = useRef(0);
-  const isDeletingRef = useRef(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Particle presets map
+  const particlePresets = useMemo(
+    () => ({
+      network: networkPreset,
+    }),
+    []
+  );
+
+  // Initialize tsParticles
+  useEffect(() => {
+    initParticlesEngine(async engine => {
+      await loadSlim(engine);
+    }).then(() => {
+      setInit(true);
+    });
+  }, []);
+
+  const particlesLoaded = useCallback(async (_container?: Container): Promise<void> => {
+    // Particle system loaded
+  }, []);
 
   // Get featured skills for the typing effect - memoized
   const featuredSkills = useMemo(
@@ -58,90 +70,6 @@ function HeroComponent() {
     []
   );
 
-  // Current developer role - memoized
-  const currentRole = useMemo(() => {
-    const role = developerCompletions[roleIndex];
-    return {
-      text: role.role[lang as keyof TranslatedField] || role.role.pt,
-      emoji: role.emoji,
-    };
-  }, [roleIndex, lang]);
-
-  // Função para controlar o efeito de digitação
-  const handleTypingEffect = useCallback(() => {
-    if (featuredSkills.length === 0) return;
-
-    const currentSkill = featuredSkills[skillIndexRef.current % featuredSkills.length];
-    const isDeleting = isDeletingRef.current;
-
-    // Velocidade de digitação com randomização
-    const getTypingSpeed = () => {
-      const baseSpeed = isDeleting ? 40 : 100;
-      return baseSpeed + Math.floor(Math.random() * 40);
-    };
-
-    if (!isDeleting) {
-      // Digitando
-      setDisplayText(prev => {
-        const nextText = currentSkill.substring(0, prev.length + 1);
-
-        // Se completou a palavra, aguarda e depois começa a deletar
-        if (nextText.length === currentSkill.length) {
-          timeoutRef.current = setTimeout(() => {
-            isDeletingRef.current = true;
-            handleTypingEffect();
-          }, 1500);
-          return nextText;
-        }
-
-        // Continua digitando
-        timeoutRef.current = setTimeout(handleTypingEffect, getTypingSpeed());
-        return nextText;
-      });
-    } else {
-      // Deletando
-      setDisplayText(prev => {
-        const nextText = currentSkill.substring(0, prev.length - 1);
-
-        // Se terminou de deletar, passa para próxima skill
-        if (nextText.length === 0) {
-          isDeletingRef.current = false;
-          skillIndexRef.current = (skillIndexRef.current + 1) % featuredSkills.length;
-
-          timeoutRef.current = setTimeout(handleTypingEffect, 300);
-          return nextText;
-        }
-
-        // Continua deletando
-        timeoutRef.current = setTimeout(handleTypingEffect, getTypingSpeed());
-        return nextText;
-      });
-    }
-  }, [featuredSkills]);
-
-  // Inicializa o efeito de digitação
-  useEffect(() => {
-    if (featuredSkills.length > 0) {
-      handleTypingEffect();
-    }
-
-    // Cleanup ao desmontar
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [featuredSkills, handleTypingEffect]);
-
-  // Effect para changing roles
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRoleIndex(prev => (prev + 1 < developerCompletions.length ? prev + 1 : 0));
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   // Memoized event handlers
   const handleContactClick = useCallback(() => {
     router.push('/contact');
@@ -151,40 +79,48 @@ function HeroComponent() {
     router.push('/projects');
   }, [router]);
 
-  const handleScrollToProjects = useCallback(() => {
-    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
-
   return (
     <section
-      className="min-h-[60vh] w-full max-w-4xl mx-auto px-4"
-      style={{
-        justifyContent: 'center',
-      }}
+      className="min-h-[60vh] w-full max-w-4xl mx-auto px-4 relative flex flex-col justify-center items-center"
+      style={{ justifyContent: 'center' }}
     >
-      {/* Animated background gradient */}
-      <motion.div
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-background to-background"
-        animate={{
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
+      {/* AVISO DE CONSTRUÇÃO MELHORADO */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
+        <div className="px-4 py-2 rounded-full border border-[var(--primary)] text-[var(--primary)] text-sm flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />
+          Website under construction!
+        </div>
+      </div>
+
+      {/* tsParticles Background */}
+      {init && (
+        <Particles
+          id="tsparticles"
+          particlesLoaded={particlesLoaded}
+          options={particlePresets.network}
+          className="absolute inset-0 -z-10"
+        />
+      )}
+
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 -z-5 bg-gradient-to-b from-transparent via-background/20 to-background/80" />
 
       <div className="flex flex-col items-center gap-4 w-full">
         {/* Typing effect for skills */}
         <motion.div
-          className="text-lg text-[color:var(--blue)] font-mono flex items-center justify-center h-8 mb-2"
+          className="mb-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <span className="min-w-[1rem] min-h-[1.5rem]">{displayText}</span>
-          <span className="inline-block w-2 h-5 ml-1 bg-[color:var(--blue)] cursor"></span>
+          <TypingText
+            className="text-lg font-bold text-[color:var(--primary)]"
+            text={featuredSkills}
+            cursor
+            cursorClassName="h-6 w-1 mx-1 bg-[var(--primary)] dark:bg-[var(--primary)]"
+            loop
+            holdDelay={1200}
+          />
         </motion.div>
 
         {/* Main heading */}
@@ -194,76 +130,27 @@ function HeroComponent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Hi, I&apos;m{' '}
-          <span className="text-cyan-400 relative group">
+          {lang === 'pt' ? 'Olá, eu sou ' : "Hello, I'm "}
+          <span className="relative bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 bg-clip-text text-transparent font-extrabold">
             Lucas HDO
             <motion.div
-              className="absolute inset-0 bg-cyan-400/20 blur-xl -z-10"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.5, 0.8, 0.5],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
+              className="absolute inset-0 bg-blue-400/15 blur-lg -z-10"
+              animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.6, 0.4] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             />
           </span>
         </motion.h1>
 
         {/* Subtitle with changing roles */}
-        <motion.h2
-          className="text-2xl font-medium flex flex-wrap items-center justify-center gap-2 text-center"
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <span>{lang === 'pt' ? 'Um desenvolvedor ' : 'A developer '}</span>
-          <span className="inline-flex items-center role-container">
-            <span className="role-text-wrapper">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={roleIndex}
-                  className="text-[color:var(--cyan)] underline underline-offset-4 whitespace-nowrap"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {currentRole.text}
-                </motion.span>
-              </AnimatePresence>
-            </span>
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={roleIndex}
-                role="img"
-                aria-label="developer icon"
-                className="inline-block ml-2"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  y: [0, -5, 0],
-                }}
-                exit={{ opacity: 0, scale: 0.5, rotate: 20 }}
-                transition={{
-                  duration: 0.4,
-                  y: {
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  },
-                }}
-              >
-                {currentRole.emoji}
-              </motion.span>
-            </AnimatePresence>
-          </span>
-        </motion.h2>
+          <AnimatedRole lang={lang} />
+        </motion.div>
 
-        {/* Call to action buttons - horizontally centered */}
+        {/* Call to action buttons */}
         <motion.div
           className="flex flex-col sm:flex-row gap-4 mt-6 justify-center w-full"
           initial={{ opacity: 0, y: 20 }}
@@ -285,7 +172,7 @@ function HeroComponent() {
             >
               <span className="flex items-center gap-2">
                 <LuMail className="w-5 h-5" />
-                {lang === 'pt' ? 'Contato' : 'Contact'}
+                {t('Navigation.contact')}
               </span>
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-[color:var(--blue)] via-[color:var(--cyan)] to-[color:var(--blue)] -z-10"
@@ -296,7 +183,7 @@ function HeroComponent() {
             </Button>
           </motion.div>
 
-          {/* Projects button - with animated glowing border effect */}
+          {/* Projects button */}
           <motion.div
             className="projects-button-wrapper relative group w-full sm:w-auto"
             whileHover={{ scale: 1.03 }}
@@ -313,12 +200,11 @@ function HeroComponent() {
             >
               <span className="flex items-center gap-2">
                 <LuExternalLink className="w-5 h-5" />
-                {lang === 'pt' ? 'Projetos' : 'Projects'}
+                {t('Navigation.projects')}
               </span>
             </Button>
             <div className="absolute -inset-[8px] rounded-xl z-0 overflow-hidden pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div className="glow-circle-clockwise"></div>
-              <div className="glow-circle-counterclockwise"></div>
             </div>
           </motion.div>
         </motion.div>
@@ -330,7 +216,6 @@ function HeroComponent() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.5 }}
-        onClick={handleScrollToProjects}
         whileHover={{
           scale: 1.05,
           y: -2,
@@ -339,44 +224,23 @@ function HeroComponent() {
         whileTap={{ scale: 0.95 }}
       >
         <span className="text-sm font-medium text-muted-foreground">
-          {lang === 'pt' ? 'Ver mais' : 'See more'}
+          {t('Home.viewProjects') || (lang === 'pt' ? 'Navegue pelos projetos' : 'Browse Projects')}
         </span>
 
         <motion.div
           className="relative"
           animate={{ y: [0, -2, 0] }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <LuChevronDown className="w-5 h-5 text-[color:var(--cyan)]" />
-
-          <motion.div
-            className="h-[1px] bg-gradient-to-r from-transparent via-[color:var(--cyan)] to-transparent absolute -bottom-1 left-0 right-0"
-            style={{ width: '100%' }}
-            animate={{
-              opacity: [0.2, 0.6, 0.2],
-              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-            }}
-            transition={{
-              duration: 3.5,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
+          <MdOutlineMouse className="w-5 h-5 text-[color:var(--cyan)]" />
         </motion.div>
 
         <div className="flex flex-col items-center relative">
-          <LuChevronDown className="w-5 h-5 text-[color:var(--cyan)] opacity-70" />
+          <HiOutlineArrowNarrowDown className="w-5 h-5 text-[color:var(--cyan)] opacity-70" />
 
           <motion.div
             className="absolute -inset-2 rounded-full bg-[color:var(--cyan)] opacity-[0.025] blur-md"
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.02, 0.04, 0.02],
-            }}
+            animate={{ scale: [1, 1.1, 1], opacity: [0.02, 0.04, 0.02] }}
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
