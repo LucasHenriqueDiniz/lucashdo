@@ -25,6 +25,7 @@ import ProjectBrowserTab from './ProjectBrowserTab';
 const ProjectsShowcase = () => {
   const [activeTabId, setActiveTabId] = useState<string>('');
   const [activeProjectIndex, setActiveProjectIndex] = useState<number>(0);
+  const [ShowMouseInfo, setShowMouseInfo] = useState<boolean>(true);
   const lang = useLanguageStore(state => state.lang);
 
   // Sort projects to get featured ones first
@@ -51,20 +52,6 @@ const ProjectsShowcase = () => {
     }
   }, []);
 
-  // Close modal when pressing escape
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        // Modal functionality removed
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    return () => {
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, []);
-
   // Handle tab change
   const handleTabChange = useCallback(
     (tabId: string | null) => {
@@ -75,6 +62,7 @@ const ProjectsShowcase = () => {
         return;
       }
 
+      setShowMouseInfo(false); // Hide mouse info on tab change
       // Encontre o índice do projeto para atualizar activeProjectIndex
       const newIndex = topFeaturedProjects.findIndex(project => project.id === tabId);
 
@@ -243,50 +231,53 @@ const ProjectsShowcase = () => {
               </div>
 
               {/* Browser with project showcase */}
-              <div className="relative">
+              <div className="relative h-full">
                 {/* Mouse click instructional icon */}
-                <motion.div
-                  className="floating-mouse-instruction"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1, duration: 0.3 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <div className="relative">
-                    <motion.div
-                      className="relative z-10"
-                      animate={{
-                        scale: [1, 0.9, 1],
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 2,
-                        ease: 'easeInOut',
-                      }}
-                    >
-                      <MousePointer size={16} className="text-blue-400" />
-                    </motion.div>
+                {ShowMouseInfo && (
+                  <motion.div
+                    className="floating-mouse-instruction"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 1, duration: 0.3 }}
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <div className="relative">
+                      <motion.div
+                        className="relative z-10"
+                        animate={{
+                          scale: [1, 0.9, 1],
+                        }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 2,
+                          ease: 'easeInOut',
+                        }}
+                      >
+                        <MousePointer size={16} className="text-blue-400" />
+                      </motion.div>
 
-                    {/* Simplified ripple effect */}
-                    <motion.div
-                      className="absolute inset-0 rounded-full bg-blue-400/20"
-                      animate={{
-                        scale: [1, 1.8],
-                        opacity: [0.5, 0],
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 2,
-                        ease: 'easeOut',
-                      }}
-                    />
-                  </div>
-                  <span className="text-sm text-slate-300 whitespace-nowrap hidden md:inline">
-                    Click tabs to explore
-                  </span>
-                </motion.div>
+                      {/* Simplified ripple effect */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full bg-blue-400/20"
+                        animate={{
+                          scale: [1, 1.8],
+                          opacity: [0.5, 0],
+                        }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 2,
+                          ease: 'easeOut',
+                        }}
+                      />
+                    </div>
+                    <span className="text-sm text-slate-300 whitespace-nowrap hidden md:inline">
+                      Click tabs to explore
+                    </span>
+                  </motion.div>
+                )}
                 <Browser
                   key="featured-browser" // Static key to prevent re-creation
+                  height="100%"
                   tabs={topFeaturedProjects.map(project => ({
                     id: project.id,
                     title: project.title,
@@ -306,7 +297,6 @@ const ProjectsShowcase = () => {
                   onTabChange={handleTabChange}
                   onExternalTabRequest={handleExternalTabRequest}
                   width="600px"
-                  height="410px"
                   showWindowControls={true}
                   hideNewTabButton={true}
                   isInteractive={false}
@@ -389,7 +379,7 @@ const ProjectsShowcase = () => {
 
                     {/* Description with animated fade */}
                     <motion.p
-                      className="text-slate-300 mb-6 leading-relaxed text-sm md:text-base"
+                      className="text-slate-300 mb-6 leading-relaxed text-sm md:text-base max-h-[165px] overflow-hidden text-ellipsis"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3, duration: 0.3 }}

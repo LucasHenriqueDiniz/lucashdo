@@ -95,7 +95,10 @@ const ExperienceCardSkillsIcon = memo(
               transition: { duration: 0.2 },
             }}
           >
-            {icon && React.createElement(icon)}
+            {icon &&
+              React.createElement(icon, {
+                className: 'w-6 h-6',
+              })}
           </motion.div>
         </TooltipTrigger>
         <TooltipContent>

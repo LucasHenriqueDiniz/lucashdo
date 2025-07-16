@@ -316,7 +316,11 @@ const Browser = function Browser({
       className={`browser-container ${isMaximized ? 'maximized' : ''} ${
         !isInteractive ? 'decorative-mode' : ''
       }`}
-      style={{ width: isMaximized ? '100%' : width, height: isMaximized ? '100vh' : height }}
+      style={{
+        width: '100%',
+        height: isMaximized ? '100vh' : height,
+        maxWidth: isMaximized ? '100%' : width,
+      }}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}

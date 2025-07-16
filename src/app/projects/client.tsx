@@ -367,7 +367,7 @@ export const ProjectsGrid = memo(
                 </div>
               </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
               {filteredProjects.slice(0, 50).map((project, index) => (
                 <ProjectCard
                   key={project.id}

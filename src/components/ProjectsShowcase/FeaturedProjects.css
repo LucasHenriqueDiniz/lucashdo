@@ -776,7 +776,7 @@
 
 .floating-mouse-instruction {
   position: absolute;
-  top: -28px;
+  top: 36px;
   right: 18px;
   display: flex;
   height: 32px;
@@ -794,13 +794,7 @@
 
 @media (max-width: 768px) {
   .floating-mouse-instruction {
-    right: 50% !important;
-    transform: translateX(50%) !important;
-    bottom: -25px !important;
-    top: auto !important;
-    font-size: 11px;
-    height: 28px;
-    padding: 6px 10px;
+    display: none;
   }
 }
 
