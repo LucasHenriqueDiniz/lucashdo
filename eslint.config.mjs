@@ -8,6 +8,10 @@ import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
+import importPlugin from 'eslint-plugin-import';
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import { dirname } from 'path';
 import * as tseslint from 'typescript-eslint';
 import { fileURLToPath } from 'url';
@@ -54,6 +58,10 @@ const eslintConfig = [
     // Register plugins in the new flat config format
     plugins: {
       prettier: prettierPlugin,
+      import: importPlugin,
+      'jsx-a11y': jsxA11yPlugin,
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
     },
 
     // Custom rules for the project
