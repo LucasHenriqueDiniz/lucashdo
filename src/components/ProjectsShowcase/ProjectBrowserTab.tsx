@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import type { MouseEvent } from 'react';
 import { ExternalLink, Github } from 'lucide-react';
 import { Project } from '@/constants/projects';
 
@@ -94,7 +95,7 @@ const ProjectBrowserTab = ({ project, onClick, isActive = false }: ProjectBrowse
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
+                onClick={(e: MouseEvent) => e.stopPropagation()}
                 className="browser-tab-button inline-flex items-center gap-2 px-5 py-2.5 bg-sidebar/80 hover:bg-sidebar rounded-lg text-sm font-medium backdrop-blur-sm border border-sidebar-border shadow-lg shadow-black/20"
                 whileHover={{
                   scale: 1.03,
@@ -123,7 +124,7 @@ const ProjectBrowserTab = ({ project, onClick, isActive = false }: ProjectBrowse
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
+                onClick={(e: MouseEvent) => e.stopPropagation()}
                 className="browser-tab-button inline-flex items-center gap-2 px-5 py-2.5 bg-accent/10 hover:bg-accent/20 rounded-lg text-sm font-medium backdrop-blur-sm border border-accent/20 text-accent-foreground shadow-lg shadow-accent/10"
                 whileHover={{
                   scale: 1.03,

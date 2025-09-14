@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import type { MouseEvent } from 'react';
 import { useState } from 'react';
 import { LuBriefcase, LuCode, LuStar, LuX } from 'react-icons/lu';
 import { useTranslations } from 'next-intl';
@@ -258,7 +259,7 @@ export default function SkillsGrid({ skills }: SkillsGridProps) {
               {selectedCategory === category && (
                 <motion.span
                   className="ml-1 text-white/80 hover:text-white cursor-pointer"
-                  onClick={e => {
+                  onClick={(e: MouseEvent) => {
                     e.stopPropagation();
                     handleCategoryChange(null);
                   }}

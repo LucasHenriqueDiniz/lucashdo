@@ -37,7 +37,7 @@ const fadeInFromRight: Variants = {
 
 const tagVariants: Variants = {
   initial: { opacity: 0, scale: 0.8 },
-  animate: index => ({
+  animate: (index: number) => ({
     opacity: 1,
     scale: 1,
     transition: {
