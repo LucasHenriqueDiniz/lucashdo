@@ -66,7 +66,7 @@ function SlidingNumberDisplay({
   height,
   transition,
 }: SlidingNumberDisplayProps) {
-  const y = useTransform(motionValue, latest => {
+  const y = useTransform(motionValue, (latest: number) => {
     if (!height) return 0;
     const currentNumber = latest % 10;
     const offset = (10 + number - currentNumber) % 10;
