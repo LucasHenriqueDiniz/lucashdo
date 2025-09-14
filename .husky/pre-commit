@@ -1,3 +1,4 @@
-# Run lint-staged to format code and run linters
-# Usando cmd.exe para garantir compatibilidade com Windows
-cmd.exe /c "npx lint-staged"
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx lint-staged
