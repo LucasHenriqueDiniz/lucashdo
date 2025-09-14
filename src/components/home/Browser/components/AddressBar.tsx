@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, RotateCcw, Search, X, Home } from 'lucide-react';
 import { BrowserTab } from '../types/BrowserTab';
 import './AddressBar.css';
@@ -27,6 +28,7 @@ const AddressBar: React.FC<AddressBarProps> = ({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations('Browser');
 
   // Filtrar tabs baseado na pesquisa
   const filteredTabs = availableTabs.filter(availableTab =>
@@ -97,10 +99,10 @@ const AddressBar: React.FC<AddressBarProps> = ({
       <div className="nav-buttons">
         {isInteractive && (
           <>
-            <button className="nav-btn" disabled aria-label="Voltar" title="Voltar">
+            <button className="nav-btn" disabled aria-label={t('back')} title={t('back')}>
               <ChevronLeft size={16} />
             </button>
-            <button className="nav-btn" disabled aria-label="Avançar" title="Avançar">
+            <button className="nav-btn" disabled aria-label={t('forward')} title={t('forward')}>
               <ChevronRight size={16} />
             </button>
           </>
@@ -108,8 +110,8 @@ const AddressBar: React.FC<AddressBarProps> = ({
         <button
           className={`nav-btn refresh-btn ${isRefreshing ? 'refreshing' : ''}`}
           onClick={handleRefresh}
-          aria-label="Recarregar"
-          title="Recarregar"
+          aria-label={t('reload')}
+          title={t('reload')}
         >
           <RotateCcw size={16} />
         </button>
@@ -118,8 +120,8 @@ const AddressBar: React.FC<AddressBarProps> = ({
             className="nav-btn home-btn"
             onClick={handleHomeClick}
             disabled={tab?.type === 'home' || !tab}
-            aria-label="Ir para Home"
-            title={tab?.type === 'home' ? 'Já está na Home' : 'Ir para Home'}
+            aria-label={t('goHome')}
+            title={tab?.type === 'home' ? t('alreadyHome') : t('goHome')}
           >
             <Home size={16} />
           </button>
@@ -150,14 +152,14 @@ const AddressBar: React.FC<AddressBarProps> = ({
               className="search-input"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Pesquisar projetos..."
+              placeholder={t('searchProjects')}
               autoComplete="off"
             />
             {searchQuery && (
               <button
                 className="clear-search-btn"
                 onClick={() => setSearchQuery('')}
-                aria-label="Limpar pesquisa"
+                aria-label={t('clearSearch')}
               >
                 <X size={14} />
               </button>
@@ -165,8 +167,8 @@ const AddressBar: React.FC<AddressBarProps> = ({
           </div>
         ) : (
           <div className="url-display" onClick={isInteractive ? handleUrlClick : undefined}>
-            <span className="url-text">{tab?.url || 'loading...'}</span>
-            {isInteractive && <span className="url-hint">Clique para pesquisar</span>}
+            <span className="url-text">{tab?.url || t('loading')}</span>
+            {isInteractive && <span className="url-hint">{t('clickToSearch')}</span>}
           </div>
         )}
       </div>
@@ -203,7 +205,7 @@ const AddressBar: React.FC<AddressBarProps> = ({
           ) : (
             <div className="no-results">
               <Search size={20} />
-              <span>Nenhum projeto encontrado</span>
+              <span>{t('noProjectsFound')}</span>
             </div>
           )}
         </div>

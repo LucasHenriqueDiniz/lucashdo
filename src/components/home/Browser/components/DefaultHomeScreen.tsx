@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { BrowserTab } from '../types/BrowserTab';
 import './DefaultHomeScreen.css';
 
@@ -9,6 +10,7 @@ export interface DefaultHomeScreenProps {
 }
 
 const DefaultHomeScreen: React.FC<DefaultHomeScreenProps> = ({ tabs, onTabClick }) => {
+  const t = useTranslations('Browser');
   const handleTabClick = React.useCallback(
     (tabId: string) => {
       onTabClick(tabId);
@@ -18,7 +20,7 @@ const DefaultHomeScreen: React.FC<DefaultHomeScreenProps> = ({ tabs, onTabClick 
 
   return (
     <div className="browser-showcase">
-      <h2 className="browser-showcase-title">Projetos Disponíveis</h2>
+      <h2 className="browser-showcase-title">{t('availableProjects')}</h2>
       <div className="browser-showcase-grid">
         {tabs.map((tab: BrowserTab) => (
           <div
@@ -33,7 +35,7 @@ const DefaultHomeScreen: React.FC<DefaultHomeScreenProps> = ({ tabs, onTabClick 
                 handleTabClick(tab.id);
               }
             }}
-            aria-label={`Abrir ${tab.title}`}
+            aria-label={t('openTab', { title: tab.title })}
           >
             <div className="browser-showcase-card">
               <div className="browser-showcase-icon">
@@ -52,7 +54,7 @@ const DefaultHomeScreen: React.FC<DefaultHomeScreenProps> = ({ tabs, onTabClick 
               <div className="browser-showcase-content">
                 <h3 className="browser-showcase-title">{tab.title}</h3>
                 <div className="browser-showcase-url">{tab.url}</div>
-                <div className="browser-showcase-action">Visitar →</div>
+                <div className="browser-showcase-action">{t('visit')}</div>
               </div>
             </div>
           </div>

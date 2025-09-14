@@ -328,5 +328,23 @@
       "total": "Total",
       "favorite": "Favorito"
     }
+  },
+  "Browser": {
+    "newTab": "Nova aba",
+    "unsavedChanges": "Mudanças não salvas",
+    "closeTab": "Fechar aba {title}",
+    "openTab": "Abrir {title}",
+    "visit": "Visitar \u2192",
+    "availableProjects": "Projetos Disponíveis",
+    "back": "Voltar",
+    "forward": "Avançar",
+    "reload": "Recarregar",
+    "goHome": "Ir para Home",
+    "alreadyHome": "Já está na Home",
+    "searchProjects": "Pesquisar projetos...",
+    "clearSearch": "Limpar pesquisa",
+    "loading": "carregando...",
+    "clickToSearch": "Clique para pesquisar",
+    "noProjectsFound": "Nenhum projeto encontrado"
   }
 }

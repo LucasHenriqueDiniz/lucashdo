@@ -334,6 +334,24 @@
       "favorite": "Favorite"
     }
   },
+  "Browser": {
+    "newTab": "New tab",
+    "unsavedChanges": "Unsaved changes",
+    "closeTab": "Close tab {title}",
+    "openTab": "Open {title}",
+    "visit": "Visit \u2192",
+    "availableProjects": "Available Projects",
+    "back": "Back",
+    "forward": "Forward",
+    "reload": "Reload",
+    "goHome": "Go Home",
+    "alreadyHome": "Already on Home",
+    "searchProjects": "Search projects...",
+    "clearSearch": "Clear search",
+    "loading": "loading...",
+    "clickToSearch": "Click to search",
+    "noProjectsFound": "No projects found"
+  },
   "Timeline": {
     "subTitle": "A timeline of my journey",
     "titleWhitePart": "My",

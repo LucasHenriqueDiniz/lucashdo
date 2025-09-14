@@ -1,6 +1,7 @@
 import React from 'react';
 import { HouseIcon } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { BrowserTab } from '../types/BrowserTab';
 import './TabPreviewTooltip.css';
 
@@ -13,6 +14,7 @@ export interface TabPreviewTooltipProps {
 
 const TabPreviewTooltip = React.memo<TabPreviewTooltipProps>(
   ({ tab, open, reference, placement = 'top' }) => {
+    const t = useTranslations('Browser');
     const [position, setPosition] = React.useState({ x: 0, y: 0 });
     const [isVisible, setIsVisible] = React.useState(false);
 
@@ -84,7 +86,7 @@ const TabPreviewTooltip = React.memo<TabPreviewTooltipProps>(
             <div className="tab-preview-title">{tab.title}</div>
             <div className="tab-preview-url">{tab.url}</div>
             {tab.hasUnsavedChanges && (
-              <div className="tab-preview-unsaved">Mudanças não salvas</div>
+              <div className="tab-preview-unsaved">{t('unsavedChanges')}</div>
             )}
           </div>
           <div className="tab-preview-image">

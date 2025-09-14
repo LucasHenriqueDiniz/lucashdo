@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { BrowserTab } from '../types/BrowserTab';
 import './Tab.css';
 
@@ -31,6 +32,7 @@ const Tab = React.memo(
       },
       ref
     ) => {
+      const t = useTranslations('Browser');
       const handleClick = React.useCallback(() => {
         if (!tab.isDisabled) {
           onClick(tabIndex);
@@ -89,7 +91,7 @@ const Tab = React.memo(
           <div className="tab-title">
             {tab.title}
             {tab.hasUnsavedChanges && (
-              <span className="tab-unsaved-indicator" title="Mudanças não salvas">
+              <span className="tab-unsaved-indicator" title={t('unsavedChanges')}>
                 •
               </span>
             )}
@@ -99,8 +101,8 @@ const Tab = React.memo(
             <button
               className="tab-close-btn"
               onClick={handleClose}
-              aria-label={`Fechar aba ${tab.title}`}
-              title={`Fechar aba ${tab.title}`}
+              aria-label={t('closeTab', { title: tab.title })}
+              title={t('closeTab', { title: tab.title })}
             >
               &times;
             </button>
