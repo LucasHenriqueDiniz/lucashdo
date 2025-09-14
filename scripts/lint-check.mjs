@@ -26,7 +26,7 @@ function runLintCheck() {
   console.log(`Running lint check at ${new Date().toLocaleString()}...`);
 
   // Execute ESLint
-  exec('npm run lint', (err, stdout, stderr) => {
+  exec('pnpm lint', (err, stdout, stderr) => {
     const output = stdout || stderr;
 
     // Save the output to a file
