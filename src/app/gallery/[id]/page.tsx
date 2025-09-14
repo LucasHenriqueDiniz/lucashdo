@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { galleryItems } from '@/constants/gallery';
-import GalleryItemClient from '@/app/gallery/[id]/client';
+
+const GalleryItemClient = dynamic(() => import('./client'));
 
 interface PageProps {
   params: Promise<{ id: string }>;

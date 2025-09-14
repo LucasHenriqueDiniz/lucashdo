@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { projects } from '@/constants';
-import ProjectDetailClient from './client';
+
+const ProjectDetailClient = dynamic(() => import('./client'));
 
 export async function generateStaticParams() {
   return projects.map(p => ({

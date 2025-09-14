@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
-import GalleryClient from '@/app/gallery/client';
+import dynamic from 'next/dynamic';
+
+const GalleryClient = dynamic(() => import('./client'));
 
 export const metadata: Metadata = {
   title: 'Galeria | Lucas Hdo - Desenvolvedor Full Stack',

@@ -1,13 +1,15 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata, Viewport } from 'next';
+import dynamic from 'next/dynamic';
 import { Inter, Roboto_Mono } from 'next/font/google';
 import { IntlProviderClient } from '@/lib/i18n/IntlProviderClient';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
 import './globals.css';
 import { logo } from '../../public';
+
+const Header = dynamic(() => import('@/components/layout/Header'));
+const Footer = dynamic(() => import('@/components/layout/Footer'));
 
 const inter = Inter({
   subsets: ['latin'],
