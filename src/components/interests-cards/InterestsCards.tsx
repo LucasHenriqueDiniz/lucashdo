@@ -543,7 +543,9 @@ const InterestsCards = () => {
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     {lyftaStats?.lastWorkout?.workout_perform_date
-                      ? new Date(lyftaStats.lastWorkout.workout_perform_date).toLocaleDateString()
+                      ? new Date(
+                          lyftaStats.lastWorkout.workout_perform_date
+                        ).toLocaleDateString('en-US', { timeZone: 'UTC' })
                       : '-'}
                   </p>
                 </div>
