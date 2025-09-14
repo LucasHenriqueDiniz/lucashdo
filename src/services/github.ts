@@ -11,14 +11,18 @@ import { cache } from 'react';
  * @returns Number of stargazers
  */
 export const getRepoStars = cache(async (username: string, repo: string): Promise<number> => {
-  const response = await fetch(`https://api.github.com/repos/${username}/${repo}`, {
-    next: { revalidate: 3600 },
-  });
+  try {
+    const response = await fetch(`https://api.github.com/repos/${username}/${repo}`, {
+      next: { revalidate: 3600 },
+    });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch repository stars');
+    if (!response.ok) {
+      return 0;
+    }
+
+    const data = await response.json();
+    return data.stargazers_count ?? 0;
+  } catch {
+    return 0;
   }
-
-  const data = await response.json();
-  return data.stargazers_count ?? 0;
 });

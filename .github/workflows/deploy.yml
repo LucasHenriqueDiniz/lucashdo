@@ -13,13 +13,17 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.5.2
+          run_install: false
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Instalar PNPM
-        run: npm install -g pnpm
+          cache: 'pnpm'
 
       - name: Instalar dependências e buildar standalone
         run: |
