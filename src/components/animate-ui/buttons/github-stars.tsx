@@ -40,6 +40,7 @@ function formatNumber(num: number, formatted: boolean): FormatNumberResult {
 type GitHubStarsButtonProps = HTMLMotionProps<'a'> & {
   username: string;
   repo: string;
+  stars: number;
   transition?: SpringOptions;
   formatted?: boolean;
   inView?: boolean;
@@ -51,6 +52,7 @@ function GitHubStarsButton({
   ref,
   username,
   repo,
+  stars: starsCount,
   transition = { stiffness: 90, damping: 50 },
   formatted = false,
   inView = false,
@@ -64,24 +66,10 @@ function GitHubStarsButton({
   const motionNumberRef = React.useRef(0);
   const isCompletedRef = React.useRef(false);
   const [, forceRender] = React.useReducer(x => x + 1, 0);
-  const [stars, setStars] = React.useState(0);
   const [isCompleted, setIsCompleted] = React.useState(false);
   const [displayParticles, setDisplayParticles] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
 
   const repoUrl = React.useMemo(() => `https://github.com/${username}/${repo}`, [username, repo]);
-
-  React.useEffect(() => {
-    fetch(`https://api.github.com/repos/${username}/${repo}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data && typeof data.stargazers_count === 'number') {
-          setStars(data.stargazers_count);
-        }
-      })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
-  }, [username, repo]);
 
   const handleDisplayParticles = React.useCallback(() => {
     setDisplayParticles(true);
@@ -104,22 +92,23 @@ function GitHubStarsButton({
         motionNumberRef.current = newValue;
         forceRender();
       }
-      if (stars !== 0 && newValue >= stars && !isCompletedRef.current) {
+      if (starsCount !== 0 && newValue >= starsCount && !isCompletedRef.current) {
         isCompletedRef.current = true;
         setIsCompleted(true);
         handleDisplayParticles();
       }
     });
     return () => unsubscribe();
-  }, [springVal, stars, handleDisplayParticles]);
+  }, [springVal, starsCount, handleDisplayParticles]);
 
   React.useEffect(() => {
-    if (stars > 0 && isComponentInView) motionVal.set(stars);
-  }, [motionVal, stars, isComponentInView]);
+    if (starsCount > 0 && isComponentInView) motionVal.set(starsCount);
+  }, [motionVal, starsCount, isComponentInView]);
 
-  const fillPercentage = Math.min(100, (motionNumberRef.current / stars) * 100);
+  const fillPercentage =
+    starsCount > 0 ? Math.min(100, (motionNumberRef.current / starsCount) * 100) : 0;
   const formattedResult = formatNumber(motionNumberRef.current, formatted);
-  const ghostFormattedNumber = formatNumber(stars, formatted);
+  const ghostFormattedNumber = formatNumber(starsCount, formatted);
 
   const renderNumberSegments = (segments: string[], unit: string, isGhost: boolean) => (
     <span
@@ -145,8 +134,6 @@ function GitHubStarsButton({
     },
     [handleDisplayParticles, repoUrl]
   );
-
-  if (isLoading) return null;
 
   return (
     <motion.a
