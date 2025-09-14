@@ -1,3 +1,5 @@
+'use server';
+
 import { LastFmUser, LastFmTrack, LastFmArtist } from '@/types/lastfm.types';
 
 // Last.fm API service
