@@ -10,7 +10,6 @@ import Avatar from 'boring-avatars';
 import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GUESTBOOK_EMOJIS } from '@/constants/guestbookEmojis';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { useGuestbookStore } from '@/store/guestbookStore';
 import { GuestbookEntry } from '@/types/guestbook.types';
 import CarouselGuestbook from './CarouselGuestbook';
@@ -35,7 +34,6 @@ const useDebounce = <T,>(value: T, delay: number): T => {
 
 const GuestBook: React.FC = () => {
   const t = useTranslations('ModernGuestBook');
-  const lang = useLanguageStore(state => state.lang);
   const { entries, isLoading, error, fetchEntries, addEntry } = useGuestbookStore();
   const [formData, setFormData] = useState({
     name: '',
@@ -292,9 +290,9 @@ const GuestBook: React.FC = () => {
       <div className="relative z-10">
         <div className="flex justify-center mb-6 w-full">
           <HomeSectionTitle
-            subTitle={lang === 'pt' ? 'Deixe sua marca aqui!' : 'Leave your mark here!'}
-            titleWhitePart={lang === 'pt' ? 'Livro de' : 'Guest'}
-            titleBluePart={lang === 'pt' ? 'Visitas' : 'Book'}
+            subTitle={t('subtitle')}
+            titleWhitePart={t('titleWhitePart')}
+            titleBluePart={t('titleBluePart')}
             icon={
               <motion.div
                 key={1}

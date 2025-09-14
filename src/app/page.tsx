@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import ExpGraph from '@/components/home/ExpGraph';
 import GuestBook from '@/components/home/GuestBook';
 import Hero from '@/components/home/Hero';
@@ -63,7 +64,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslations('Home');
   return (
     <>
       <PersonStructuredData
@@ -89,24 +91,32 @@ export default function Home() {
       <WebsiteStructuredData />
       <OrganizationStructuredData />
 
-      <main className="min-h-screen w-full flex flex-col items-center mt-[--navbar-height]">
+      <main className="min-h-screen w-full flex flex-col items-center mt-[--navbar-height] px-4">
         {/* HERO */}
         <Hero />
 
-        {/* Hero Browser */}
-        <HeroBrowser />
+        {/* Desktop-only sections */}
+        <div className="hidden md:flex flex-col items-center w-full">
+          {/* Hero Browser */}
+          <HeroBrowser />
 
-        {/* EXPERIENCE GRAPH */}
-        <ExpGraph />
+          {/* EXPERIENCE GRAPH */}
+          <ExpGraph />
 
-        {/* TIMELINE */}
-        <Timeline />
+          {/* TIMELINE */}
+          <Timeline />
 
-        {/* PROJECTS SHOWCASE */}
-        <ProjectsShowcase />
+          {/* PROJECTS SHOWCASE */}
+          <ProjectsShowcase />
 
-        {/* GUESTBOOK */}
-        <GuestBook />
+          {/* GUESTBOOK */}
+          <GuestBook />
+        </div>
+
+        {/* Mobile placeholder */}
+        <div className="md:hidden w-full max-w-4xl mx-auto my-12 text-center text-muted-foreground">
+          {t('mobilePlaceholder')}
+        </div>
       </main>
     </>
   );

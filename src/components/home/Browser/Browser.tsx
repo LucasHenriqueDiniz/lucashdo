@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import React, { ReactNode, useCallback, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PlusIcon } from 'lucide-react';
-import React, { ReactNode, useCallback, useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { Skeleton } from '@/components/ui/skeleton';
 import './Browser.css';
 import {
@@ -102,6 +103,7 @@ const Browser = function Browser({
   externalActiveTabId,
 }: BrowserProps): React.ReactElement {
   // Browser state
+  const t = useTranslations('Browser');
   const [isMaximized, setIsMaximized] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
@@ -362,8 +364,8 @@ const Browser = function Browser({
             <button
               className="new-tab-btn"
               onClick={handleNewTabClick}
-              aria-label="Nova aba"
-              title="Nova aba"
+              aria-label={t('newTab')}
+              title={t('newTab')}
             >
               <PlusIcon size={16} />
             </button>

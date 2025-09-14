@@ -125,6 +125,7 @@ const ExperienceCard = memo(
     isAcademic?: boolean;
     lang: 'pt' | 'en';
   }) => {
+    const t = useTranslations('Timeline');
     return (
       <div className="card-container mx-2 py-6 px-4 h-full rounded-xl transition-colors">
         <motion.div
@@ -157,13 +158,7 @@ const ExperienceCard = memo(
               },
             }}
           >
-            {isAcademic
-              ? lang === 'pt'
-                ? 'Educação'
-                : 'Education'
-              : lang === 'pt'
-                ? 'Trabalho'
-                : 'Job'}
+            {isAcademic ? t('education') : t('job')}
           </motion.div>
           <motion.div
             className="top-tag-pill institution"
@@ -487,9 +482,9 @@ const Timeline = () => {
   return (
     <section ref={sectionRef} className="w-full flex flex-col items-center justify-center">
       <HomeSectionTitle
-        subTitle="A timeline of my journey"
-        titleWhitePart="My"
-        titleBluePart="Career"
+        subTitle={t('subTitle')}
+        titleWhitePart={t('titleWhitePart')}
+        titleBluePart={t('titleBluePart')}
       />
       <div
         ref={timelineRef}

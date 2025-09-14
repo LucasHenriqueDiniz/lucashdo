@@ -2,9 +2,9 @@
 import { flip, arrow as floatingArrow, offset, shift, useFloating } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { SkillDataType, skillsData } from '@/constants';
 import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
 import './ExpGraph.css';
 
 // Simplified skill icon component for the grid
@@ -239,7 +239,7 @@ const ExpGraph = () => {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
   const [currentSkillIndex, setCurrentSkillIndex] = useState(0);
   const [showAllSkills, setShowAllSkills] = useState(false);
-  const lang = useLanguageStore(state => state.lang);
+  const t = useTranslations('ExpGraph');
 
   // Sort skills by order for display
   const orderedSkills = [...skillsData].sort((a, b) => (a.order || 999) - (b.order || 999));
@@ -356,12 +356,8 @@ const ExpGraph = () => {
                   >
                     <span>
                       {showAllSkills
-                        ? lang === 'pt'
-                          ? 'Mostrar Menos'
-                          : 'Show Less'
-                        : lang === 'pt'
-                          ? `Mostrar Todos ${orderedSkills.length} Skills`
-                          : `Show All ${orderedSkills.length} Skills`}
+                        ? t('showLess')
+                        : t('showAll', { total: orderedSkills.length })}
                     </span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -388,22 +384,18 @@ const ExpGraph = () => {
                   className="w-3 h-3 rounded"
                   style={{ backgroundColor: 'var(--primary)' }}
                 ></div>
-                <span className="text-xs text-gray-400">
-                  {lang === 'pt' ? 'Trabalhando' : 'Working'}
-                </span>
+                <span className="text-xs text-gray-400">{t('legend.working')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div
                   className="w-3 h-3 rounded"
                   style={{ backgroundColor: 'var(--popover)' }}
                 ></div>
-                <span className="text-xs text-gray-400">{lang === 'pt' ? 'Total' : 'Total'}</span>
+                <span className="text-xs text-gray-400">{t('legend.total')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 rounded" style={{ backgroundColor: 'var(--cyan)' }}></div>
-                <span className="text-xs text-gray-400">
-                  {lang === 'pt' ? 'Favorito' : 'Favorite'}
-                </span>
+                <span className="text-xs text-gray-400">{t('legend.favorite')}</span>
               </div>
             </div>
           </div>
@@ -412,9 +404,9 @@ const ExpGraph = () => {
             {/* Single large background icon */}
             <div className="relative z-10">
               <HomeSectionTitle
-                subTitle={lang === 'pt' ? 'Onde sou bom' : 'Where I excel'}
-                titleWhitePart={lang === 'pt' ? 'Minhas' : 'My'}
-                titleBluePart={lang === 'pt' ? 'Skills' : 'Skills'}
+                subTitle={t('subTitle')}
+                titleWhitePart={t('titleWhitePart')}
+                titleBluePart={t('titleBluePart')}
                 icon={
                   <motion.div
                     key={currentSkillIndex}

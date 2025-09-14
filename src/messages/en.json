@@ -16,6 +16,13 @@
     "projectsTitle": "Featured Projects",
     "makeContact": "Get in touch"
   },
+  "Language": {
+    "english": "English",
+    "portuguese": "Portuguese"
+  },
+  "Hero": {
+    "developerPrefix": "A developer"
+  },
   "Home": {
     "title": "Hello, I'm Lucas",
     "subtitle": "Developer & Designer",
@@ -25,7 +32,10 @@
     "latestPosts": "Latest Posts",
     "viewAll": "View All",
     "viewProject": "View Project",
-    "readMore": "Read More"
+    "readMore": "Read More",
+    "greeting": "Hello, I'm",
+    "browseProjects": "Browse Projects",
+    "mobilePlaceholder": "More sections coming soon to mobile."
   },
   "About": {
     "title": "About Me",
@@ -264,6 +274,8 @@
   "ModernGuestBook": {
     "title": "Guest Book",
     "subtitle": "Leave your mark here! ✨",
+    "titleWhitePart": "Guest",
+    "titleBluePart": "Book",
     "rulesTitle": "Guestbook Rules:",
     "rule1": "• Maximum 3 posts every 15 minutes",
     "rule2": "• 2 minutes interval between posts",
@@ -302,7 +314,50 @@
     "messageTooShortHint": "Minimum {min} characters (missing {current})",
     "emojiRules": "Choose an emoji that represents your mood or personality!"
   },
+  "FeaturedProjects": {
+    "subTitle": "Check out some of my featured projects",
+    "titleWhitePart": "Projects",
+    "titleBluePart": "Featured",
+    "viewCode": "View Code",
+    "liveDemo": "Live Demo",
+    "viewAllProjects": "View all projects"
+  },
+  "ExpGraph": {
+    "subTitle": "Where I excel",
+    "titleWhitePart": "My",
+    "titleBluePart": "Skills",
+    "showLess": "Show Less",
+    "showAll": "Show All {total} Skills",
+    "legend": {
+      "working": "Working",
+      "total": "Total",
+      "favorite": "Favorite"
+    }
+  },
+  "Browser": {
+    "newTab": "New tab",
+    "unsavedChanges": "Unsaved changes",
+    "closeTab": "Close tab {title}",
+    "openTab": "Open {title}",
+    "visit": "Visit \u2192",
+    "availableProjects": "Available Projects",
+    "back": "Back",
+    "forward": "Forward",
+    "reload": "Reload",
+    "goHome": "Go Home",
+    "alreadyHome": "Already on Home",
+    "searchProjects": "Search projects...",
+    "clearSearch": "Clear search",
+    "loading": "loading...",
+    "clickToSearch": "Click to search",
+    "noProjectsFound": "No projects found"
+  },
   "Timeline": {
+    "subTitle": "A timeline of my journey",
+    "titleWhitePart": "My",
+    "titleBluePart": "Career",
+    "education": "Education",
+    "job": "Job",
     "join_timeline": "Want to be the next company in my timeline?",
     "click_here": "Click here to get in touch"
   }
