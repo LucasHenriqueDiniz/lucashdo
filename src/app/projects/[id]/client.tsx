@@ -56,9 +56,10 @@ const tagVariants: Variants = {
 
 interface ProjectDetailProps {
   project: Project;
+  stars: number;
 }
 
-export const ProjectDetail = ({ project }: ProjectDetailProps) => {
+export const ProjectDetail = ({ project, stars }: ProjectDetailProps) => {
   const [imageLoading, setImageLoading] = useState(true);
   const t = useTranslations('Projects');
   const locale = useLanguageStore(state => state.lang);
@@ -179,6 +180,7 @@ export const ProjectDetail = ({ project }: ProjectDetailProps) => {
             <GitHubStarsButton
               username={project.repoUrl.split('/')[3] || 'LucasHenriqueDiniz'}
               repo={project.repoUrl.split('/')[4] || 'lucashdo'}
+              stars={stars}
             />
           </motion.div>
         </div>
@@ -268,10 +270,16 @@ export const ProjectDetail = ({ project }: ProjectDetailProps) => {
 };
 
 // Main component that wraps ProjectDetail with AnimatedProjectsLayout
-export default function ProjectDetailClient({ project }: { project: Project }) {
+export default function ProjectDetailClient({
+  project,
+  stars,
+}: {
+  project: Project;
+  stars: number;
+}) {
   return (
     <AnimatedProjectsLayout>
-      <ProjectDetail project={project} />
+      <ProjectDetail project={project} stars={stars} />
     </AnimatedProjectsLayout>
   );
 }

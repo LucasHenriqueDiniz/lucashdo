@@ -47,6 +47,7 @@ Você pode começar a editar o site modificando os arquivos em `src/app/`. A pá
 - `npm run lint` - Executa o linter para verificar problemas
 - `npm run lint:fix` - Corrige automaticamente problemas de linting
 - `npm run type-check` - Executa o verificador de tipos TypeScript
+- `pnpm lint-check` - Executa ESLint e Prettier, salvando o relatório em `lint-reports/`
 
 ## 📁 Estrutura do Projeto
 
