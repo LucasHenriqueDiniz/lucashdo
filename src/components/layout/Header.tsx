@@ -13,6 +13,14 @@ import {
   HiOutlineMail,
   HiMail,
 } from 'react-icons/hi';
+import { Menu } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '../language-switcher';
 import './header.css';
 import { logo } from '../../../public';
@@ -205,7 +213,10 @@ export default function Header() {
             </Link>
           </motion.div>
 
-          <nav className="flex-1 flex justify-center overflow-x-auto hide-scrollbar">
+          <nav
+            className="hidden md:flex flex-1 justify-center overflow-x-auto hide-scrollbar"
+            aria-label="Main"
+          >
             <ul className="flex gap-2 md:gap-4 lg:gap-6">
               <NavItem
                 href="/projects"
@@ -231,22 +242,70 @@ export default function Header() {
             </ul>
           </nav>
 
-          <motion.div
-            className="flex items-center gap-3 relative"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-          >
+          <div className="flex items-center gap-3">
             <motion.div
-              className="absolute -inset-2 rounded-lg opacity-0 hover:opacity-10"
-              style={{
-                background: 'radial-gradient(circle, var(--primary) 0%, transparent 70%)',
-                filter: 'blur(4px)',
-              }}
-              transition={{ duration: 0.3 }}
-            />
-            <LanguageSwitcher />
-          </motion.div>
+              className="hidden md:flex items-center gap-3 relative"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+            >
+              <motion.div
+                className="absolute -inset-2 rounded-lg opacity-0 hover:opacity-10"
+                style={{
+                  background: 'radial-gradient(circle, var(--primary) 0%, transparent 70%)',
+                  filter: 'blur(4px)',
+                }}
+                transition={{ duration: 0.3 }}
+              />
+              <LanguageSwitcher />
+            </motion.div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="md:hidden p-2 rounded-md hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label="Open menu"
+                >
+                  <Menu className="h-6 w-6" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 md:hidden">
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/projects"
+                    className="flex items-center gap-2"
+                    aria-current={activeSection === 'projects' ? 'page' : undefined}
+                  >
+                    <HiOutlineFolder className="icon" />
+                    {t('projects') || 'Projetos'}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/about"
+                    className="flex items-center gap-2"
+                    aria-current={activeSection === 'about' ? 'page' : undefined}
+                  >
+                    <HiOutlineUser className="icon" />
+                    {t('about') || 'Sobre'}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/contact"
+                    className="flex items-center gap-2"
+                    aria-current={activeSection === 'contact' ? 'page' : undefined}
+                  >
+                    <HiOutlineMail className="icon" />
+                    {t('contact') || 'Contato'}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5">
+                  <LanguageSwitcher />
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         <motion.div
@@ -294,7 +353,7 @@ function NavItem({ href, label, isActive = false, icon, activeIcon }: NavItemPro
 
   return (
     <li>
-      <Link href={href} passHref>
+      <Link href={href} passHref aria-current={isActive ? 'page' : undefined}>
         <motion.div
           className="header-nav-button"
           onMouseEnter={() => setIsHovering(true)}
