@@ -47,8 +47,8 @@ export interface LyftaStats {
   };
 }
 
-// Obtém as chaves de API do ambiente Next.js ou process.env
-const API_KEY = process.env.NEXT_PUBLIC_LYFTA_API_KEY || process.env.LYFTA_API_KEY || '';
+// Obtém a chave de API do ambiente
+const API_KEY = process.env.LYFTA_API_KEY || '';
 const BASE_URL = 'https://my.lyfta.app';
 
 /**
