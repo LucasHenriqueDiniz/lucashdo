@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { projects } from '@/constants';
+import { getRepoStars } from '@/services/github';
 
 const ProjectDetailClient = dynamic(() => import('./client'));
 
@@ -38,6 +39,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
   if (!project) {
     notFound();
   }
+  const [, , , owner = 'LucasHenriqueDiniz', repo = 'lucashdo'] = project.repoUrl.split('/');
+  const stars = await getRepoStars(owner, repo);
 
-  return <ProjectDetailClient project={project} />;
+  return <ProjectDetailClient project={project} stars={stars} />;
 }
