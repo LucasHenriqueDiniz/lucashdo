@@ -12,7 +12,8 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "type-check": "tsc --noEmit",
     "lint-check": "node scripts/lint-check.mjs",
-    "i18n:unused": "tsx scripts/check-i18n.ts"
+    "i18n:unused": "tsx scripts/check-i18n.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.13",
@@ -81,12 +82,11 @@
     "typescript-eslint": "^8.33.1"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
+    "*.{js,ts,tsx}": [
+      "eslint --max-warnings=0",
+      "sh -c \"tsc -p tsconfig.json --noEmit\""
     ],
-    "*.{json,md,css}": [
-      "prettier --write"
-    ]
+    "*.{md,json,yml,yaml,css,scss}": "prettier -w",
+    "package.json": "prettier -w"
   }
 }

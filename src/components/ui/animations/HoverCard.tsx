@@ -11,7 +11,7 @@ export default function HoverCard({ children, className = '' }: HoverCardProps) 
     <div
       className={cn(
         'transition-transform duration-200 hover:scale-[1.02] active:scale-95',
-        className,
+        className
       )}
     >
       {children}

@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { BsBookmarkFill } from 'react-icons/bs';
 import { MdFeaturedPlayList } from 'react-icons/md';
 import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { Project, projects } from '@/constants/projects';

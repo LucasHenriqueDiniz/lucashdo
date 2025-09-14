@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -22,50 +18,21 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@app/*": [
-        "./src/app/*"
-      ],
-      "@constants/*": [
-        "./src/constants/*"
-      ],
-      "@lib/*": [
-        "./src/lib/*"
-      ],
-      "@messages/*": [
-        "./src/messages/*"
-      ],
-      "@scripts/*": [
-        "./src/scripts/*"
-      ],
-      "@services/*": [
-        "./src/services/*"
-      ],
-      "@types/*": [
-        "./src/types/*"
-      ],
-      "framer-motion": [
-        "./src/types/framer-motion"
-      ]
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@app/*": ["./src/app/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@messages/*": ["./src/messages/*"],
+      "@scripts/*": ["./src/scripts/*"],
+      "@services/*": ["./src/services/*"],
+      "@types/*": ["./src/types/*"],
+      "framer-motion": ["./src/types/framer-motion"]
     },
-    "types": [
-      "react",
-      "react-dom",
-      "node"
-    ]
+    "types": ["react", "react-dom", "node"],
+    "allowJs": true,
+    "skipLibCheck": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "public/gallery/*"]
 }
