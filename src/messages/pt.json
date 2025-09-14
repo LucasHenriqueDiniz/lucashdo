@@ -16,6 +16,13 @@
     "projectsTitle": "Projetos em destaque",
     "makeContact": "Entrar em contato"
   },
+  "Language": {
+    "english": "Inglês",
+    "portuguese": "Português"
+  },
+  "Hero": {
+    "developerPrefix": "Um desenvolvedor"
+  },
   "Home": {
     "title": "Olá, sou Lucas",
     "subtitle": "Desenvolvedor & Designer",
@@ -25,7 +32,10 @@
     "latestPosts": "Posts Recentes",
     "viewAll": "Ver todos",
     "viewProject": "Ver Projeto",
-    "readMore": "Ler mais"
+    "readMore": "Ler mais",
+    "greeting": "Olá, eu sou",
+    "browseProjects": "Navegue pelos projetos",
+    "mobilePlaceholder": "Mais seções em breve na versão mobile."
   },
   "About": {
     "title": "Sobre Mim",
@@ -202,6 +212,11 @@
     "viewCode": "Ver Código"
   },
   "Timeline": {
+    "subTitle": "Linha do tempo da minha jornada",
+    "titleWhitePart": "Minha",
+    "titleBluePart": "Carreira",
+    "education": "Educação",
+    "job": "Trabalho",
     "join_timeline": "Quer ser a próxima empresa na minha timeline?",
     "click_here": "Clique aqui para entrar em contato"
   },
@@ -254,6 +269,8 @@
   "ModernGuestBook": {
     "title": "Livro de Visitas",
     "subtitle": "Deixe sua marca aqui! ✨",
+    "titleWhitePart": "Livro de",
+    "titleBluePart": "Visitas",
     "rulesTitle": "Regras do Guestbook:",
     "rule1": "• Máximo 3 posts a cada 15 minutos",
     "rule2": "• Intervalo de 2 minutos entre posts",
@@ -291,5 +308,25 @@
     "unexpectedError": "❌ Erro inesperado. Tente novamente mais tarde.",
     "messageTooShortHint": "Mínimo {min} caracteres (faltam {current})",
     "emojiRules": "Escolha um emoji que represente seu humor ou personalidade!"
+  },
+  "FeaturedProjects": {
+    "subTitle": "Veja alguns dos meus projetos em destaque",
+    "titleWhitePart": "Projetos em",
+    "titleBluePart": "Destaque",
+    "viewCode": "Ver Código",
+    "liveDemo": "Demo ao Vivo",
+    "viewAllProjects": "Ver todos os projetos"
+  },
+  "ExpGraph": {
+    "subTitle": "Onde sou bom",
+    "titleWhitePart": "Minhas",
+    "titleBluePart": "Skills",
+    "showLess": "Mostrar Menos",
+    "showAll": "Mostrar Todos {total} Skills",
+    "legend": {
+      "working": "Trabalhando",
+      "total": "Total",
+      "favorite": "Favorito"
+    }
   }
 }

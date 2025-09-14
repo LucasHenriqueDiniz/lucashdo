@@ -144,7 +144,7 @@ function HeroComponent() {
     >
       {/* AVISO DE CONSTRUÇÃO MELHORADO */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
-        <div className="px-4 py-2 rounded-full border border-[var(--primary)] text-[var(--primary)] text-sm flex items-center gap-2">
+        <div className="px-4 py-2 rounded-full border border-[var(--primary)] text-[var(--primary)] text-xs sm:text-sm flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />
           Website under construction!
         </div>
@@ -156,7 +156,7 @@ function HeroComponent() {
           id="tsparticles"
           particlesLoaded={particlesLoaded}
           options={networkPreset}
-          className="absolute inset-0 -z-10"
+          className="absolute inset-0 -z-10 hidden md:block"
         />
       )}
 
@@ -188,7 +188,7 @@ function HeroComponent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {lang === 'pt' ? 'Olá, eu sou ' : "Hello, I'm "}
+          {t('Home.greeting')}{' '}
           <span className="relative bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 bg-clip-text text-transparent font-extrabold">
             Lucas HDO
             <motion.div
@@ -270,7 +270,7 @@ function HeroComponent() {
 
       {/* "See more projects" indicator  */}
       <motion.div
-        className="absolute bottom-8 left-0 right-0 mx-auto w-fit flex flex-col items-center gap-2 cursor-pointer"
+        className="absolute bottom-8 left-0 right-0 mx-auto w-fit hidden md:flex flex-col items-center gap-2 cursor-pointer"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.5 }}
@@ -282,7 +282,7 @@ function HeroComponent() {
         whileTap={{ scale: 0.95 }}
       >
         <span className="text-sm font-medium text-muted-foreground">
-          {t('Home.viewProjects') || (lang === 'pt' ? 'Navegue pelos projetos' : 'Browse Projects')}
+          {t('Home.browseProjects')}
         </span>
 
         <motion.div

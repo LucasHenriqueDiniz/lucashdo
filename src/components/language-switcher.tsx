@@ -3,13 +3,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Languages } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useLanguageStore } from '@/lib/i18n/languageStore';
-
-// Configuração de idiomas
-const languages = {
-  pt: { name: 'Português' },
-  en: { name: 'English' },
-};
 
 type Locale = 'pt' | 'en';
 
@@ -18,6 +13,12 @@ export function LanguageSwitcher() {
   const setLang = useLanguageStore(state => state.setLang);
   const [isHovered, setIsHovered] = useState(false);
   const [previewLanguage, setPreviewLanguage] = useState<Locale | null>(null);
+  const t = useTranslations('Language');
+
+  const languageNames: Record<Locale, string> = {
+    pt: t('portuguese'),
+    en: t('english'),
+  };
 
   const handleLanguageChange = (newLanguage: Locale) => {
     setLang(newLanguage);
@@ -60,7 +61,7 @@ export function LanguageSwitcher() {
                 className="flex items-center"
               >
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {languages[previewLanguage].name}
+                  {languageNames[previewLanguage]}
                 </span>
               </motion.div>
             ) : (
@@ -73,7 +74,7 @@ export function LanguageSwitcher() {
                 className="flex items-center"
               >
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {languages[lang].name}
+                  {languageNames[lang]}
                 </span>
               </motion.div>
             )}

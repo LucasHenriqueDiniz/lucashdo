@@ -14,6 +14,7 @@ import {
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { MdFeaturedPlayList } from 'react-icons/md';
+import { useTranslations } from 'next-intl';
 import { useLanguageStore } from '@/lib/i18n/languageStore';
 import { Project, projects } from '@/constants/projects';
 import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
@@ -26,6 +27,7 @@ const ProjectsShowcase = () => {
   const [activeProjectIndex, setActiveProjectIndex] = useState<number>(0);
   const [ShowMouseInfo, setShowMouseInfo] = useState<boolean>(true);
   const lang = useLanguageStore(state => state.lang);
+  const t = useTranslations('FeaturedProjects');
 
   // Sort projects to get featured ones first
   const featuredProjects = projects.filter(project => project.featured);
@@ -120,13 +122,9 @@ const ProjectsShowcase = () => {
   return (
     <section className="w-full max-w-7xl mx-auto my-24 px-4 sm:px-6">
       <HomeSectionTitle
-        subTitle={
-          lang === 'pt'
-            ? 'Veja alguns dos meus projetos em destaque'
-            : 'Check out some of my featured projects'
-        }
-        titleWhitePart={lang === 'pt' ? 'Projetos em' : 'Projects'}
-        titleBluePart={lang === 'pt' ? 'Destaque' : 'Featured'}
+        subTitle={t('subTitle')}
+        titleWhitePart={t('titleWhitePart')}
+        titleBluePart={t('titleBluePart')}
         icon={
           <motion.div
             key={1}
@@ -403,7 +401,7 @@ const ProjectsShowcase = () => {
                           size={16}
                           className="transition-transform group-hover:-translate-y-0.5 group-hover:rotate-3"
                         />
-                        <span>View Code</span>
+                        <span>{t('viewCode')}</span>
                       </Link>
                       {activeProject.demoUrl && (
                         <Link
@@ -416,7 +414,7 @@ const ProjectsShowcase = () => {
                             size={16}
                             className="transition-transform group-hover:-translate-y-0.5 group-hover:rotate-3"
                           />
-                          <span>Live Demo</span>
+                          <span>{t('liveDemo')}</span>
                         </Link>
                       )}
                     </motion.div>
@@ -440,7 +438,7 @@ const ProjectsShowcase = () => {
             href="/projects"
             className="group relative overflow-hidden bg-gradient-to-r from-blue-600/90 to-blue-700/90 hover:from-blue-500/90 hover:to-blue-600/90 text-white font-medium py-3 px-7 rounded-lg shadow-md shadow-blue-900/20 hover:shadow-lg hover:shadow-blue-900/30 transition-all duration-300 flex items-center gap-3"
           >
-            <span className="z-10 relative">View all projects</span>
+            <span className="z-10 relative">{t('viewAllProjects')}</span>
             <motion.span
               className="inline-block z-10 relative"
               animate={{ x: [0, 2, 0] }}

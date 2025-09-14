@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { TranslatedField } from '@/types/experience.types';
 
 interface DeveloperCompletion {
@@ -13,6 +14,7 @@ interface AnimatedRoleProps {
 
 const AnimatedRole: React.FC<AnimatedRoleProps> = React.memo(({ lang }) => {
   const [roleIndex, setRoleIndex] = useState(0);
+  const t = useTranslations('Hero');
 
   const roles: DeveloperCompletion[] = [
     { text: { pt: 'front-end pleno', en: 'mid-level front-end developer' }, emoji: '💻' },
@@ -41,7 +43,7 @@ const AnimatedRole: React.FC<AnimatedRoleProps> = React.memo(({ lang }) => {
     return () => clearInterval(interval);
   }, [roles.length]);
 
-  const prefix = lang === 'pt' ? 'Um desenvolvedor' : 'A developer';
+  const prefix = t('developerPrefix');
   const currentRole = roles[roleIndex];
   const roleText = currentRole.text[lang];
 
