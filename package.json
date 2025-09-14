@@ -11,7 +11,8 @@
     "lint:fix": "next lint --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "type-check": "tsc --noEmit",
-    "lint-check": "node scripts/lint-check.mjs"
+    "lint-check": "node scripts/lint-check.mjs",
+    "i18n:unused": "tsx scripts/check-i18n.ts"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.13",
