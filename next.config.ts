@@ -47,13 +47,6 @@ const nextConfig: NextConfig = {
       process.env.NODE_ENV === 'production' ? 'https://www.lucashdo.com' : 'http://localhost:3000',
   },
 
-  // Expor variáveis de ambiente para o cliente
-  publicRuntimeConfig: {
-    NEXT_PUBLIC_LASTFM_USERNAME: process.env.LASTFM_USERNAME,
-    NEXT_PUBLIC_SUPABASE_URL: process.env.SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-  },
-
   // Security headers
   async headers() {
     return [

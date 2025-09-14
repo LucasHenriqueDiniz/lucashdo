@@ -6,7 +6,7 @@ import { Database } from './types';
 export async function createClient() {
   const cookieStore = await cookies();
 
-  // Usar as variáveis que já estão configuradas no .env.local (server-side only)
+  // Usar as variáveis que já estão configuradas no .env
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 

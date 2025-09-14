@@ -47,7 +47,7 @@ export interface LyftaStats {
   };
 }
 
-// Obtém a chave de API apenas do ambiente do servidor
+// Obtém a chave de API do ambiente
 const API_KEY = process.env.LYFTA_API_KEY || '';
 const BASE_URL = 'https://my.lyfta.app';
 

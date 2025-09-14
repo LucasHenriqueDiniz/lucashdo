@@ -56,7 +56,7 @@ export interface SteamStats {
   lastPlayed: number;
 }
 
-// Obtém as chaves de API apenas do ambiente do servidor
+// Obtém as chaves de API do ambiente
 const API_KEY = process.env.STEAM_API_KEY || '';
 const STEAM_ID = process.env.STEAM_ID || '';
 const BASE_URL = 'https://api.steampowered.com';
