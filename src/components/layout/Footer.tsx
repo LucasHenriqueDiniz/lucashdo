@@ -174,7 +174,7 @@ FooterLink.displayName = 'FooterLink';
 
 const Footer = memo(() => {
   const t = useTranslations('Footer');
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getUTCFullYear();
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);

@@ -337,7 +337,7 @@ const ProjectsShowcase = () => {
                       transition={{ delay: 0.1 }}
                     >
                       <Calendar size={14} />
-                      <span>Created {new Date().getFullYear()}</span>
+                      <span>Created {new Date().getUTCFullYear()}</span>
                     </motion.div>
 
                     {/* Title with animated underline */}
