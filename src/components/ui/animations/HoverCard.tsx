@@ -1,7 +1,5 @@
-'use client';
-
-import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 interface HoverCardProps {
   children: ReactNode;
@@ -10,17 +8,13 @@ interface HoverCardProps {
 
 export default function HoverCard({ children, className = '' }: HoverCardProps) {
   return (
-    <motion.div
-      className={className}
-      whileHover={{
-        scale: 1.02,
-        transition: { duration: 0.2 },
-      }}
-      whileTap={{
-        scale: 0.98,
-      }}
+    <div
+      className={cn(
+        'transition-transform duration-200 hover:scale-[1.02] active:scale-95',
+        className,
+      )}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
