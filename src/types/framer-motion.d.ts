@@ -1,7 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module 'framer-motion' {
-  export const motion: any;
-  export const AnimatePresence: any;
-  export interface Variants { [key: string]: any }
+  import type { FC, ReactNode } from 'react';
+
+  export const motion: Record<string, FC<any>>;
+  export const AnimatePresence: FC<{ children?: ReactNode; mode?: string }>;
+  export interface Variants {
+    [key: string]: any;
+  }
   export function useInView(...args: any[]): any;
   export function useScroll(...args: any[]): any;
   export function useTransform(...args: any[]): any;

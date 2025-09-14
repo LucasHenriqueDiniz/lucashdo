@@ -1,4 +1,4 @@
 declare module '@solana/wallet-standard-features' {
-  export interface SolanaSignInInput {}
-  export interface SolanaSignInOutput {}
+  export type SolanaSignInInput = Record<string, unknown>;
+  export type SolanaSignInOutput = Record<string, unknown>;
 }

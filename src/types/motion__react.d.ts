@@ -1,11 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module 'motion/react' {
-  export const motion: any;
-  export const AnimatePresence: any;
+  import type { FC, ReactNode } from 'react';
+
+  export const motion: Record<string, FC<any>>;
+  export const AnimatePresence: FC<{ children?: ReactNode; mode?: string }>;
+
   export interface HTMLMotionProps<T = any> {
     [key: string]: any;
   }
-  export interface SpringOptions { [key: string]: any }
-  export interface UseInViewOptions { [key: string]: any }
+  export interface SpringOptions {
+    [key: string]: any;
+  }
+  export interface UseInViewOptions {
+    [key: string]: any;
+  }
   export interface MotionValue<T = any> {
     set: (v: T) => void;
     [key: string]: any;
