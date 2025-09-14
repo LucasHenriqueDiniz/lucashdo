@@ -2,7 +2,6 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata, Viewport } from 'next';
 import dynamic from 'next/dynamic';
-import { Inter, Roboto_Mono } from 'next/font/google';
 import { IntlProviderClient } from '@/lib/i18n/IntlProviderClient';
 import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
 import './globals.css';
@@ -10,17 +9,6 @@ import { logo } from '../../public';
 
 const Header = dynamic(() => import('@/components/layout/Header'));
 const Footer = dynamic(() => import('@/components/layout/Footer'));
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-const robotoMono = Roboto_Mono({
-  subsets: ['latin'],
-  variable: '--font-roboto-mono',
-  display: 'swap',
-});
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -134,17 +122,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="icon" type="image/webp" href="/logo.webp" />
         <link rel="apple-touch-icon" href="/logo.webp" />
       </head>
-      <body className={`${inter.variable} ${robotoMono.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <IntlProviderClient>
           <TooltipProvider>
             <Header />
