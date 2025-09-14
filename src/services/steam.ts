@@ -1,5 +1,7 @@
 'use server';
 
+import logger from '@/lib/logger';
+
 export interface SteamGame {
   appid: string;
   name: string;
@@ -67,11 +69,11 @@ const BASE_URL = 'https://api.steampowered.com';
 export async function getSteamProfile(): Promise<SteamProfile | null> {
   try {
     if (!API_KEY || !STEAM_ID) {
-      console.error('Steam API key or Steam ID not found');
+      logger.error('Steam API key or Steam ID not found');
       return null;
     }
 
-    console.log('🔍 Fetching Steam profile...');
+    logger.debug('🔍 Fetching Steam profile...');
     const response = await fetch(
       `${BASE_URL}/ISteamUser/GetPlayerSummaries/v0002/?key=${API_KEY}&steamids=${STEAM_ID}`,
       { next: { revalidate: 3600 } } // Cache for 1 hour
@@ -84,7 +86,7 @@ export async function getSteamProfile(): Promise<SteamProfile | null> {
     const data = await response.json();
     return data.response?.players?.[0] || null;
   } catch (error) {
-    console.error('❌ Error fetching Steam profile:', error);
+    logger.error('❌ Error fetching Steam profile:', error);
     return null;
   }
 }
@@ -95,11 +97,11 @@ export async function getSteamProfile(): Promise<SteamProfile | null> {
 export async function getRecentGames(count = 5): Promise<SteamGame[]> {
   try {
     if (!API_KEY || !STEAM_ID) {
-      console.error('Steam API key or Steam ID not found');
+      logger.error('Steam API key or Steam ID not found');
       return [];
     }
 
-    console.log('🎮 Fetching recent games...');
+    logger.debug('🎮 Fetching recent games...');
     const response = await fetch(
       `${BASE_URL}/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${API_KEY}&steamid=${STEAM_ID}&count=${count}&format=json`,
       { next: { revalidate: 3600 } } // Cache for 1 hour
@@ -112,7 +114,7 @@ export async function getRecentGames(count = 5): Promise<SteamGame[]> {
     const data = await response.json();
     return data.response?.games || [];
   } catch (error) {
-    console.error('❌ Error fetching recent games:', error);
+    logger.error('❌ Error fetching recent games:', error);
     return [];
   }
 }
@@ -123,11 +125,11 @@ export async function getRecentGames(count = 5): Promise<SteamGame[]> {
 export async function getOwnedGames(): Promise<{ games: SteamGame[]; total: number }> {
   try {
     if (!API_KEY || !STEAM_ID) {
-      console.error('Steam API key or Steam ID not found');
+      logger.error('Steam API key or Steam ID not found');
       return { games: [], total: 0 };
     }
 
-    console.log('🎲 Fetching owned games...');
+    logger.debug('🎲 Fetching owned games...');
     const response = await fetch(
       `${BASE_URL}/IPlayerService/GetOwnedGames/v0001/?key=${API_KEY}&steamid=${STEAM_ID}&include_appinfo=true&include_played_free_games=true&format=json`,
       { next: { revalidate: 86400 } } // Cache for 24 hours
@@ -148,7 +150,7 @@ export async function getOwnedGames(): Promise<{ games: SteamGame[]; total: numb
       total: data.response?.game_count || 0,
     };
   } catch (error) {
-    console.error('❌ Error fetching owned games:', error);
+    logger.error('❌ Error fetching owned games:', error);
     return { games: [], total: 0 };
   }
 }
@@ -157,7 +159,7 @@ export async function getOwnedGames(): Promise<{ games: SteamGame[]; total: numb
  * Get aggregated Steam statistics
  */
 export async function getSteamStats(): Promise<SteamStats> {
-  console.log('📊 Getting Steam stats...');
+  logger.debug('📊 Getting Steam stats...');
 
   const [profile, recentGames, ownedGamesData] = await Promise.all([
     getSteamProfile(),

@@ -27,6 +27,7 @@ import { LyftaExercise } from '@/services/lyfta';
 import { LastFmArtist, LastFmImage, LastFmTrack } from '@/types/lastfm.types';
 import { SteamGame } from '@/services/steam';
 import { MusicalBar } from '@/components/MusicalBar';
+import logger from '@/lib/logger';
 import { vinylDisk } from '../../../public';
 import styles from './InterestsCards.module.css';
 
@@ -117,9 +118,9 @@ const InterestsCards = () => {
 
   // Debug logs para verificar se os dados estão sendo carregados
   useEffect(() => {
-    console.log('🎵 LastFM User:', lastfmUser);
-    console.log('🎮 Steam Stats:', steamStats);
-    console.log('💪 Lyfta Stats:', lyftaStats);
+    logger.debug('🎵 LastFM User:', lastfmUser);
+    logger.debug('🎮 Steam Stats:', steamStats);
+    logger.debug('💪 Lyfta Stats:', lyftaStats);
   }, [lastfmUser, steamStats, lyftaStats]);
 
   const cards = [
