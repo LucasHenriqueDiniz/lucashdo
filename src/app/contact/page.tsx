@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
-import ContactClient from './client';
+import dynamic from 'next/dynamic';
+
+const ContactClient = dynamic(() => import('./client'));
 
 export const metadata: Metadata = {
   title: 'Contato | Lucas Hdo - Desenvolvedor Full Stack',

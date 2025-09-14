@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { ProjectStructuredData } from '@/components/SEO/StructuredData';
 import { projects } from '@/constants';
-import ProjectsClient from './projects-client';
+
+const ProjectsClient = dynamic(() => import('./projects-client'));
 
 export const metadata: Metadata = {
   title: 'Projetos | Lucas Hdo - Desenvolvedor Full Stack',
