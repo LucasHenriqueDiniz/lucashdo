@@ -139,7 +139,7 @@ function HeroComponent() {
 
   return (
     <section
-      className="min-h-[60vh] w-full max-w-4xl mx-auto px-4 relative flex flex-col justify-center items-center"
+      className="hidden md:flex min-h-[60vh] w-full max-w-4xl mx-auto px-4 relative flex-col justify-center items-center"
       style={{ justifyContent: 'center' }}
     >
       {/* AVISO DE CONSTRUÇÃO MELHORADO */}

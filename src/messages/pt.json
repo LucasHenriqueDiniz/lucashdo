@@ -35,7 +35,24 @@
     "readMore": "Ler mais",
     "greeting": "Olá, eu sou",
     "browseProjects": "Navegue pelos projetos",
-    "mobilePlaceholder": "Mais seções em breve na versão mobile."
+    "mobilePlaceholder": "Mais seções em breve na versão mobile.",
+    "mobile": {
+      "availability": "Disponível para novos projetos",
+      "subtitle": "Construindo produtos digitais completos com foco em performance, design e acessibilidade.",
+      "description": "Combino desenvolvimento full-stack, design estratégico e animações para criar experiências envolventes em qualquer dispositivo.",
+      "stats": {
+        "experience": {
+          "value": "3+",
+          "label": "Anos de experiência",
+          "caption": "Projetos web, mobile e desktop que unem performance e estética."
+        },
+        "projects": {
+          "value": "20+",
+          "label": "Projetos entregues",
+          "caption": "Resultados reais para empresas, comunidades e iniciativas pessoais."
+        }
+      }
+    }
   },
   "About": {
     "title": "Sobre Mim",
