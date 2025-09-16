@@ -35,7 +35,24 @@
     "readMore": "Read More",
     "greeting": "Hello, I'm",
     "browseProjects": "Browse Projects",
-    "mobilePlaceholder": "More sections coming soon to mobile."
+    "mobilePlaceholder": "More sections coming soon to mobile.",
+    "mobile": {
+      "availability": "Available for new projects",
+      "subtitle": "Building complete digital products with performance, design and accessibility in mind.",
+      "description": "I blend full-stack development, strategic design and motion to craft engaging experiences on every device.",
+      "stats": {
+        "experience": {
+          "value": "3+",
+          "label": "Years of experience",
+          "caption": "Web, mobile and desktop projects that balance performance and aesthetics."
+        },
+        "projects": {
+          "value": "20+",
+          "label": "Projects delivered",
+          "caption": "Real results for companies, communities and personal initiatives."
+        }
+      }
+    }
   },
   "About": {
     "title": "About Me",
