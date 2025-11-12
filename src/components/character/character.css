@@ -1,0 +1,224 @@
+:root {
+  --wave-front: #0e1a24; /* mais claro */
+  --wave-back: #0b1020; /* mais escuro */
+  --bubble-front: #00c2c7; /* Primária */
+  --bubble-back: #1de9b6; /* Secundária */
+  --frame-color: #0b1020;
+  --primary: #00c2c7;
+  --secondary: #1de9b6;
+  --accent-cta: #fca5a5;
+  --text-primary: #e6f1ff;
+  --text-soft: #9fb0c3;
+  --bg-start: #0b1020;
+  --bg-end: #0e1a24;
+}
+
+.wave {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.wave svg {
+  width: 110vw; /* cobre um pouco além para garantir sem faixas */
+  height: 110vh;
+  display: block;
+}
+
+/* back wave ainda mais larga */
+.wave-back svg {
+  width: 125vw;
+  height: 125vh;
+}
+
+.avatar-background {
+  /* Gradiente usando variáveis da paleta ativa */
+  background:
+    radial-gradient(1200px 800px at 60% 110%, var(--bg-end) 0%, var(--bg-start) 45%, #040404 100%),
+    linear-gradient(180deg, var(--bg-start) 0%, #040404 100%);
+}
+
+/* Strong, distinct colors per layer */
+.wave-back svg *,
+.wave-back * {
+  fill: var(--wave-back) !important;
+}
+
+.wave-front svg *,
+.wave-front * {
+  fill: var(--wave-front) !important;
+}
+
+/* Bubbles coloridas usando filtros CSS */
+.bubbles-front img {
+  /* Filtro para aplicar cor primária (--bubble-front) */
+  filter: brightness(0) saturate(100%) invert(45%) sepia(94%) saturate(1200%) hue-rotate(165deg)
+    brightness(100%) contrast(90%);
+}
+
+/* Ajuste manual para Midnight Cyan (#00C2C7) */
+.bubbles-front img {
+  filter: brightness(0) saturate(100%) invert(56%) sepia(94%) saturate(2500%) hue-rotate(160deg)
+    brightness(110%) contrast(95%);
+}
+
+.bubbles-back img {
+  /* Filtro para aplicar cor secundária (--bubble-back) */
+  filter: brightness(0) saturate(100%) invert(72%) sepia(65%) saturate(2000%) hue-rotate(125deg)
+    brightness(115%) contrast(90%);
+}
+
+/* Intro text central por trás do personagem */
+.intro-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: grid;
+  grid-auto-flow: row;
+  justify-items: center;
+  text-align: center;
+  font-family:
+    'Poppins',
+    'General Sans',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Ubuntu,
+    Cantarell,
+    Noto Sans,
+    Helvetica Neue,
+    Arial,
+    'Apple Color Emoji',
+    'Segoe UI Emoji';
+  letter-spacing: 0.04em;
+  color: var(--primary);
+  opacity: 1;
+  z-index: 8;
+}
+
+.intro-text .small {
+  font-weight: 700;
+  font-size: clamp(18px, 2.4vw, 36px);
+  opacity: 0.9;
+  justify-self: start;
+  margin-bottom: 6px;
+}
+
+.intro-text .big {
+  font-weight: 900;
+  font-size: clamp(172px, 114vw, 320px);
+  line-height: 1;
+}
+
+/* Header do topo */
+.hero-header {
+  position: fixed;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  color: var(--text-primary);
+}
+
+.hero-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 20px;
+  max-width: 1200px;
+  width: 100vw;
+}
+
+.hero-header .brand {
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.hero-header nav {
+  display: flex;
+  gap: 22px;
+}
+
+.hero-header nav a {
+  color: var(--text-soft);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.hero-header nav a.contact {
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 2px;
+}
+
+.hero-header .cta {
+  color: #040404;
+  background: var(--accent-cta);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Hover effects header */
+.hero-header nav a:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.hero-header nav a {
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hero-header .cta {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hero-header .cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+}
+
+/* Selo no canto inferior direito */
+.corner-badge {
+  position: absolute;
+  right: 64px;
+  bottom: 180px;
+  z-index: 30;
+  color: var(--text-primary);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  font-weight: 800;
+  font-size: clamp(20px, 2.4vw, 32px);
+  line-height: 1.2;
+  animation: cornerGlow 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes cornerGlow {
+  0% {
+    text-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.5),
+      0 0 0px rgba(0, 194, 199, 0);
+  }
+  50% {
+    text-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.5),
+      0 0 16px rgba(0, 194, 199, 0.25);
+  }
+  100% {
+    text-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.5),
+      0 0 0px rgba(0, 194, 199, 0);
+  }
+}

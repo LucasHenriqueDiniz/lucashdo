@@ -4,28 +4,28 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Languages } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import type { Locale } from '@/lib/i18n/config';
+import { useLanguageStore } from '@/store/languageStore';
 
-type Locale = 'pt' | 'en';
+type LanguageOption = Locale;
 
 export function LanguageSwitcher() {
   const lang = useLanguageStore(state => state.lang);
   const setLang = useLanguageStore(state => state.setLang);
   const [isHovered, setIsHovered] = useState(false);
-  const [previewLanguage, setPreviewLanguage] = useState<Locale | null>(null);
+  const [previewLanguage, setPreviewLanguage] = useState<LanguageOption | null>(null);
   const t = useTranslations('Language');
 
-  const languageNames: Record<Locale, string> = {
+  const languageNames: Record<LanguageOption, string> = {
     pt: t('portuguese'),
     en: t('english'),
   };
 
-  const handleLanguageChange = (newLanguage: Locale) => {
+  const handleLanguageChange = (newLanguage: LanguageOption) => {
     setLang(newLanguage);
-    localStorage.setItem('language', newLanguage);
   };
 
-  const handleMouseEnter = (language: Locale) => {
+  const handleMouseEnter = (language: LanguageOption) => {
     setIsHovered(true);
     setPreviewLanguage(language);
   };
@@ -35,7 +35,7 @@ export function LanguageSwitcher() {
     setPreviewLanguage(null);
   };
 
-  const otherLanguage = lang === 'pt' ? 'en' : 'pt';
+  const otherLanguage: LanguageOption = lang === 'pt' ? 'en' : 'pt';
 
   return (
     <div className="relative">

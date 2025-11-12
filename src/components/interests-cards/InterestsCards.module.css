@@ -65,3 +65,15 @@
 .card.fitness:hover {
   box-shadow: 0 8px 32px 0 rgba(34, 197, 94, 0.2) !important;
 }
+
+@media (max-width: 767px) {
+  .card::before {
+    opacity: 0 !important;
+  }
+
+  .card.music:hover,
+  .card.games:hover,
+  .card.fitness:hover {
+    box-shadow: none !important;
+  }
+}

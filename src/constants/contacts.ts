@@ -5,6 +5,7 @@ export const ContactLinks = {
   email: 'lucashdo@protonmail.com',
   steam: 'https://steamcommunity.com/id/Amayacrab/',
   github: 'https://github.com/LucasHenriqueDiniz',
+  whatsapp: 'https://wa.me/5551995245504',
 };
 
 // Type for contact links

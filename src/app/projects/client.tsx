@@ -4,7 +4,7 @@ import { motion, useInView, Variants } from 'framer-motion';
 import { Code2, Eye, Filter, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Locale } from '@/lib/i18n/config';
 import { Project } from '@/constants';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -208,7 +208,6 @@ export const ProjectsGrid = memo(
 
     // Filtrar projetos baseado no status e tags
     const filteredProjects = useMemo(() => {
-      setIsLoading(true);
       let filtered = projects;
 
       // Filtrar por status
@@ -221,21 +220,44 @@ export const ProjectsGrid = memo(
         filtered = filtered.filter(project => selectedTags.some(tag => project.tags.includes(tag)));
       }
 
-      // Simular um pequeno delay para feedback visual
-      setTimeout(() => setIsLoading(false), 100);
       return filtered;
     }, [projects, statusFilter, selectedTags]);
+
+    useEffect(() => {
+      if (!isLoading) {
+        return;
+      }
+
+      const timeoutId = setTimeout(() => setIsLoading(false), 100);
+
+      return () => clearTimeout(timeoutId);
+    }, [filteredProjects, isLoading]);
 
     const featuredCount = useMemo(() => projects.filter(p => p.featured).length, [projects]);
     const totalCount = projects.length;
 
-    const handleTagToggle = useCallback((tag: string) => {
-      setSelectedTags(prev => (prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]));
-    }, []);
+    const handleStatusChange = useCallback(
+      (status: StatusFilter) => {
+        setIsLoading(true);
+        setStatusFilter(status);
+      },
+      [setIsLoading, setStatusFilter]
+    );
+
+    const handleTagToggle = useCallback(
+      (tag: string) => {
+        setIsLoading(true);
+        setSelectedTags(prev =>
+          prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+        );
+      },
+      [setIsLoading, setSelectedTags]
+    );
 
     const handleClearAllTags = useCallback(() => {
+      setIsLoading(true);
       setSelectedTags([]);
-    }, []);
+    }, [setIsLoading, setSelectedTags]);
 
     const columns = useMemo(
       () =>
@@ -336,7 +358,7 @@ export const ProjectsGrid = memo(
               </h3>
               <StatusFilter
                 status={statusFilter}
-                onStatusChange={setStatusFilter}
+                onStatusChange={handleStatusChange}
                 featuredCount={featuredCount}
                 totalCount={totalCount}
                 translations={statusFilterTranslations}

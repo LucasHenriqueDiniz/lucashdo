@@ -1,0 +1,114 @@
+.pokeBtn {
+  --btn-bg: linear-gradient(180deg, #fff4c9 0%, #e8cb87 100%);
+  --btn-text: #24170c;
+  --btn-border: #0b1330;
+  --btn-shadow: #0b1330;
+  --btn-hover-filter: 1.06;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 11px 20px 12px;
+  border: 3px solid var(--btn-border);
+  border-radius: 0;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 0 var(--btn-shadow);
+  image-rendering: pixelated;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 80ms ease,
+    box-shadow 80ms ease,
+    filter 120ms ease,
+    background-color 120ms ease;
+}
+
+.pokeLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pokeBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 var(--btn-shadow);
+  filter: brightness(var(--btn-hover-filter));
+}
+
+.pokeBtn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 4px 0 var(--btn-shadow);
+}
+
+.pokeBtn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px var(--btn-border),
+    0 6px 0 var(--btn-shadow);
+}
+
+.pokeBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: 0 6px 0 rgba(11, 19, 48, 0.35);
+}
+
+.small {
+  min-height: 40px;
+  padding: 9px 18px 10px;
+  font-size: 0.64rem;
+  letter-spacing: 0.24em;
+}
+
+.variantNeutral {
+  --btn-bg: linear-gradient(180deg, #fff4c9 0%, #e8cb87 100%);
+  --btn-text: #24170c;
+  --btn-border: #0b1330;
+  --btn-shadow: #0b1330;
+}
+
+.variantRed {
+  --btn-bg: linear-gradient(180deg, #ffd9dd 0%, #f6a0b0 100%);
+  --btn-text: #30121f;
+  --btn-border: #2a0f1d;
+  --btn-shadow: #2a0f1d;
+}
+
+.variantBlue {
+  --btn-bg: linear-gradient(180deg, #d8eaff 0%, #9ebdff 100%);
+  --btn-text: #0f2144;
+  --btn-border: #0d1a3b;
+  --btn-shadow: #0d1a3b;
+}
+
+.variantGold {
+  --btn-bg: linear-gradient(180deg, #ffe9b8 0%, #f7c868 100%);
+  --btn-text: #33200d;
+  --btn-border: #2b1a0a;
+  --btn-shadow: #2b1a0a;
+}
+
+.variantGreen {
+  --btn-bg: linear-gradient(180deg, #d9f6d5 0%, #9be8a2 100%);
+  --btn-text: #113818;
+  --btn-border: #0f2f14;
+  --btn-shadow: #0f2f14;
+}
+
+.variantDark {
+  --btn-bg: linear-gradient(180deg, #101b3d 0%, #070d22 100%);
+  --btn-text: #f7f8ff;
+  --btn-border: #040815;
+  --btn-shadow: #040815;
+  --btn-hover-filter: 1.1;
+}

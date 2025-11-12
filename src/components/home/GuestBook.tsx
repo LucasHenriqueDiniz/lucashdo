@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Github, InfoIcon, Send, User } from 'lucide-react';
+import { AlertTriangle, Github, InfoIcon, Send, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -35,6 +35,7 @@ const useDebounce = <T,>(value: T, delay: number): T => {
 const GuestBook: React.FC = () => {
   const t = useTranslations('ModernGuestBook');
   const { entries, isLoading, error, fetchEntries, addEntry } = useGuestbookStore();
+  const isServiceUnavailable = useMemo(() => error === 'SERVICE_UNAVAILABLE', [error]);
   const [formData, setFormData] = useState({
     name: '',
     message: '',
@@ -140,9 +141,18 @@ const GuestBook: React.FC = () => {
     }
   }, []);
 
+  const handleRetry = useCallback(() => {
+    fetchEntries();
+  }, [fetchEntries]);
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+
+      if (isServiceUnavailable) {
+        setSubmitError(t('serviceUnavailableMessage'));
+        return;
+      }
 
       // Validações melhoradas
       const trimmedName = formData.name.trim();
@@ -208,8 +218,11 @@ const GuestBook: React.FC = () => {
         if (err instanceof Error) {
           const errorMessage = err.message;
 
+          if (errorMessage === 'SERVICE_UNAVAILABLE') {
+            setSubmitError(t('serviceUnavailableMessage'));
+          }
           // Verificar se é erro de rate limiting
-          if (errorMessage.includes('Aguarde') || errorMessage.includes('Muitos posts')) {
+          else if (errorMessage.includes('Aguarde') || errorMessage.includes('Muitos posts')) {
             setSubmitError(t('rateLimitError', { message: errorMessage }));
           }
           // Verificar se é erro de validação
@@ -231,7 +244,7 @@ const GuestBook: React.FC = () => {
         setIsSubmitting(false);
       }
     },
-    [formData, addEntry, t]
+    [formData, addEntry, t, isServiceUnavailable]
   );
 
   // Função para scroll horizontal do emoji selector
@@ -318,330 +331,355 @@ const GuestBook: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <motion.div className="flex items-center justify-center gap-2 mb-8">
-              <h3 className="text-2xl md:text-3xl font-bold text-white text-center">
-                {t('leaveCommentTitle')}
-              </h3>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    tabIndex={0}
-                    aria-label={t('rulesTitle')}
-                    className="cursor-pointer transition-all text-blue-400 hover:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded-full p-1"
-                  >
-                    <span aria-hidden="true">
-                      <InfoIcon />
-                    </span>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <ul className="text-xs space-y-1 text-blue-200/80">
-                    <li>{t('rule1')}</li>
-                    <li>{t('rule2')}</li>
-                    <li>{t('rule3', { max: MAX_NAME_LENGTH })}</li>
-                    <li>{t('rule4', { min: MIN_MESSAGE_LENGTH, max: MAX_MESSAGE_LENGTH })}</li>
-                    <li>{t('rule5')}</li>
-                  </ul>
-                </TooltipContent>
-              </Tooltip>
-            </motion.div>
-
-            {/* Success message */}
-            <AnimatePresence>
-              {showSuccess && (
-                <motion.div
-                  className="bg-green-500/20 border border-green-500/50 text-green-400 rounded-2xl p-4 mb-6 text-center font-medium"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
+          {isServiceUnavailable ? (
+            <div className={`${styles.form} flex flex-col items-center gap-6 text-center`}>
+              <motion.div
+                className="flex flex-col items-center gap-4 w-full bg-red-500/10 border border-red-500/30 rounded-2xl p-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <AlertTriangle className="w-12 h-12 text-red-400" />
+                <h3 className="text-2xl font-semibold text-white">
+                  {t('serviceUnavailableTitle')}
+                </h3>
+                <p className="text-sm text-gray-300 max-w-sm">{t('serviceUnavailableMessage')}</p>
+                <motion.button
+                  type="button"
+                  onClick={handleRetry}
+                  className="px-6 py-3 rounded-xl font-semibold bg-blue-500 text-white shadow-lg shadow-blue-500/25 hover:bg-blue-400 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {t('commentSuccess')}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Segment de tipo */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <motion.button
-                type="button"
-                onClick={() => handleInputChange('is_developer', true)}
-                className={`relative overflow-hidden rounded-2xl p-4 font-semibold transition-all duration-300 ${
-                  formData.is_developer
-                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                }`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="flex items-center justify-center gap-3">
-                  <Github size={20} />
-                  <span>{t('devOption')}</span>
-                </div>
-              </motion.button>
-
-              <motion.button
-                type="button"
-                onClick={() => handleInputChange('is_developer', false)}
-                className={`relative overflow-hidden rounded-2xl p-4 font-semibold transition-all duration-300 ${
-                  !formData.is_developer
-                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                }`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="flex items-center justify-center gap-3">
-                  <User size={20} />
-                  <span>{t('visitorOption')}</span>
-                </div>
-              </motion.button>
+                  {t('serviceUnavailableAction')}
+                </motion.button>
+              </motion.div>
             </div>
+          ) : (
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <motion.div className="flex items-center justify-center gap-2 mb-8">
+                <h3 className="text-2xl md:text-3xl font-bold text-white text-center">
+                  {t('leaveCommentTitle')}
+                </h3>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      tabIndex={0}
+                      aria-label={t('rulesTitle')}
+                      className="cursor-pointer transition-all text-blue-400 hover:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded-full p-1"
+                    >
+                      <span aria-hidden="true">
+                        <InfoIcon />
+                      </span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <ul className="text-xs space-y-1 text-blue-200/80">
+                      <li>{t('rule1')}</li>
+                      <li>{t('rule2')}</li>
+                      <li>{t('rule3', { max: MAX_NAME_LENGTH })}</li>
+                      <li>{t('rule4', { min: MIN_MESSAGE_LENGTH, max: MAX_MESSAGE_LENGTH })}</li>
+                      <li>{t('rule5')}</li>
+                    </ul>
+                  </TooltipContent>
+                </Tooltip>
+              </motion.div>
 
-            {/* Campos de input */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
+              {/* Success message */}
+              <AnimatePresence>
+                {showSuccess && (
+                  <motion.div
+                    className="bg-green-500/20 border border-green-500/50 text-green-400 rounded-2xl p-4 mb-6 text-center font-medium"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {t('commentSuccess')}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Segment de tipo */}
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <motion.button
+                  type="button"
+                  onClick={() => handleInputChange('is_developer', true)}
+                  className={`relative overflow-hidden rounded-2xl p-4 font-semibold transition-all duration-300 ${
+                    formData.is_developer
+                      ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <Github size={20} />
+                    <span>{t('devOption')}</span>
+                  </div>
+                </motion.button>
+
+                <motion.button
+                  type="button"
+                  onClick={() => handleInputChange('is_developer', false)}
+                  className={`relative overflow-hidden rounded-2xl p-4 font-semibold transition-all duration-300 ${
+                    !formData.is_developer
+                      ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <User size={20} />
+                    <span>{t('visitorOption')}</span>
+                  </div>
+                </motion.button>
+              </div>
+
+              {/* Campos de input */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="block text-sm font-medium text-gray-300">
+                      {t('nameLabel')}
+                    </label>
+                    <span
+                      className={`text-sm ${
+                        formData.name.length > MAX_NAME_LENGTH
+                          ? 'text-red-400'
+                          : formData.name.length > MAX_NAME_LENGTH * 0.8
+                            ? 'text-yellow-400'
+                            : 'text-gray-400'
+                      }`}
+                    >
+                      {formData.name.length}/{MAX_NAME_LENGTH}
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={e => handleInputChange('name', e.target.value)}
+                    placeholder={t('namePlaceholder')}
+                    maxLength={MAX_NAME_LENGTH}
+                    required
+                    className={`w-full bg-gray-800/50 border rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200 ${
+                      formData.name.length > MAX_NAME_LENGTH
+                        ? 'border-red-500 focus:border-red-500'
+                        : 'border-gray-600 focus:border-blue-500'
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    {formData.is_developer ? t('githubUsernameLabel') : t('instagramUsernameLabel')}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={formData.username}
+                      onChange={e => handleInputChange('username', e.target.value)}
+                      placeholder={
+                        formData.is_developer
+                          ? t('githubUsernamePlaceholder')
+                          : t('instagramUsernamePlaceholder')
+                      }
+                      className="w-full bg-gray-800/50 border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200"
+                    />
+                    {formData.is_developer && formData.username && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        {avatarStatus === 'loading' && (
+                          <motion.div
+                            className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity }}
+                          />
+                        )}
+                        {avatarStatus === 'success' && (
+                          <motion.div
+                            className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 500 }}
+                          >
+                            <span className="text-white text-xs">✓</span>
+                          </motion.div>
+                        )}
+                        {avatarStatus === 'error' && (
+                          <motion.div
+                            className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 500 }}
+                          >
+                            <span className="text-white text-xs">✕</span>
+                          </motion.div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {formData.is_developer && avatarStatus === 'success' && formData.avatar_url && (
+                    <motion.div
+                      className="flex items-center gap-2 mt-2 text-sm text-green-400"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      <div style={{ position: 'relative', width: 24, height: 24 }}>
+                        <Image
+                          src={formData.avatar_url}
+                          alt="Avatar preview"
+                          width={24}
+                          height={24}
+                          className="w-full h-full object-cover"
+                          sizes="24px"
+                        />
+                      </div>
+                      <span>{t('avatarFound')}</span>
+                    </motion.div>
+                  )}
+                  {formData.is_developer && avatarStatus === 'error' && (
+                    <motion.div
+                      className="text-sm text-red-400 mt-2"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      {t('githubUserNotFound')}
+                    </motion.div>
+                  )}
+                </div>
+              </div>
+
+              {/* Selector de emoji com scroll horizontal (sem animações desnecessárias) */}
+              <div className="mb-6">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <label className="block text-sm font-medium text-gray-300 mb-3">
+                      {t('chooseEmojiLabel')}
+                    </label>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t('emojiRules')}</p>
+                  </TooltipContent>
+                </Tooltip>
+                <div className="relative">
+                  <div
+                    className={styles.emojiSelector}
+                    onWheelCapture={handleEmojiWheel}
+                    style={{
+                      pointerEvents: 'auto',
+                      overflowX: 'auto',
+                      whiteSpace: 'nowrap',
+                      overscrollBehavior: 'contain',
+                      touchAction: 'pan-x',
+                    }}
+                  >
+                    {GUESTBOOK_EMOJIS.map(emoji => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        onClick={() => handleInputChange('emoji', emoji)}
+                        className={`${styles.emojiButton} ${
+                          formData.emoji === emoji ? styles.emojiButtonSelected : ''
+                        }`}
+                      >
+                        <span className="filter drop-shadow-sm">{emoji}</span>
+                      </button>
+                    ))}
+                  </div>
+                  {/* Gradient indicators for scroll */}
+                  <div className={styles.emojiGradientLeft} />
+                  <div className={styles.emojiGradientRight} />
+                </div>
+              </div>
+
+              {/* Textarea para mensagem */}
+              <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <label className="block text-sm font-medium text-gray-300">
-                    {t('nameLabel')}
+                    {t('messageLabel')}
                   </label>
                   <span
                     className={`text-sm ${
-                      formData.name.length > MAX_NAME_LENGTH
+                      formData.message.length > MAX_MESSAGE_LENGTH
                         ? 'text-red-400'
-                        : formData.name.length > MAX_NAME_LENGTH * 0.8
+                        : formData.message.length > MAX_MESSAGE_LENGTH * 0.8
                           ? 'text-yellow-400'
                           : 'text-gray-400'
                     }`}
                   >
-                    {formData.name.length}/{MAX_NAME_LENGTH}
+                    {formData.message.length}/{MAX_MESSAGE_LENGTH}
                   </span>
                 </div>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={e => handleInputChange('name', e.target.value)}
-                  placeholder={t('namePlaceholder')}
-                  maxLength={MAX_NAME_LENGTH}
+                <textarea
+                  value={formData.message}
+                  onChange={e => handleInputChange('message', e.target.value)}
+                  placeholder={t('messagePlaceholder')}
+                  rows={4}
+                  maxLength={MAX_MESSAGE_LENGTH}
                   required
-                  className={`w-full bg-gray-800/50 border rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200 ${
-                    formData.name.length > MAX_NAME_LENGTH
+                  className={`w-full bg-gray-800/50 border rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200 resize-none ${
+                    formData.message.length > MAX_MESSAGE_LENGTH
                       ? 'border-red-500 focus:border-red-500'
                       : 'border-gray-600 focus:border-blue-500'
                   }`}
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  {formData.is_developer ? t('githubUsernameLabel') : t('instagramUsernameLabel')}
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={formData.username}
-                    onChange={e => handleInputChange('username', e.target.value)}
-                    placeholder={
-                      formData.is_developer
-                        ? t('githubUsernamePlaceholder')
-                        : t('instagramUsernamePlaceholder')
-                    }
-                    className="w-full bg-gray-800/50 border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200"
-                  />
-                  {formData.is_developer && formData.username && (
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      {avatarStatus === 'loading' && (
-                        <motion.div
-                          className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full"
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity }}
-                        />
-                      )}
-                      {avatarStatus === 'success' && (
-                        <motion.div
-                          className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: 'spring', stiffness: 500 }}
-                        >
-                          <span className="text-white text-xs">✓</span>
-                        </motion.div>
-                      )}
-                      {avatarStatus === 'error' && (
-                        <motion.div
-                          className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: 'spring', stiffness: 500 }}
-                        >
-                          <span className="text-white text-xs">✕</span>
-                        </motion.div>
-                      )}
-                    </div>
-                  )}
-                </div>
-                {formData.is_developer && avatarStatus === 'success' && formData.avatar_url && (
-                  <motion.div
-                    className="flex items-center gap-2 mt-2 text-sm text-green-400"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <div style={{ position: 'relative', width: 24, height: 24 }}>
-                      <Image
-                        src={formData.avatar_url}
-                        alt="Avatar preview"
-                        width={24}
-                        height={24}
-                        className="w-full h-full object-cover"
-                        sizes="24px"
-                      />
-                    </div>
-                    <span>{t('avatarFound')}</span>
-                  </motion.div>
-                )}
-                {formData.is_developer && avatarStatus === 'error' && (
-                  <motion.div
-                    className="text-sm text-red-400 mt-2"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    {t('githubUserNotFound')}
-                  </motion.div>
+                {formData.message.length < MIN_MESSAGE_LENGTH && formData.message.length > 0 && (
+                  <p className="text-yellow-400 text-xs mt-1">
+                    {t('messageTooShortHint', {
+                      min: MIN_MESSAGE_LENGTH,
+                      current: MIN_MESSAGE_LENGTH - formData.message.length,
+                    })}
+                  </p>
                 )}
               </div>
-            </div>
 
-            {/* Selector de emoji com scroll horizontal (sem animações desnecessárias) */}
-            <div className="mb-6">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <label className="block text-sm font-medium text-gray-300 mb-3">
-                    {t('chooseEmojiLabel')}
-                  </label>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{t('emojiRules')}</p>
-                </TooltipContent>
-              </Tooltip>
-              <div className="relative">
-                <div
-                  className={styles.emojiSelector}
-                  onWheelCapture={handleEmojiWheel}
-                  style={{
-                    pointerEvents: 'auto',
-                    overflowX: 'auto',
-                    whiteSpace: 'nowrap',
-                    overscrollBehavior: 'contain',
-                    touchAction: 'pan-x',
-                  }}
-                >
-                  {GUESTBOOK_EMOJIS.map(emoji => (
-                    <button
-                      key={emoji}
-                      type="button"
-                      onClick={() => handleInputChange('emoji', emoji)}
-                      className={`${styles.emojiButton} ${
-                        formData.emoji === emoji ? styles.emojiButtonSelected : ''
-                      }`}
-                    >
-                      <span className="filter drop-shadow-sm">{emoji}</span>
-                    </button>
-                  ))}
-                </div>
-                {/* Gradient indicators for scroll */}
-                <div className={styles.emojiGradientLeft} />
-                <div className={styles.emojiGradientRight} />
-              </div>
-            </div>
-
-            {/* Textarea para mensagem */}
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-medium text-gray-300">
-                  {t('messageLabel')}
-                </label>
-                <span
-                  className={`text-sm ${
-                    formData.message.length > MAX_MESSAGE_LENGTH
-                      ? 'text-red-400'
-                      : formData.message.length > MAX_MESSAGE_LENGTH * 0.8
-                        ? 'text-yellow-400'
-                        : 'text-gray-400'
-                  }`}
-                >
-                  {formData.message.length}/{MAX_MESSAGE_LENGTH}
-                </span>
-              </div>
-              <textarea
-                value={formData.message}
-                onChange={e => handleInputChange('message', e.target.value)}
-                placeholder={t('messagePlaceholder')}
-                rows={4}
-                maxLength={MAX_MESSAGE_LENGTH}
-                required
-                className={`w-full bg-gray-800/50 border rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200 resize-none ${
-                  formData.message.length > MAX_MESSAGE_LENGTH
-                    ? 'border-red-500 focus:border-red-500'
-                    : 'border-gray-600 focus:border-blue-500'
-                }`}
-              />
-              {formData.message.length < MIN_MESSAGE_LENGTH && formData.message.length > 0 && (
-                <p className="text-yellow-400 text-xs mt-1">
-                  {t('messageTooShortHint', {
-                    min: MIN_MESSAGE_LENGTH,
-                    current: MIN_MESSAGE_LENGTH - formData.message.length,
-                  })}
-                </p>
-              )}
-            </div>
-
-            {/* Error message */}
-            {submitError ||
-              (error && (
+              {/* Error message */}
+              {submitError && (
                 <div className="bg-red-500/20 border border-red-500/50 text-red-400 rounded-2xl p-4 mb-6 text-center font-medium">
-                  {error}
+                  {submitError}
                 </div>
-              ))}
+              )}
 
-            {/* Submit button */}
-            <motion.button
-              type="submit"
-              disabled={isSubmitting}
-              className="relative w-full bg-gradient-to-r from-blue-500 via-purple-600 to-blue-500 bg-size-200 text-white font-bold py-5 px-8 rounded-2xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 overflow-hidden"
-              style={{ backgroundSize: '200% 100%' }}
-              whileHover={
-                !isSubmitting
-                  ? {
-                      scale: 1.02,
-                      boxShadow: '0 0 40px rgba(59, 130, 246, 0.6)',
-                    }
-                  : {}
-              }
-              whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.3 }}
-            >
-              {/* Shine effect */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
-                initial={{ x: '-100%' }}
-                animate={{ x: '100%' }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-              />
-              <div className="relative flex items-center justify-center gap-3 cursor-pointer">
+              {/* Submit button */}
+              <motion.button
+                type="submit"
+                disabled={isSubmitting}
+                className="relative w-full bg-gradient-to-r from-blue-500 via-purple-600 to-blue-500 bg-size-200 text-white font-bold py-5 px-8 rounded-2xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 overflow-hidden"
+                style={{ backgroundSize: '200% 100%' }}
+                whileHover={
+                  !isSubmitting
+                    ? {
+                        scale: 1.02,
+                        boxShadow: '0 0 40px rgba(59, 130, 246, 0.6)',
+                      }
+                    : {}
+                }
+                whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.3 }}
+              >
+                {/* Shine effect */}
                 <motion.div
-                  animate={isSubmitting ? { rotate: 360 } : {}}
-                  transition={{ duration: 1, repeat: isSubmitting ? Infinity : 0 }}
-                >
-                  <Send size={22} />
-                </motion.div>
-                <span className="text-lg">{isSubmitting ? t('sending') : t('sendComment')}</span>
-              </div>
-            </motion.button>
-          </form>
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '100%' }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                />
+                <div className="relative flex items-center justify-center gap-3 cursor-pointer">
+                  <motion.div
+                    animate={isSubmitting ? { rotate: 360 } : {}}
+                    transition={{ duration: 1, repeat: isSubmitting ? Infinity : 0 }}
+                  >
+                    <Send size={22} />
+                  </motion.div>
+                  <span className="text-lg">{isSubmitting ? t('sending') : t('sendComment')}</span>
+                </div>
+              </motion.button>
+            </form>
+          )}
         </motion.div>
 
         {/* Loading and Error States */}

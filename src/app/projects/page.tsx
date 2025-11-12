@@ -56,10 +56,14 @@ export const metadata: Metadata = {
 };
 
 export default function Projects() {
+  const featuredFirstProjects = [...projects].sort(
+    (a, b) => Number(b.featured) - Number(a.featured)
+  );
+
   return (
     <>
       {/* Structured Data for featured projects */}
-      {projects.slice(0, 3).map(project => (
+      {featuredFirstProjects.slice(0, 3).map(project => (
         <ProjectStructuredData
           key={project.id}
           name={project.title}
@@ -75,7 +79,7 @@ export default function Projects() {
         />
       ))}
 
-      <ProjectsClient projects={projects} />
+      <ProjectsClient projects={featuredFirstProjects} />
     </>
   );
 }

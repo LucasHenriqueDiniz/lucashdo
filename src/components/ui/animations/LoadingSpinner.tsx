@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import React from 'react';
 
 /**
  * LoadingSpinner - Um spinner animado usando framer-motion para telas de loading.

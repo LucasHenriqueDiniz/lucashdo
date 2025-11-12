@@ -24,7 +24,7 @@ export const jobExperiences: ExperienceProps[] = [
     id: 'eng-futuro-vol',
     topTags: [
       { labels: { pt: 'Voluntário', en: 'Volunteer' } },
-      { labels: { pt: 'Engenharia do Futuro', en: 'Engineering of the Future' } },
+      { labels: { pt: 'Engenharia do Futuro', en: 'Engenharia do Futuro' } },
     ],
     title: 'Desenvolvedor Voluntário',
     institution: 'Engenharia do Futuro',
@@ -50,7 +50,7 @@ export const jobExperiences: ExperienceProps[] = [
     id: 'eng-futuro',
     topTags: [
       { labels: { pt: 'Trabalho', en: 'Job' } },
-      { labels: { pt: 'Engenharia do Futuro', en: 'Engineering of the Future' } },
+      { labels: { pt: 'Engenharia do Futuro', en: 'Engenharia do Futuro' } },
     ],
     title: 'Desenvolvedor Full Stack',
     institution: 'Engenharia do Futuro',
@@ -132,7 +132,6 @@ export const jobExperiences: ExperienceProps[] = [
     tags: [
       { labels: { pt: 'Almoxarifado', en: 'Warehouse' }, icon: BiBox },
       { labels: { pt: 'Planilhas de Dados', en: 'Data Sheets' }, icon: AiOutlineFile },
-      { labels: { pt: 'Controle de Estoque', en: 'Inventory Management' }, icon: MdInventory },
     ],
     description: {
       pt: 'Exerci funções administrativas e de controle de almoxarifado, desenvolvendo planilhas de dados e gestão de estoque, demonstrando habilidades organizacionais e atenção a detalhes em ambiente corporativo.',

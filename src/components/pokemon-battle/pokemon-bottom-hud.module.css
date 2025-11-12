@@ -1,0 +1,268 @@
+.root {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  padding: 0;
+}
+
+.frame {
+  position: relative;
+  border: 4px solid #0b1330;
+  border-radius: 0;
+  background: linear-gradient(180deg, #fff4c9 0%, #e8cb87 100%);
+  box-shadow: 0 8px 0 #0b1330;
+  padding: 14px 18px 16px;
+  color: #0b1330;
+  isolation: isolate;
+  min-height: 168px;
+}
+
+.enemyMode .frame {
+  background: linear-gradient(180deg, #f7f8ff 0%, #dde4fb 100%);
+}
+
+.frame::before,
+.frame::after {
+  content: none;
+}
+
+.content {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.promptBlock {
+  justify-content: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+}
+
+.promptBlock span:last-child {
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  color: #566190;
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-content: center;
+  height: 100%;
+}
+
+.actionButton,
+.moveButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 14px;
+  border: 3px solid #0b1330;
+  border-radius: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  box-shadow: 0 6px 0 #0b1330;
+  transition: transform 80ms ease, box-shadow 80ms ease, filter 120ms ease;
+}
+
+.actionButton:hover:not(:disabled),
+.moveButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 #0b1330;
+  filter: brightness(1.06);
+}
+
+.actionButton:disabled,
+.moveButton:disabled {
+  opacity: 0.55;
+  filter: saturate(0.7);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 6px 0 #0b1330;
+}
+
+.moveOptions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  height: 100%;
+}
+
+.moveDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  border: 3px solid #0b1330;
+  border-radius: 0;
+  background: #f1f5ff;
+  padding: 12px 14px;
+  box-shadow: inset 0 -4px 0 rgba(11, 19, 48, 0.12);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #1a2146;
+}
+
+.moveMeta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+}
+
+.moveDescription {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #0b1330;
+  border-radius: 0;
+  background: white;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: #19203f;
+  text-transform: none;
+}
+
+.backButton {
+  align-self: flex-end;
+  padding: 10px 18px;
+  border: 3px solid #0b1330;
+  border-radius: 0;
+  background: #0d1a3b;
+  color: #ffffff;
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: 0 6px 0 #0b1330;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.backButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 #0b1330;
+}
+
+.backButton:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 0 #0b1330;
+}
+
+.backButtonInline {
+  align-self: flex-end;
+  padding: 6px 10px;
+  border: 3px solid #0b1330;
+  border-radius: 0;
+  background: #0d1a3b;
+  color: #ffffff;
+  font-size: 0.52rem;
+  letter-spacing: 0.26em;
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: 0 4px 0 #0b1330;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.backButtonInline:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #0b1330;
+}
+
+.backButtonInline:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 #0b1330;
+}
+
+.backBadge {
+  position: absolute;
+  top: -26px;
+  right: 18px;
+  z-index: 5;
+}
+
+.backBadge button {
+  padding: 6px 8px;
+  border: 3px solid #0b1330;
+  border-radius: 0;
+  background: #0d1a3b;
+  color: #ffb7c4;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 0 #0b1330;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.backBadge button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #0b1330;
+}
+
+.backBadge button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 #0b1330;
+}
+
+.swatchRed {
+  background: linear-gradient(180deg, #ffd9dd 0%, #f6a0b0 100%);
+  color: #30121f;
+}
+
+.swatchBlue {
+  background: linear-gradient(180deg, #d8eaff 0%, #9ebdff 100%);
+  color: #0f2144;
+}
+
+.swatchGold {
+  background: linear-gradient(180deg, #ffe9b8 0%, #f7c868 100%);
+  color: #33200d;
+}
+
+.swatchGreen {
+  background: linear-gradient(180deg, #d9f6d5 0%, #9be8a2 100%);
+  color: #113818;
+}
+
+.animateMain {
+  animation: panelPop 220ms ease-out;
+}
+
+.animateMoves {
+  animation: panelSlide 260ms ease-out;
+}
+
+@keyframes panelPop {
+  0% {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes panelSlide {
+  0% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

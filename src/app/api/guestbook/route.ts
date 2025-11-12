@@ -1,8 +1,61 @@
+import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '@/lib/supabase/server';
+import { logger } from '@/lib/logger';
 import { rateLimiter, getClientIP } from '@/utils/rateLimiter';
 import { containsBlockedTerms, getFoundBlockedTerms } from '@/constants/guestbookBlockedTerms';
+import { GuestbookEntry } from '@/types/guestbook.types';
+import { kv, KV_KEYS } from '@/lib/kv';
+
+function normalizeUsername(raw: string | null | undefined, isDeveloper: boolean): string | null {
+  if (!raw) return null;
+
+  let value = raw.trim();
+  if (!value) return null;
+
+  value = value.replace(/^@+/, '');
+
+  const hasUrlIndicators = /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(value) || value.includes('/');
+
+  if (hasUrlIndicators) {
+    const candidate = /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(value) ? value : `https://${value}`;
+    try {
+      const url = new URL(candidate);
+      const host = url.hostname.toLowerCase();
+      const segments = url.pathname.split('/').filter(Boolean);
+
+      if (
+        segments.length > 0 &&
+        (host.includes('github.com') ||
+          host.includes('instagram.com') ||
+          host.includes('www.github.com') ||
+          host.includes('www.instagram.com'))
+      ) {
+        value = segments[0];
+      }
+    } catch {
+      // Se não for uma URL válida, ignora
+    }
+  }
+
+  value = value.replace(/^@+/, '').replace(/\/+$/, '');
+  value = value.split('?')[0].split('#')[0];
+  value = value.split(/\s+/)[0];
+
+  if (!value) return null;
+
+  try {
+    value = decodeURIComponent(value);
+  } catch {
+    // Ignora erros de decode
+  }
+
+  if (isDeveloper) {
+    return value.replace(/[^0-9a-zA-Z-]/g, '').slice(0, 39) || null;
+  }
+
+  return value;
+}
 
 const guestbookSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório').max(50, 'Nome muito longo (máximo 50 caracteres)'),
@@ -37,12 +90,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log('Received body:', body);
+    logger.debug('Received guestbook body');
 
     const validated = guestbookSchema.safeParse(body);
 
     if (!validated.success) {
-      console.log('Validation failed:', validated.error.issues);
+      logger.debug('Validation failed:', validated.error.issues);
       return NextResponse.json(
         { error: 'Dados inválidos', details: validated.error.issues },
         { status: 400 }
@@ -54,7 +107,7 @@ export async function POST(request: NextRequest) {
     // Validações adicionais de segurança
     const trimmedName = name.trim();
     const trimmedMessage = message.trim();
-    const trimmedUsername = username?.trim();
+    const sanitizedUsername = normalizeUsername(username, is_developer);
 
     // Verificar conteúdo spam/malicioso
     const hasUrls = /https?:\/\//gi.test(trimmedMessage) || /https?:\/\//gi.test(trimmedName);
@@ -70,74 +123,57 @@ export async function POST(request: NextRequest) {
           ...getFoundBlockedTerms(trimmedMessage),
           ...getFoundBlockedTerms(trimmedName),
         ];
-        console.log('Spam detected:', {
+        logger.debug('Spam detected:', {
           hasUrls,
           hasRepeatedChars,
           hasBlockedTerms,
           foundTerms: foundTerms.length > 0 ? foundTerms : undefined,
-          message: trimmedMessage,
-          name: trimmedName,
         });
       }
 
       return NextResponse.json({ error: 'Conteúdo não permitido detectado.' }, { status: 400 });
     }
 
-    const supabase = await createClient();
-
     // Gerar URL do avatar baseado no tipo de usuário
     let avatar_url: string | null = null;
-    if (trimmedUsername && is_developer) {
+    if (sanitizedUsername && is_developer) {
       // GitHub avatar apenas para desenvolvedores com username
-      avatar_url = `https://github.com/${trimmedUsername}.png`;
+      avatar_url = `https://github.com/${sanitizedUsername}.png`;
     }
     // Para todos os outros casos (visitantes, sem username, etc.), deixamos null
 
-    // Inserir no Supabase
-    const { data, error } = await supabase
-      .from('guestbook_entries')
-      .insert({
-        name: trimmedName,
-        message: trimmedMessage,
-        username: trimmedUsername || null,
-        is_developer,
-        avatar_url,
-        emoji,
-      })
-      .select()
-      .single();
+    const entry: GuestbookEntry = {
+      id: randomUUID(),
+      name: trimmedName,
+      message: trimmedMessage,
+      username: sanitizedUsername,
+      is_developer,
+      avatar_url,
+      emoji,
+      created_at: new Date().toISOString(),
+    };
 
-    if (error) {
-      console.error('Erro no guestbook:', error);
-      return NextResponse.json({ error: 'Erro ao salvar mensagem' }, { status: 500 });
-    }
+    await kv.lpush<GuestbookEntry>(KV_KEYS.guestbook, entry);
+    await kv.ltrim(KV_KEYS.guestbook, 0, 49);
 
-    return NextResponse.json(data, { status: 201 });
+    return NextResponse.json(entry, { status: 201 });
   } catch (error) {
-    console.error('Erro no guestbook:', error);
+    logger.error('Erro no guestbook:', error);
     return NextResponse.json({ error: 'Erro interno do servidor' }, { status: 500 });
   }
 }
 
 export async function GET() {
   try {
-    const supabase = await createClient();
+    const entries = (await kv.lrange<GuestbookEntry>(KV_KEYS.guestbook, 0, 49)) ?? [];
 
-    const { data, error } = await supabase
-      .from('guestbook_entries')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50);
-
-    if (error) throw error;
-
-    return NextResponse.json(data, {
+    return NextResponse.json(entries, {
       headers: {
         'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
       },
     });
   } catch (error) {
-    console.error('Erro ao buscar guestbook:', error);
+    logger.error('Erro ao buscar guestbook:', error);
     return NextResponse.json({ error: 'Erro ao buscar mensagens' }, { status: 500 });
   }
 }

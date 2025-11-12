@@ -2,7 +2,7 @@
 
 import { Code, ExternalLink, Github, Star } from 'lucide-react';
 import { projects } from '@/constants/projects';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import { useLanguageStore } from '@/store/languageStore';
 import Browser from '../Browser/Browser';
 import { BrowserTab } from '../Browser/types/BrowserTab';
 import './HeroBrowser.css';
@@ -161,8 +161,6 @@ export default function HeroBrowser() {
     const handleProjectClick = (projectId: string) => {
       if (onTabOpen) {
         onTabOpen(projectId);
-      } else {
-        console.log('Project clicked:', projectId);
       }
     };
 

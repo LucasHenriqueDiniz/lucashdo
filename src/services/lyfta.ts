@@ -1,14 +1,16 @@
 'use server';
 
+import { logger } from '@/lib/logger';
+
 export interface LyftaWorkout {
-  id: string;
+  id: string | number;
   title: string;
   workout_perform_date: string;
-  body_weight: number;
+  body_weight: number | null;
   total_volume: number;
   totalLiftedWeight: number;
-  user: {
-    username: string;
+  user?: {
+    username?: string;
   };
   exercises: LyftaExercise[];
 }
@@ -20,9 +22,9 @@ export interface LyftaExercise {
   exercise_image: string;
   exercise_rest_time: number;
   sets: Array<{
-    id: string;
-    weight: number | null;
-    reps: string | null;
+    id: string | number;
+    weight: number | string | null;
+    reps: number | string | null;
     duration?: number;
     is_completed: boolean;
   }>;
@@ -43,7 +45,7 @@ export interface LyftaStats {
     totalExercises: number;
     uniqueExercises: number;
     mostUsedWeight: number;
-    averageReps: number;
+    averageReps: number | null;
   };
 }
 
@@ -57,16 +59,16 @@ const BASE_URL = 'https://my.lyfta.app';
 export async function getWorkouts(limit = 5, page = 1): Promise<LyftaWorkout[]> {
   try {
     if (!API_KEY) {
-      console.error('❌ Lyfta API key not found');
+      logger.error('Lyfta API key not found');
       return [];
     }
 
-    console.log('🔍 Fetching Lyfta workouts...');
+    logger.debug('Fetching Lyfta workouts...');
     const response = await fetch(`${BASE_URL}/api/v1/workouts?limit=${limit}&page=${page}`, {
       headers: {
         Authorization: `Bearer ${API_KEY}`,
       },
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 86400, tags: ['lyfta'] },
     });
 
     if (!response.ok) {
@@ -78,7 +80,7 @@ export async function getWorkouts(limit = 5, page = 1): Promise<LyftaWorkout[]> 
     // Return workouts array or empty array if not found
     return Array.isArray(data) ? data : data.workouts || [];
   } catch (error) {
-    console.error('❌ Error fetching Lyfta workouts:', error);
+    logger.error('Error fetching Lyfta workouts:', error);
     return [];
   }
 }
@@ -87,14 +89,14 @@ export async function getWorkouts(limit = 5, page = 1): Promise<LyftaWorkout[]> 
  * Get aggregated statistics from workouts
  */
 export async function getLyftaStats(): Promise<LyftaStats> {
-  console.log('🔍 Fetching Lyfta workouts...');
+  logger.debug('Fetching Lyfta stats...');
   const workouts = await getWorkouts(100);
 
   // Calculate total duration and weight
   const totalDuration = workouts.reduce((acc, workout) => {
     const workoutDuration = workout.exercises.reduce((exerciseAcc, exercise) => {
       const setsDuration = exercise.sets.reduce((setAcc, set) => {
-        const setDuration = set.duration || (set.reps ? parseInt(set.reps) * 2 : 0);
+        const setDuration = set.duration || (set.reps ? parseInt(String(set.reps), 10) * 2 : 0);
         return setAcc + setDuration;
       }, 0);
       return exerciseAcc + setsDuration + (exercise.exercise_rest_time || 0);
@@ -124,7 +126,7 @@ export async function getLyftaStats(): Promise<LyftaStats> {
   const muscleGroupCounts = new Map<string, number>();
   workouts.forEach(workout => {
     workout.exercises.forEach(exercise => {
-      const muscleGroup = exercise.exercise_type.split('_')[0].toUpperCase();
+      const muscleGroup = exercise.exercise_type?.split('_')[0]?.toUpperCase() ?? 'GERAL';
       if (muscleGroup) {
         const count = muscleGroupCounts.get(muscleGroup) || 0;
         muscleGroupCounts.set(muscleGroup, count + 1);
@@ -230,12 +232,13 @@ export async function getLyftaStats(): Promise<LyftaStats> {
   const allExercises = workouts.flatMap(w => w.exercises);
   const uniqueExercises = new Set(allExercises.map(e => e.excercise_name));
   const allWeights = allExercises
-    .flatMap(e => e.sets.map(s => s.weight))
-    .filter(w => w !== null) as number[];
+    .flatMap(e => e.sets.map(s => (s.weight !== null ? Number(s.weight) : null)))
+    .filter((w): w is number => typeof w === 'number' && !Number.isNaN(w));
   const allReps = allExercises
     .flatMap(e => e.sets.map(s => s.reps))
     .filter(r => r !== null)
-    .map(r => parseInt(r));
+    .map(r => Number.parseInt(String(r), 10))
+    .filter(n => !Number.isNaN(n));
 
   return {
     totalWorkouts: workouts.length,
@@ -253,7 +256,7 @@ export async function getLyftaStats(): Promise<LyftaStats> {
       uniqueExercises: uniqueExercises.size,
       mostUsedWeight: allWeights.length > 0 ? Math.max(...allWeights) : 0,
       averageReps:
-        allReps.length > 0 ? Math.round(allReps.reduce((a, b) => a + b, 0) / allReps.length) : 0,
+        allReps.length > 0 ? Math.round(allReps.reduce((a, b) => a + b, 0) / allReps.length) : null,
     },
   };
 }

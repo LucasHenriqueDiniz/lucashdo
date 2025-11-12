@@ -1,10 +1,84 @@
 'use server';
 
+import { logger } from '@/lib/logger';
 import { LastFmUser, LastFmTrack, LastFmArtist } from '@/types/lastfm.types';
 
 // Last.fm API service
 const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
 const API_KEY = process.env.LASTFM_API_KEY || null;
+const USER_AGENT =
+  process.env.LASTFM_USER_AGENT || 'lucashdo-portfolio/1.0 (+https://www.lucashdo.com)';
+
+interface LastFmRequestOptions<T> {
+  params: Record<string, string>;
+  cacheTag: string;
+  errorContext: string;
+  transform: (data: any) => T;
+}
+
+async function requestLastFm<T>({
+  params,
+  cacheTag,
+  errorContext,
+  transform,
+}: LastFmRequestOptions<T>): Promise<T> {
+  if (!API_KEY) {
+    throw new Error('Last.fm API key is not set');
+  }
+
+  const url = new URL(BASE_URL);
+  const searchParams = new URLSearchParams({
+    api_key: API_KEY,
+    format: 'json',
+    ...params,
+  });
+  url.search = searchParams.toString();
+
+  logger.debug('Fetching Last.fm data', {
+    method: params.method,
+    username: params.user,
+  });
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      'User-Agent': USER_AGENT,
+      Accept: 'application/json',
+    },
+    next: { revalidate: 86400, tags: ['lastfm', cacheTag] },
+  });
+
+  const textPayload = await response.text();
+  let data: any;
+
+  try {
+    data = textPayload ? JSON.parse(textPayload) : {};
+  } catch (error) {
+    logger.error('Failed to parse Last.fm response as JSON', {
+      error,
+      textPayload,
+    });
+    throw new Error(`${errorContext}: Invalid response from Last.fm API`);
+  }
+
+  if (!response.ok || data?.error) {
+    const message =
+      data?.message ||
+      data?.error ||
+      `${response.status} ${response.statusText || 'Unknown error'}`;
+
+    logger.error('Last.fm API responded with an error', {
+      status: response.status,
+      statusText: response.statusText,
+      message,
+      method: params.method,
+      username: params.user,
+    });
+
+    throw new Error(`${errorContext}: ${message}`);
+  }
+
+  return transform(data);
+}
 
 /**
  * Fetch user information from Last.fm
@@ -12,26 +86,15 @@ const API_KEY = process.env.LASTFM_API_KEY || null;
  * @returns User information
  */
 export async function getUserInfo(username: string): Promise<LastFmUser> {
-  if (!API_KEY) {
-    throw new Error('Last.fm API key is not set');
-  }
-
-  console.log('👤 Fetching Last.fm user info...');
-  const params = new URLSearchParams({
-    method: 'user.getInfo',
-    user: username,
-    api_key: API_KEY,
-    format: 'json',
+  return requestLastFm<LastFmUser>({
+    params: {
+      method: 'user.getInfo',
+      user: username,
+    },
+    cacheTag: 'lastfm-user',
+    errorContext: 'Failed to fetch user info',
+    transform: data => data.user,
   });
-
-  const response = await fetch(`${BASE_URL}?${params.toString()}`);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch user info: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data.user;
 }
 
 /**
@@ -44,27 +107,16 @@ export async function getRecentTracks(
   username: string,
   limit: number = 10
 ): Promise<LastFmTrack[]> {
-  if (!API_KEY) {
-    throw new Error('Last.fm API key is not set');
-  }
-
-  console.log('🎵 Fetching Last.fm recent tracks...');
-  const params = new URLSearchParams({
-    method: 'user.getRecentTracks',
-    user: username,
-    api_key: API_KEY,
-    limit: limit.toString(),
-    format: 'json',
+  return requestLastFm<LastFmTrack[]>({
+    params: {
+      method: 'user.getRecentTracks',
+      user: username,
+      limit: limit.toString(),
+    },
+    cacheTag: 'lastfm-recent-tracks',
+    errorContext: 'Failed to fetch recent tracks',
+    transform: data => data.recenttracks?.track ?? [],
   });
-
-  const response = await fetch(`${BASE_URL}?${params.toString()}`);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch recent tracks: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data.recenttracks.track;
 }
 
 /**
@@ -79,28 +131,17 @@ export async function getTopTracks(
   period: string = 'overall',
   limit: number = 10
 ): Promise<LastFmTrack[]> {
-  if (!API_KEY) {
-    throw new Error('Last.fm API key is not set');
-  }
-
-  console.log('🎵 Fetching Last.fm top tracks...');
-  const params = new URLSearchParams({
-    method: 'user.getTopTracks',
-    user: username,
-    api_key: API_KEY,
-    period,
-    limit: limit.toString(),
-    format: 'json',
+  return requestLastFm<LastFmTrack[]>({
+    params: {
+      method: 'user.getTopTracks',
+      user: username,
+      period,
+      limit: limit.toString(),
+    },
+    cacheTag: 'lastfm-top-tracks',
+    errorContext: 'Failed to fetch top tracks',
+    transform: data => data.toptracks?.track ?? [],
   });
-
-  const response = await fetch(`${BASE_URL}?${params.toString()}`);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch top tracks: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data.toptracks.track;
 }
 
 /**
@@ -115,25 +156,15 @@ export async function getTopArtists(
   period: string = 'overall',
   limit: number = 10
 ): Promise<LastFmArtist[]> {
-  if (!API_KEY) {
-    throw new Error('Last.fm API key is not set');
-  }
-
-  console.log('🎨 Fetching Last.fm top artists...');
-  const params = new URLSearchParams({
-    method: 'user.getTopArtists',
-    user: username,
-    api_key: API_KEY,
-    period,
-    limit: limit.toString(),
-    format: 'json',
+  return requestLastFm<LastFmArtist[]>({
+    params: {
+      method: 'user.getTopArtists',
+      user: username,
+      period,
+      limit: limit.toString(),
+    },
+    cacheTag: 'lastfm-top-artists',
+    errorContext: 'Failed to fetch top artists',
+    transform: data => data.topartists?.artist ?? [],
   });
-
-  const response = await fetch(`${BASE_URL}?${params.toString()}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch top artists: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data.topartists.artist;
 }

@@ -8,8 +8,11 @@ import {
   SiFigma,
   SiGooglemeet,
   SiLinkedin,
+  SiNextdotjs,
   SiOpenbadges,
   SiPython,
+  SiSupabase,
+  SiTypescript,
   SiUdemy,
 } from 'react-icons/si';
 import { TbWorldWww } from 'react-icons/tb';
@@ -27,13 +30,12 @@ export const academicExperiences: ExperienceProps[] = [
     url: 'https://www.uergs.edu.br/',
     startDate: '2023-02',
     endDate: '2025-01',
-    showInTimeline: false,
+    showInTimeline: true,
     tags: [
       { labels: { pt: 'C', en: 'C' }, icon: SiC },
       { labels: { pt: 'Python', en: 'Python' }, icon: SiPython },
       { labels: { pt: 'Microcontroladores', en: 'Microcontrollers' }, icon: SiArduino },
       { labels: { pt: 'Assembly', en: 'Assembly' }, icon: SiAssemblyscript },
-      { labels: { pt: 'A.I', en: 'A.I' }, icon: FaRobot },
     ],
     description: {
       pt: 'Participei de projetos acadêmicos focados em programação de baixo nível, desenvolvimento de algoritmos e sistemas embarcados. Experiência prática com microcontroladores e fundamentos de inteligência artificial.',
@@ -47,7 +49,7 @@ export const academicExperiences: ExperienceProps[] = [
     url: '',
     startDate: '2025-07',
     endDate: null,
-    showInTimeline: false,
+    showInTimeline: true,
     topTags: [
       { labels: { pt: 'Idioma', en: 'Language' } },
       { labels: { pt: 'Japonês', en: 'Japanese' } },
@@ -109,6 +111,74 @@ export const academicExperiences: ExperienceProps[] = [
     description: {
       pt: 'Desenvolvimento completo da plataforma Include Gurias: prototipagem no Figma, chatbot interativo, site institucional com cards das integrantes e gibis educativos, além de painel administrativo no-code para gestão de conteúdo.',
       en: 'Complete development of the Include Gurias platform: Figma prototyping, interactive chatbot, institutional website with member cards and educational comics, plus a no-code admin dashboard for content management.',
+    },
+    
+  },
+  {
+  id: 'comunica-mulher-bolsa',
+  topTags: [
+    { labels: { pt: 'Bolsa de Estudos', en: 'Scholarship' } },
+    { labels: { pt: 'ComunicaMulher',   en: 'ComunicaMulher' } },
+  ],
+  title: 'Bolsa de Estudos - ComunicaMulher',
+  institution: 'ComunicaMulher',
+  url: 'https://reclame-mulher.vercel.app/',
+  startDate: '2025-8',
+  endDate: null,
+  showInTimeline: true,
+  tags: [
+    { labels: { pt: 'Next.js',     en: 'Next.js' },     icon: SiNextdotjs },
+    { labels: { pt: 'TypeScript',  en: 'TypeScript' },  icon: SiTypescript },
+    { labels: { pt: 'Supabase',    en: 'Supabase' },    icon: SiSupabase },
+    { labels: { pt: 'Banco de Dados', en: 'Databases' }, icon: FaDatabase },
+    { labels: { pt: 'Impacto Social', en: 'Social Impact' }, icon: FaHeart },
+  ],
+  description: {
+    pt: 'Bolsa focada no desenvolvimento da plataforma ComunicaMulher: intake de reclamações com validações, painel de moderação, políticas RLS no Supabase, e frontend em Next.js (App Router) com UI acessível. Entregas contínuas, métricas de engajamento e documentação técnica.',
+    en: 'Scholarship focused on building the ComunicaMulher platform: complaint intake with validations, moderation dashboard, Supabase RLS policies, and a Next.js (App Router) front-end with accessible UI. Continuous delivery, engagement metrics, and technical documentation.',
+  },
+},
+  {
+    id: 'belart-estetica',
+    title: 'Ensino Técnico, Massoterapia',
+    institution: 'Belart Escola de Estética',
+    topTags: [
+      { labels: { pt: 'Acadêmico', en: 'Academic' } },
+      { labels: { pt: 'Técnico', en: 'Technical' } },
+    ],
+    url: '',
+    startDate: '2021-01',
+    endDate: '2022-12',
+    showInTimeline: false,
+    tags: [
+      { labels: { pt: 'Massagem terapêutica', en: 'Therapeutic massage' }, icon: MdDesignServices },
+      { labels: { pt: 'Relacionamento com clientes', en: 'Client relations' }, icon: MdDesignServices },
+    ],
+    description: {
+      pt: 'Formação técnica em massoterapia com foco em técnicas terapêuticas e relacionamento com clientes.',
+      en: 'Technical training in massage therapy focusing on therapeutic techniques and client relations.',
+    },
+  },
+  {
+    id: 'jovem-profissional-necropsia',
+    title: 'Auxiliar Necropsia',
+    institution: 'Escola Técnica e Faculdade Jovem Profissional Porto Alegre',
+    topTags: [
+      { labels: { pt: 'Acadêmico', en: 'Academic' } },
+      { labels: { pt: 'Técnico', en: 'Technical' } },
+    ],
+    url: '',
+    startDate: '2020-01',
+    endDate: '2022-12',
+    showInTimeline: false,
+    tags: [
+      { labels: { pt: 'Forense', en: 'Forensics' }, icon: GiSkeleton },
+      { labels: { pt: 'Anatomia humana', en: 'Human anatomy' }, icon: GiSkeleton },
+      { labels: { pt: 'Apresentações técnicas', en: 'Technical presentations' }, icon: MdDesignServices },
+    ],
+    description: {
+      pt: 'Formação técnica em auxiliar de necropsia com conhecimentos em forense, anatomia humana e apresentações técnicas.',
+      en: 'Technical training as necropsy assistant with knowledge in forensics, human anatomy, and technical presentations.',
     },
   },
   {

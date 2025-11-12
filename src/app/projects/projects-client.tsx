@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import { useLanguageStore } from '@/store/languageStore';
 import { Project } from '@/constants';
 import { AnimatedProjectsLayout } from './AnimatedProjects';
 import { ProjectsGrid } from './client';

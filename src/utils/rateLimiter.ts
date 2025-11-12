@@ -12,9 +12,9 @@ class RateLimiter {
   private readonly cooldownMs: number;
 
   constructor(
-    maxRequests: number = 1, // 1 posts por janela de tempo
-    windowMs: number = 15 * 60 * 1000, // 15 minutos
-    cooldownMs: number = 15 * 60 * 1000 // 2 minutos entre posts
+    maxRequests: number = 1, // 1 post por janela de tempo
+    windowMs: number = 24 * 60 * 60 * 1000, // 24 horas
+    cooldownMs: number = 24 * 60 * 60 * 1000 // 24 horas entre posts
   ) {
     this.maxRequests = maxRequests;
     this.windowMs = windowMs;
@@ -53,7 +53,7 @@ class RateLimiter {
       const retryAfter = Math.ceil((this.cooldownMs - (now - entry.lastPost)) / 1000);
       return {
         allowed: false,
-        message: `Aguarde ${retryAfter} segundos antes de postar novamente.`,
+        message: `Você já deixou um recado hoje. Aguarde ${Math.ceil(retryAfter / 3600)} hora(s) para postar novamente.`,
         retryAfter,
       };
     }
@@ -63,7 +63,7 @@ class RateLimiter {
       const retryAfter = Math.ceil((entry.resetTime - now) / 1000);
       return {
         allowed: false,
-        message: `Muitos posts. Tente novamente em ${Math.ceil(retryAfter / 60)} minutos.`,
+        message: `Você já deixou um recado hoje. Tente novamente em ${Math.ceil(retryAfter / 3600)} hora(s).`,
         retryAfter,
       };
     }

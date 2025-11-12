@@ -1,14 +1,10 @@
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata, Viewport } from 'next';
-import dynamic from 'next/dynamic';
 import { IntlProviderClient } from '@/lib/i18n/IntlProviderClient';
 import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
+import AppShell from '@/components/layout/AppShell';
 import './globals.css';
 import { logo } from '../../public';
-
-const Header = dynamic(() => import('@/components/layout/Header'));
-const Footer = dynamic(() => import('@/components/layout/Footer'));
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -22,7 +18,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://lucashdo.com'),
+  metadataBase: new URL('https://www.lucashdo.com'),
   title: {
     default: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
     template: '%s | Lucas Hdo - Portfolio',
@@ -50,7 +46,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: 'Lucas Hdo',
-      url: 'https://lucashdo.com',
+      url: 'https://www.lucashdo.com',
     },
   ],
   creator: 'Lucas Hdo',
@@ -72,7 +68,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: 'https://lucashdo.com',
+    url: 'https://www.lucashdo.com',
     siteName: 'Lucas Hdo - Portfolio',
     title: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
     description:
@@ -83,7 +79,6 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
-        type: 'image/webp',
       },
     ],
   },
@@ -96,6 +91,11 @@ export const metadata: Metadata = {
       'Portfólio de Lucas Hdo - Desenvolvedor Full Stack especializado em React, Next.js, TypeScript e design criativo.',
     images: [logo.src],
   },
+  icons: {
+    icon: '/logo.webp',
+    apple: '/logo.webp',
+  },
+  manifest: '/site.webmanifest',
   robots: {
     index: true,
     follow: true,
@@ -108,35 +108,22 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'google-site-verification-code',
-    yandex: 'yandex-verification-code',
-    yahoo: 'yahoo-verification-code',
+    google: 'TjTYF3JIy6CpIclGSHBWOmwz_gbk_OOQnV5rI5rM-KI',
   },
   other: {
     'msapplication-TileColor': '#000000',
     'theme-color': '#000000',
+    'msvalidate.01': 'FC3E7584A52FA48F6866E5465BF8EFBD',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="icon" type="image/webp" href="/logo.webp" />
-        <link rel="apple-touch-icon" href="/logo.webp" />
-      </head>
       <body className="font-sans antialiased">
         <IntlProviderClient>
           <TooltipProvider>
-            <Header />
-            {children}
-            <Footer />
-            <SpeedInsights />
+            <AppShell>{children}</AppShell>
             <GoogleAnalytics
               gaId={process.env.NEXT_PUBLIC_GA_ID}
               gtmId={process.env.NEXT_PUBLIC_GTM_ID}

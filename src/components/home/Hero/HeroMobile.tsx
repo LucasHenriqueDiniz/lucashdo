@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { TypingText } from '@/components/animate-ui/text/typing';
 import { Button } from '@/components/ui/button';
 import { skillsData } from '@/constants/skillsData';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import { useLanguageStore } from '@/store/languageStore';
 import AnimatedRole from './AnimatedRole';
 
 export default function HeroMobile() {

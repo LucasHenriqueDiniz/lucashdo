@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { ArrowLeft, ExternalLink, Github, Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import { useLanguageStore } from '@/store/languageStore';
 import { Project } from '@/constants';
 import { GitHubStarsButton } from '@/components/animate-ui/buttons/github-stars';
 import { AnimatedProjectsLayout } from '../AnimatedProjects';
@@ -61,8 +61,33 @@ interface ProjectDetailProps {
 
 export const ProjectDetail = ({ project, stars }: ProjectDetailProps) => {
   const [imageLoading, setImageLoading] = useState(true);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('Projects');
   const locale = useLanguageStore(state => state.lang);
+
+  useEffect(() => {
+    const container = imageContainerRef.current;
+    if (!container) return;
+
+    const img = container.querySelector('img');
+    if (!img) return;
+
+    const handleLoad = () => {
+      setImageLoading(false);
+    };
+
+    if (img.complete) {
+      setImageLoading(false);
+    } else {
+      img.addEventListener('load', handleLoad);
+      img.addEventListener('error', handleLoad);
+    }
+
+    return () => {
+      img.removeEventListener('load', handleLoad);
+      img.removeEventListener('error', handleLoad);
+    };
+  }, [project.image]);
 
   return (
     <motion.div
@@ -111,17 +136,18 @@ export const ProjectDetail = ({ project, stars }: ProjectDetailProps) => {
             />
 
             {/* Image with loading animation */}
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className={`object-cover transition-all duration-700 group-hover:scale-105 ${
-                imageLoading ? 'opacity-0 blur-lg' : 'opacity-100 blur-0'
-              }`}
-              onLoadingComplete={() => setImageLoading(false)}
-              priority
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-            />
+            <div ref={imageContainerRef} className="relative w-full h-full">
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                className={`object-cover transition-all duration-700 group-hover:scale-105 ${
+                  imageLoading ? 'opacity-0 blur-lg' : 'opacity-100 blur-0'
+                }`}
+                priority
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+              />
+            </div>
 
             {/* Overlay with buttons on hover  */}
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6">

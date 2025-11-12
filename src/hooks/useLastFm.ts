@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { LastFmUser, LastFmTrack, LastFmArtist } from '@/types/lastfm.types';
 
-const fetcher = (url: string) => fetch(url).then(r => r.json());
+const fetcher = (url: string) => fetch(url, { cache: 'no-store' }).then(r => r.json());
 
 // Hook para dados do usuário LastFM
 export function useLastFmUser() {
@@ -21,9 +21,9 @@ export function useLastFmTracks() {
   const { data, error, isLoading, mutate } = useSWR<LastFmTrack[]>('/api/lastfm/tracks', fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
-    dedupingInterval: 5000, // 5s para tracks (mais frequente)
+    dedupingInterval: 30000, // alinhado ao refresco manual
     errorRetryCount: 3,
-    refreshInterval: 15000, // Revalidar a cada 15 segundos para tracks
+    refreshInterval: 0,
   });
 
   return { tracks: data, isLoading, error, refresh: mutate };
