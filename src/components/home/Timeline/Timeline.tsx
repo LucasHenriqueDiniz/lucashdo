@@ -16,7 +16,7 @@ import { Pill } from '@/components/ui/Pill';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { academicExperiences } from '@/constants/academicExperiences';
 import { jobExperiences } from '@/constants/jobExperiences';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import { useLanguageStore } from '@/store/languageStore';
 import { ExperienceProps, TimelineTagProps, TranslatedField } from '@/types/experience.types';
 import { formatExperienceDates, getFilteredAndSortedExperiences } from '@/utils/experienceUtils';
 import './Timeline.css';

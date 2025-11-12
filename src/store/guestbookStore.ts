@@ -40,7 +40,17 @@ export const useGuestbookStore = create<GuestbookState>()(
           const response = await fetch('/api/guestbook');
 
           if (!response.ok) {
-            throw new Error('Erro ao buscar comentários');
+            if (response.status >= 500) {
+              throw new Error('SERVICE_UNAVAILABLE');
+            }
+
+            const errorData = await response.json().catch(() => null);
+            const serverMessage =
+              errorData && typeof errorData.error === 'string'
+                ? errorData.error
+                : 'Erro ao buscar comentários';
+
+            throw new Error(serverMessage);
           }
 
           const data: GuestbookEntry[] = await response.json();
@@ -53,7 +63,7 @@ export const useGuestbookStore = create<GuestbookState>()(
           });
         } catch (error: unknown) {
           set({
-            error: error instanceof Error ? error.message : 'Erro ao buscar guestbook',
+            error: 'SERVICE_UNAVAILABLE',
             isLoading: false,
           });
         }
@@ -84,11 +94,14 @@ export const useGuestbookStore = create<GuestbookState>()(
 
           return newEntry;
         } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : 'Erro ao adicionar comentário';
+          const normalizedMessage = /fetch failed/i.test(message) ? 'SERVICE_UNAVAILABLE' : message;
+
           set({
-            error: error instanceof Error ? error.message : 'Erro ao adicionar comentário',
+            error: normalizedMessage,
             isLoading: false,
           });
-          throw error;
+          throw new Error(normalizedMessage);
         }
       },
 

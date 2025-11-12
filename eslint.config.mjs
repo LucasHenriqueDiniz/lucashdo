@@ -26,6 +26,25 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // Global ignores - must be at the top level
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/.next/**',
+      '**/out/**',
+      '**/dist/**',
+      '**/coverage/**',
+      '**/build/**',
+      '**/.turbo/**',
+      '**/.vercel/**',
+      '**/pnpm-lock.yaml',
+      '**/package-lock.json',
+      '**/yarn.lock',
+      '**/next-env.d.ts',
+      '**/.eslintrc*',
+    ],
+  },
+
   // JavaScript recommended rules
   js.configs.recommended,
 
@@ -41,15 +60,6 @@ const eslintConfig = [
   // Custom project configuration
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
-    ignores: [
-      '**/node_modules/**',
-      '**/.next/**',
-      '**/out/**',
-      '**/dist/**',
-      '**/coverage/**',
-      '**/build/**',
-      '.eslint.config',
-    ],
 
     linterOptions: {
       reportUnusedDisableDirectives: true,
@@ -123,6 +133,15 @@ const eslintConfig = [
           extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
         },
       },
+    },
+  },
+
+  // Configuration files - allow require() and CommonJS
+  {
+    files: ['**/*.config.{js,mjs,cjs}', '**/next.config.{js,ts}'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      'import/no-commonjs': 'off',
     },
   },
 ];

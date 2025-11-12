@@ -21,7 +21,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '*.last.fm',
+        hostname: 'lastfm-img2.akamaized.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.scdn.co',
       },
       {
         protocol: 'https',
@@ -34,6 +38,14 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'media.licdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'apilyfta.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.cloudflare.steamstatic.com',
       },
     ],
     formats: ['image/avif', 'image/webp'],
@@ -62,10 +74,6 @@ const nextConfig: NextConfig = {
             value: 'max-age=63072000; includeSubDomains; preload',
           },
           {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          {
             key: 'X-Frame-Options',
             value: 'SAMEORIGIN',
           },
@@ -79,7 +87,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+            value: 'camera=(), microphone=(), geolocation=()',
           },
           // SEO headers
           {
@@ -130,7 +138,7 @@ const nextConfig: NextConfig = {
 
   // Experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+    optimizePackageImports: ['lucide-react'],
   },
 
   // Webpack optimizations

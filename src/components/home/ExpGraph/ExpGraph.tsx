@@ -3,7 +3,7 @@ import { flip, arrow as floatingArrow, offset, shift, useFloating } from '@float
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { SkillDataType, skillsData } from '@/constants';
+import { SkillDataType, skillsData, currentlyLearning } from '@/constants';
 import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
 import './ExpGraph.css';
 
@@ -18,6 +18,7 @@ const SkillIcon = memo(
     isHovered: boolean;
     onHover: (name: string | null) => void;
   }) => {
+    const t = useTranslations('ExpGraph');
     // Get the React Icon component
     const IconComponent = skill.icon;
 
@@ -63,8 +64,8 @@ const SkillIcon = memo(
             >
               <div className="font-semibold">{skill.name}</div>
               <div className="text-xs flex gap-2">
-                <span>Pro: {skill.proexp}y</span>
-                <span>Total: {skill.proexp + skill.exp}y</span>
+                <span>{t('tooltip.work')}: {skill.proexp}y</span>
+                <span>{t('tooltip.total')}: {skill.proexp + skill.exp}y</span>
               </div>
             </motion.div>
           )}
@@ -92,6 +93,7 @@ const ExperienceBar = ({
   onHover: (name: string | null) => void;
   index: number;
 }) => {
+  const t = useTranslations('ExpGraph');
   // Floating UI para tooltip
   const [open, setOpen] = useState(false);
   const arrowRef = useRef(null);
@@ -157,8 +159,8 @@ const ExperienceBar = ({
             >
               <div className="font-semibold">{skill.name}</div>
               <div className="text-xs flex gap-2">
-                <span>Pro: {skill.proexp}y</span>
-                <span>Total: {skill.proexp + skill.exp}y</span>
+                <span>{t('tooltip.work')}: {skill.proexp}y</span>
+                <span>{t('tooltip.total')}: {skill.proexp + skill.exp}y</span>
               </div>
               <div
                 ref={arrowRef}
@@ -313,10 +315,10 @@ const ExpGraph = () => {
                 aria-label="Experience chart showing professional and total years of experience"
                 preserveAspectRatio="xMinYMin meet"
               >
-                {/* Animated grid lines - now 1, 3, 6+ anos */}
-                <VerticalLine position="20%" year={1} label="1 ano" />
-                <VerticalLine position="50%" year={3} label="3 anos" />
-                <VerticalLine position="85%" year={6} label="6+ anos" />
+                {/* Animated grid lines - now 1, 3, 6 anos */}
+                <VerticalLine position="16.67%" year={1} label={t('years.one')} />
+                <VerticalLine position="50%" year={3} label={t('years.three')} />
+                <VerticalLine position="100%" year={6} label={t('years.six')} />
                 {/* Experience bars with titles above */}
                 {displayedSkills.map((skill, index) => {
                   const y = 50 + index * 70;
@@ -442,6 +444,79 @@ const ExpGraph = () => {
                   );
                 })}
               </div>
+              
+              {/* Currently Learning Section */}
+              {currentlyLearning.length > 0 && (
+                <div className="mt-8 pt-8 border-t border-[#333]">
+                  <h3 className="text-sm font-semibold text-gray-400 mb-4">{t('currentlyLearning')}</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    {currentlyLearning.map((skill, index) => {
+                      const isHovered = hoveredSkill === skill.name;
+
+                      return (
+                        <motion.div
+                          key={skill.name}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.05, duration: 0.3 }}
+                          onMouseEnter={() => handleSkillHover(skill.name)}
+                          onMouseLeave={() => handleSkillHover(null)}
+                        >
+                          <div
+                            style={{ position: 'relative' }}
+                            onMouseEnter={() => handleSkillHover(skill.name)}
+                            onMouseLeave={() => handleSkillHover(null)}
+                          >
+                            <motion.div
+                              className={`w-full aspect-square rounded-xl flex items-center justify-center cursor-pointer skill-icon-card ${
+                                isHovered ? 'active' : ''
+                              }`}
+                              style={{
+                                backgroundColor: isHovered ? 'var(--secondary)' : 'rgba(75, 75, 75, 0.2)',
+                                border: isHovered
+                                  ? `1px solid rgba(255, 255, 255, 0.25)`
+                                  : '1px solid rgba(75, 75, 75, 0.3)',
+                                opacity: 0.7,
+                              }}
+                              animate={{
+                                scale: isHovered ? 1.03 : 1,
+                              }}
+                              transition={{
+                                type: 'spring',
+                                stiffness: 300,
+                                damping: 15,
+                                duration: 0.15,
+                              }}
+                              whileTap={{ scale: 0.98 }}
+                              role="button"
+                              aria-label={`${skill.name}: Learning`}
+                            >
+                              {React.createElement(skill.icon, {
+                                size: 24,
+                                color: 'rgba(255, 255, 255, 0.6)',
+                              })}
+                            </motion.div>
+                            <AnimatePresence>
+                              {isHovered && (
+                                <motion.div
+                                  className="expgraph-tooltip"
+                                  initial={{ opacity: 0, y: 8 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: 8 }}
+                                  transition={{ duration: 0.18 }}
+                                >
+                                  <div className="font-semibold">{skill.name}</div>
+                                  <div className="text-xs text-gray-400">Learning</div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

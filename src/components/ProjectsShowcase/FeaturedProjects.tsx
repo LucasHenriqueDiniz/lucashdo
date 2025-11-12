@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { MdFeaturedPlayList } from 'react-icons/md';
 import { useTranslations } from 'next-intl';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import { useLanguageStore } from '@/store/languageStore';
 import { Project, projects } from '@/constants/projects';
 import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
 import Browser from '../home/Browser/Browser';

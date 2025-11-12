@@ -4,6 +4,5 @@ export * from './skillsData';
 export * from './guestbookBlockedTerms';
 export * from './guestbookEmojis';
 export * from './gallery';
-export * from './aboutTestimonials';
 export * from './academicExperiences';
 export * from './jobExperiences';

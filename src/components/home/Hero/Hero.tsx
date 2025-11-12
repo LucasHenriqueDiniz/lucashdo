@@ -8,9 +8,9 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { HiOutlineArrowNarrowDown } from 'react-icons/hi';
-import { LuExternalLink, LuMail } from 'react-icons/lu';
+import { LuExternalLink, LuFileText, LuMail } from 'react-icons/lu';
 import { MdOutlineMouse } from 'react-icons/md';
-import { useLanguageStore } from '@/lib/i18n/languageStore';
+import { useLanguageStore } from '@/store/languageStore';
 import { skillsData } from '@/constants/skillsData';
 import { Button } from '@/components/ui/button';
 import { TypingText } from '@/components/animate-ui/text/typing';
@@ -137,18 +137,34 @@ function HeroComponent() {
     router.push('/projects');
   }, [router]);
 
+  const handleCVClick = useCallback(() => {
+    router.push('/cv');
+  }, [router]);
+
   return (
     <section
-      className="min-h-[60vh] w-full max-w-4xl mx-auto px-4 relative flex flex-col justify-center items-center"
+      className="hidden md:flex min-h-[60vh] w-full max-w-4xl mx-auto px-4 relative flex-col justify-center items-center"
       style={{ justifyContent: 'center' }}
     >
-      {/* AVISO DE CONSTRUÇÃO MELHORADO */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
-        <div className="px-4 py-2 rounded-full border border-[var(--primary)] text-[var(--primary)] text-xs sm:text-sm flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />
-          Website under construction!
+      {/* Badge de Disponibilidade */}
+      <motion.div 
+        className="absolute top-12 left-1/2 -translate-x-1/2 z-20"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        <div className="relative group">
+          <div className="absolute -inset-1 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
+          <div className="relative px-5 py-2 bg-background rounded-full border border-green-500/30 text-green-500 text-xs sm:text-sm font-medium flex items-center gap-2 shadow-lg">
+            <motion.span 
+              className="w-2 h-2 rounded-full bg-green-500"
+              animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {t('Home.availableForHire')}
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* tsParticles Background */}
       {init && (
@@ -215,10 +231,10 @@ function HeroComponent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {/* Contact button - with clean outline effect */}
+          {/* Contact button */}
           <motion.div
-            className="contact-button-wrapper relative group w-full sm:w-auto"
-            whileHover={{ scale: 1.03 }}
+            className="w-full sm:w-auto"
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 400, damping: 17 }}
           >
@@ -226,44 +242,64 @@ function HeroComponent() {
               onClick={handleContactClick}
               size="lg"
               variant="outline"
-              className="relative overflow-hidden border-2 border-[color:var(--blue)] hover:text-white px-8 py-3 rounded-xl text-lg font-semibold w-full transition-all duration-300"
+              className="relative overflow-hidden border-2 border-[color:var(--blue)] hover:text-white px-8 py-3 rounded-xl text-lg font-semibold w-full transition-all duration-300 bg-background hover:shadow-xl hover:shadow-blue-500/20"
             >
-              <span className="flex items-center gap-2">
+              <span className="relative z-10 flex items-center gap-2">
                 <LuMail className="w-5 h-5" />
                 {t('Navigation.contact')}
               </span>
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-[color:var(--blue)] via-[color:var(--cyan)] to-[color:var(--blue)] -z-10"
-                initial={{ x: '-100%', opacity: 0.5 }}
-                whileHover={{ x: '0%', opacity: 1 }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="absolute inset-0 bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--cyan)] -z-10"
+                initial={{ x: '-100%' }}
+                whileHover={{ x: '0%' }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+              />
+            </Button>
+          </motion.div>
+
+          {/* CV button */}
+          <motion.div
+            className="w-full sm:w-auto"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+          >
+            <Button
+              onClick={handleCVClick}
+              size="lg"
+              variant="outline"
+              className="relative overflow-hidden border-2 border-[color:var(--cyan)] hover:text-white px-8 py-3 rounded-xl text-lg font-semibold w-full transition-all duration-300 bg-background hover:shadow-xl hover:shadow-cyan-500/20"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <LuFileText className="w-5 h-5" />
+                {t('Navigation.viewCV')}
+              </span>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-[color:var(--cyan)] to-[color:var(--blue)] -z-10"
+                initial={{ x: '-100%' }}
+                whileHover={{ x: '0%' }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
               />
             </Button>
           </motion.div>
 
           {/* Projects button */}
           <motion.div
-            className="projects-button-wrapper relative group w-full sm:w-auto"
-            whileHover={{ scale: 1.03 }}
+            className="relative w-full sm:w-auto"
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 400, damping: 17 }}
           >
-            <div className="absolute -inset-[6px] rounded-xl border-2 border-[color:var(--cyan)] z-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="animated-border-glow"></div>
-            </div>
             <Button
               onClick={handleProjectsClick}
               size="lg"
-              className="bg-[color:var(--blue)] text-white hover:bg-[color:var(--blue)]/90 px-8 py-3 rounded-xl text-lg font-semibold w-full relative z-10 shine-effect hero-focus-ring"
+              className="relative bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--cyan)] text-white hover:shadow-xl hover:shadow-cyan-500/30 px-8 py-3 rounded-xl text-lg font-semibold w-full overflow-hidden transition-all duration-300"
             >
               <span className="flex items-center gap-2">
                 <LuExternalLink className="w-5 h-5" />
                 {t('Navigation.projects')}
               </span>
             </Button>
-            <div className="absolute -inset-[8px] rounded-xl z-0 overflow-hidden pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="glow-circle-clockwise"></div>
-            </div>
           </motion.div>
         </motion.div>
       </div>

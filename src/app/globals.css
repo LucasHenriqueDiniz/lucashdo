@@ -74,7 +74,8 @@
   --header-height: 80px;
 }
 
-section {
+/* Replaces global section styles; apply this class explicitly where needed */
+.legacy-section {
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -88,7 +89,6 @@ section {
   position: relative;
   scroll-snap-align: start; /* Ensures sections snap to the start */
   scroll-snap-stop: always; /* Ensures sections snap consistently */
-  scroll-snap-type: y mandatory; /* Enables vertical snapping */
   scroll-behavior: smooth; /* Smooth scrolling */
   padding-bottom: 2rem; /* Ensures space at the bottom for content */
 }
@@ -101,6 +101,34 @@ section {
 .hide-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+/* Global scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.55), rgba(79, 70, 229, 0.55));
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.75), rgba(129, 140, 248, 0.75));
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 /* Standard Variable Aliases for Project-Wide Consistency */

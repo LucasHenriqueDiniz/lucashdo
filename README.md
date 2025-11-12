@@ -47,7 +47,6 @@ Você pode começar a editar o site modificando os arquivos em `src/app/`. A pá
 - `npm run lint` - Executa o linter para verificar problemas
 - `npm run lint:fix` - Corrige automaticamente problemas de linting
 - `npm run type-check` - Executa o verificador de tipos TypeScript
-- `pnpm lint-check` - Executa ESLint e Prettier, salvando o relatório em `lint-reports/`
 
 ## 📁 Estrutura do Projeto
 
@@ -77,17 +76,3 @@ Este projeto está licenciado sob a MIT License.
 ## 👤 Autor
 
 - **Lucas** - [GitHub](https://github.com/LucasHenriqueDiniz)
-
-## 🛠️ Como funciona a arquitetura de dados
-
-- Os hooks customizados do client (ex: `useLastFmTracks`, `useSteamStats`, `useLyftaStats`) **não acessam diretamente APIs externas nem variáveis de ambiente sensíveis**.
-- Eles consomem **rotas internas de API** (`/api/lastfm/tracks`, `/api/steam/stats`, etc), que são executadas no backend (server-side).
-- Essas rotas de API usam os services (ex: `getTopArtists`, `getRecentTracks`) e **acessam as variáveis de ambiente seguras** (ex: `LASTFM_API_KEY`, `LASTFM_USERNAME`) que nunca vão para o client.
-- Assim, **nenhuma chave de API ou username sensível fica exposta no client/browser**.
-- O cache inteligente (Supabase, memória, SWR) é feito no backend e no client, garantindo performance e segurança.
-
-## 🔒 Segurança das variáveis de ambiente
-
-- **NUNCA** coloque chaves de API ou usernames sensíveis como `NEXT_PUBLIC_...` se não for necessário no client.
-- Agora, todas as variáveis sensíveis (ex: `LASTFM_API_KEY`, `LASTFM_USERNAME`, `LYFTA_API_KEY`, `STEAM_API_KEY`) ficam apenas no backend/API.
-- O client só consome dados já processados e seguros pelas rotas internas.

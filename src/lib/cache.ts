@@ -1,4 +1,5 @@
-import { createClient } from './supabase/server';
+import { kv, KV_KEYS } from './kv';
+import { logger } from './logger';
 
 interface CacheConfig {
   ttl: number; // em segundos
@@ -15,7 +16,15 @@ const CACHE_CONFIGS: Record<string, CacheConfig> = {
   'lyfta:stats': { ttl: 3600, staleWhileRevalidate: 1800 }, // 1h + 30min
 };
 
-export class SupabaseCache {
+interface KvCachePayload<T> {
+  data: T;
+  expiresAt: string;
+  staleUntil: string;
+}
+
+const MEMORY_MAX_TTL = 300000; // 5 minutes
+
+export class KvBackedCache {
   private memoryCache = new Map<string, { data: unknown; expires: number }>();
 
   async get<T>(key: string): Promise<{
@@ -33,34 +42,27 @@ export class SupabaseCache {
       };
     }
 
-    // 2. Buscar no Supabase
-    const supabase = await createClient();
-    const { data: cacheData, error } = await supabase
-      .from('api_cache')
-      .select('data, expires_at, created_at')
-      .eq('cache_key', key)
-      .single();
+    // 2. Buscar no Vercel KV
+    const cacheKey = KV_KEYS.cache(key);
+    const cacheData = await kv.get<KvCachePayload<T>>(cacheKey);
 
-    if (error || !cacheData) {
+    if (!cacheData) {
       return { data: null, isStale: false, shouldRevalidate: true };
     }
 
     const now = new Date();
-    const expiresAt = new Date(cacheData.expires_at);
+    const expiresAt = new Date(cacheData.expiresAt);
+    const staleUntil = new Date(cacheData.staleUntil);
     const config = this.getConfig(key);
 
-    const isExpired = now > expiresAt;
-    const staleUntil = config.staleWhileRevalidate
-      ? new Date(expiresAt.getTime() + config.staleWhileRevalidate * 1000)
-      : expiresAt;
-
-    const isStale = now > staleUntil;
+    const isExpired = now.getTime() > expiresAt.getTime();
+    const isStale = now.getTime() > staleUntil.getTime();
 
     // Adicionar ao cache em memória se ainda válido
     if (!isExpired) {
       this.memoryCache.set(key, {
         data: cacheData.data,
-        expires: Math.min(expiresAt.getTime(), Date.now() + 300000),
+        expires: Math.min(expiresAt.getTime(), Date.now() + MEMORY_MAX_TTL),
       });
     }
 
@@ -74,59 +76,42 @@ export class SupabaseCache {
   async set<T>(key: string, data: T): Promise<void> {
     const config = this.getConfig(key);
     const expiresAt = new Date(Date.now() + config.ttl * 1000);
+    const staleUntil = config.staleWhileRevalidate
+      ? new Date(expiresAt.getTime() + config.staleWhileRevalidate * 1000)
+      : expiresAt;
 
     try {
-      const supabase = await createClient();
+      const cacheKey = KV_KEYS.cache(key);
+      const payload: KvCachePayload<T> = {
+        data,
+        expiresAt: expiresAt.toISOString(),
+        staleUntil: staleUntil.toISOString(),
+      };
 
-      // Tentar upsert primeiro, se falhar, delete e insert
-      const { error: upsertError } = await supabase.from('api_cache').upsert(
-        {
-          cache_key: key,
-          data: data as Record<string, unknown>,
-          expires_at: expiresAt.toISOString(),
-        },
-        {
-          onConflict: 'cache_key',
-        }
-      );
+      const ttlSeconds =
+        config.ttl + (config.staleWhileRevalidate ? config.staleWhileRevalidate : 0);
 
-      if (upsertError) {
-        console.log('Upsert failed, trying delete + insert:', upsertError.message);
-        // Se upsert falhar, delete e insert
-        await supabase.from('api_cache').delete().eq('cache_key', key);
-
-        const { error: insertError } = await supabase.from('api_cache').insert({
-          cache_key: key,
-          data: data as Record<string, unknown>,
-          expires_at: expiresAt.toISOString(),
-        });
-
-        if (insertError) throw insertError;
-      }
+      await kv.set(cacheKey, payload, {
+        ex: ttlSeconds,
+      });
 
       this.memoryCache.set(key, {
         data,
-        expires: Date.now() + Math.min(config.ttl * 1000, 300000),
+        expires: Date.now() + Math.min(config.ttl * 1000, MEMORY_MAX_TTL),
       });
     } catch (error) {
-      console.error('Erro ao salvar cache:', error);
+      logger.error('Erro ao salvar cache:', error);
     }
   }
 
   async delete(key: string): Promise<void> {
     this.memoryCache.delete(key);
-    const supabase = await createClient();
-    await supabase.from('api_cache').delete().eq('cache_key', key);
+    const cacheKey = KV_KEYS.cache(key);
+    await kv.del(cacheKey);
   }
 
   async cleanup(): Promise<void> {
-    const supabase = await createClient();
-    const { error } = await supabase
-      .from('api_cache')
-      .delete()
-      .lt('expires_at', new Date().toISOString());
-
-    if (error) console.error('Erro na limpeza do cache:', error);
+    // Os registros recebem TTL via Vercel KV, então não há limpeza manual necessária.
   }
 
   private getConfig(key: string): CacheConfig {
@@ -136,4 +121,4 @@ export class SupabaseCache {
   }
 }
 
-export const cache = new SupabaseCache();
+export const cache = new KvBackedCache();

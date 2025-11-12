@@ -76,7 +76,7 @@ export async function getSteamProfile(): Promise<SteamProfile | null> {
     logger.debug('🔍 Fetching Steam profile...');
     const response = await fetch(
       `${BASE_URL}/ISteamUser/GetPlayerSummaries/v0002/?key=${API_KEY}&steamids=${STEAM_ID}`,
-      { next: { revalidate: 3600 } } // Cache for 1 hour
+      { next: { revalidate: 86400, tags: ['steam'] } }
     );
 
     if (!response.ok) {

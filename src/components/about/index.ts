@@ -1,11 +1,4 @@
 export { default as ProfileHeader } from './ProfileHeader';
 export { default as Section } from './Section';
 export { default as SkillsGrid } from './SkillsGrid';
-export { default as ExperienceTimeline } from './ExperienceTimeline';
 export { default as AboutHero } from './AboutHero';
-export { default as AboutProfile } from './AboutProfile';
-export { default as AboutProjects } from './AboutProjects';
-export { default as AboutCTA } from './AboutCTA';
-export { default as AboutTestimonials } from './AboutTestimonials';
-export { default as AboutJourney } from './AboutJourney';
-export { default as AboutStats } from './AboutStats';

@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# usa o bin local, não puxa global
-npx --no-install lint-staged

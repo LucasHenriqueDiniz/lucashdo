@@ -1,399 +1,436 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRef, useState, memo, useCallback } from 'react';
-import { FaDiscord, FaSteam } from 'react-icons/fa';
-import {
-  LuArrowRight,
-  LuGithub,
-  LuGlobe,
-  LuLinkedin,
-  LuMail,
-  LuMapPin,
-  LuSend,
-  LuUser,
-} from 'react-icons/lu';
-import { AlertCircle, CheckCircle } from 'lucide-react';
+import { memo, useActionState, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { motion } from 'framer-motion';
+import { ArrowRight, CheckCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ContactLinks } from '@/constants/contacts';
-import { selfie } from '../../../public';
+import { useLanguageStore } from '@/store/languageStore';
+import { submitContact } from './actions';
 
-// Map of contact icons
-const contactIcons = {
-  email: <LuMail className="text-2xl" />,
-  github: <LuGithub className="text-2xl" />,
-  linkedin: <LuLinkedin className="text-2xl" />,
-  website: <LuGlobe className="text-2xl" />,
-  discord: <FaDiscord className="text-2xl" />,
-  steam: <FaSteam className="text-2xl" />,
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        container: HTMLElement,
+        options: {
+          sitekey: string;
+          callback: (token: string) => void;
+          'expired-callback'?: () => void;
+          'error-callback'?: () => void;
+          theme?: 'light' | 'dark' | 'auto';
+        }
+      ) => string;
+      reset: (widgetId?: string) => void;
+      remove?: (widgetId: string) => void;
+    };
+  }
+}
+
+type ContactIntentValue = 'hire' | 'project' | 'consult' | 'partner' | 'press';
+type ContactMethodValue = 'email' | 'telefone' | 'discord' | 'linkedin' | 'outro';
+
+type ContactFormValues = {
+  name: string;
+  email: string;
+  intent: ContactIntentValue;
+  message: string;
+  preferredMethod: ContactMethodValue;
+  preferredValue: string;
 };
 
-// Contact card info with custom colors and descriptions
-const contactCards = [
-  {
-    type: 'linkedin' as const,
-    title: 'LinkedIn',
-    description: 'Conecte-se comigo para oportunidades profissionais e networking',
-    colors: {
-      primary: 'from-blue-600/25 via-blue-500/20 to-blue-400/25 border-blue-400/50',
-      ring: 'ring-blue-500/60 dark:ring-blue-400/60',
-      text: 'text-blue-600 dark:text-blue-400',
-      hover: 'group-hover:bg-blue-500',
-      accent: 'bg-blue-500',
-      glow: '0 0 40px rgba(59, 130, 246, 0.3)',
-    },
-    action: 'Conectar',
-    icon: contactIcons.linkedin,
-  },
-  {
-    type: 'github' as const,
-    title: 'GitHub',
-    description: 'Explore meus projetos e contribuições open-source',
-    colors: {
-      primary: 'from-gray-600/25 via-gray-500/20 to-gray-400/25 border-gray-400/50',
-      ring: 'ring-gray-500/60 dark:ring-gray-400/60',
-      text: 'text-gray-700 dark:text-gray-300',
-      hover: 'group-hover:bg-gray-700',
-      accent: 'bg-gray-700',
-      glow: '0 0 40px rgba(75, 85, 99, 0.3)',
-    },
-    action: 'Ver Código',
-    icon: contactIcons.github,
-  },
-  {
-    type: 'email' as const,
-    title: 'Email',
-    description: 'Envie-me uma mensagem diretamente para o meu email',
-    colors: {
-      primary: 'from-amber-500/25 via-orange-400/20 to-amber-300/25 border-amber-400/50',
-      ring: 'ring-amber-500/60 dark:ring-amber-400/60',
-      text: 'text-amber-600 dark:text-amber-400',
-      hover: 'group-hover:bg-amber-500',
-      accent: 'bg-amber-500',
-      glow: '0 0 40px rgba(245, 158, 11, 0.3)',
-    },
-    action: 'Enviar Email',
-    icon: contactIcons.email,
-  },
-  {
-    type: 'discord' as const,
-    title: 'Discord',
-    description: 'Converse comigo em tempo real pelo Discord',
-    colors: {
-      primary: 'from-indigo-600/25 via-purple-500/20 to-indigo-400/25 border-indigo-400/50',
-      ring: 'ring-indigo-500/60 dark:ring-indigo-400/60',
-      text: 'text-indigo-600 dark:text-indigo-400',
-      hover: 'group-hover:bg-indigo-500',
-      accent: 'bg-indigo-500',
-      glow: '0 0 40px rgba(99, 102, 241, 0.3)',
-    },
-    action: 'Adicionar',
-    icon: contactIcons.discord,
-  },
-  {
-    type: 'steam' as const,
-    title: 'Steam',
-    description: 'Veja meus jogos e me adicione na Steam',
-    colors: {
-      primary: 'from-cyan-600/25 via-blue-500/20 to-cyan-400/25 border-cyan-400/50',
-      ring: 'ring-cyan-500/60 dark:ring-cyan-400/60',
-      text: 'text-cyan-600 dark:text-cyan-400',
-      hover: 'group-hover:bg-cyan-500',
-      accent: 'bg-cyan-500',
-      glow: '0 0 40px rgba(14, 165, 233, 0.3)',
-    },
-    action: 'Jogar',
-    icon: contactIcons.steam,
-  },
-  {
-    type: 'website' as const,
-    title: 'Website',
-    description: 'Visite meu site para conhecer mais sobre meu trabalho',
-    colors: {
-      primary: 'from-emerald-600/25 via-teal-500/20 to-emerald-400/25 border-emerald-400/50',
-      ring: 'ring-emerald-500/60 dark:ring-emerald-400/60',
-      text: 'text-emerald-600 dark:text-emerald-400',
-      hover: 'group-hover:bg-emerald-500',
-      accent: 'bg-emerald-500',
-      glow: '0 0 40px rgba(16, 185, 129, 0.3)',
-    },
-    action: 'Visitar',
-    icon: contactIcons.website,
-  },
-];
+type ContactFormState = {
+  status: 'idle' | 'success' | 'invalid' | 'rate_limited' | 'error';
+  message?: string;
+  fieldErrors?: Record<string, string[]>;
+};
 
-// Simplified Contact Card Component
-const ContactCard = memo(({ card, index }: { card: (typeof contactCards)[0]; index: number }) => {
-  return (
-    <motion.div
-      className={`bg-gradient-to-br ${card.colors.primary} p-6 rounded-xl shadow-lg border dark:border-opacity-50 backdrop-blur-md relative overflow-hidden group`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        delay: 0.1 + index * 0.1,
-        duration: 0.4,
-        ease: 'easeOut',
-      }}
-      whileHover={{
-        y: -5,
-        scale: 1.02,
-        transition: { duration: 0.2 },
-      }}
-    >
-      <div className="flex gap-4 relative z-10">
-        {/* Icon container */}
-        <div
-          className={`flex-shrink-0 w-14 h-14 bg-white/90 dark:bg-gray-800/70 backdrop-blur-md rounded-lg shadow-md flex items-center justify-center relative overflow-hidden ${card.colors.ring} group-hover:shadow-lg transition-all duration-300`}
-        >
-          <div className={`relative z-10 ${card.colors.text}`}>{card.icon}</div>
-        </div>
+const INTENT_VALUES: ContactIntentValue[] = ['hire', 'project', 'consult', 'partner', 'press'];
+const METHOD_VALUES: ContactMethodValue[] = ['email', 'telefone', 'discord', 'linkedin', 'outro'];
 
-        <div className="flex-grow">
-          <h3
-            className={`font-bold text-lg text-gray-800 dark:text-gray-100 group-hover:translate-y-[-1px] transition-all duration-300`}
-          >
-            {card.title}
-            <div
-              className={`h-0.5 w-0 group-hover:w-1/2 transition-all duration-300 mt-0.5 rounded-full ${card.colors.accent}`}
-            ></div>
-          </h3>
+const initialValues: ContactFormValues = {
+  name: '',
+  email: '',
+  intent: 'project',
+  message: '',
+  preferredMethod: 'email',
+  preferredValue: '',
+};
 
-          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 leading-relaxed">
-            {card.description}
-          </p>
+const initialFormState: ContactFormState = {
+  status: 'idle',
+};
 
-          <div className="mt-4">
-            <Link
-              href={
-                card.type === 'email' ? `mailto:${ContactLinks.email}` : ContactLinks[card.type]
-              }
-              target={card.type !== 'email' ? '_blank' : undefined}
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 text-sm font-medium ${card.colors.text} hover:underline group/link`}
-            >
-              {card.action}
-              <LuArrowRight className="group-hover/link:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-});
-
-ContactCard.displayName = 'ContactCard';
-
-// Simplified Form Component
 const ContactForm = memo(() => {
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [focusedField, setFocusedField] = useState<string | null>(null);
-  const formRef = useRef(null);
-  const isFormInView = useInView(formRef, { once: true, amount: 0.3 });
+  const language = useLanguageStore(state => state.lang);
+  const t = useTranslations('Contact');
+
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
+  const isTurnstileEnabled = process.env.NODE_ENV === 'production' && Boolean(turnstileSiteKey);
+
+  const intentOptions = useMemo(
+    () => INTENT_VALUES.map(value => ({ value, label: t(`form.intentOptions.${value}`) })),
+    [t]
+  );
+
+  const methodOptions = useMemo(
+    () =>
+      METHOD_VALUES.map(value => ({
+        value,
+        label: t(`form.methodOptions.${value}.label`),
+        placeholder: t(`form.methodOptions.${value}.placeholder`),
+        helper: t(`form.methodOptions.${value}.helper`),
+      })),
+    [t]
+  );
+
+  const [formValues, setFormValues] = useState(initialValues);
+  const [honeypotValue, setHoneypotValue] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReady, setTurnstileReady] = useState(false);
+  const [clientMessage, setClientMessage] = useState<string | null>(null);
+
+  const [state, formAction] = useActionState(submitContact, initialFormState);
+
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const turnstileRef = useRef<HTMLDivElement | null>(null);
+  const widgetIdRef = useRef<string | null>(null);
 
   const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setFormState(prev => ({ ...prev, [name]: value }));
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = event.target;
+      setFormValues(prev => ({ ...prev, [name]: value }));
     },
     []
   );
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormStatus('submitting');
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setFormStatus('success');
-      setFormState({ name: '', email: '', message: '' });
-
-      setTimeout(() => {
-        setFormStatus('idle');
-      }, 3000);
-    } catch (err) {
-      console.error(err);
-      setFormStatus('error');
-      setTimeout(() => {
-        setFormStatus('idle');
-      }, 3000);
-    }
+  const handleIntentChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormValues(prev => ({ ...prev, intent: event.target.value as ContactIntentValue }));
   }, []);
+
+  const handleMethodChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormValues(prev => ({
+      ...prev,
+      preferredMethod: event.target.value as ContactMethodValue,
+    }));
+  }, []);
+
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      if (!isTurnstileEnabled) {
+        setClientMessage(null);
+        return;
+      }
+
+      if (!turnstileToken) {
+        event.preventDefault();
+        setClientMessage(t('form.messages.turnstileRequired'));
+      } else {
+        setClientMessage(null);
+      }
+    },
+    [isTurnstileEnabled, turnstileToken, t]
+  );
+
+  useEffect(() => {
+    if (!isTurnstileEnabled) return;
+    if (window.turnstile) {
+      setTurnstileReady(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setTurnstileReady(true);
+    script.onerror = () => setClientMessage(t('form.messages.turnstileUnavailable'));
+    document.head.appendChild(script);
+
+    return () => {
+      script.onload = null;
+    };
+  }, [isTurnstileEnabled, t]);
+
+  useEffect(() => {
+    if (!isTurnstileEnabled || !turnstileReady || !turnstileRef.current || !window.turnstile)
+      return;
+
+    if (widgetIdRef.current) {
+      window.turnstile.reset(widgetIdRef.current);
+      return;
+    }
+
+    widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+      sitekey: turnstileSiteKey,
+      theme: 'auto',
+      callback: (token: string) => {
+        setTurnstileToken(token);
+        setClientMessage(null);
+      },
+      'expired-callback': () => {
+        setTurnstileToken(null);
+        setClientMessage(t('form.messages.turnstileExpired'));
+      },
+      'error-callback': () => {
+        setTurnstileToken(null);
+        setClientMessage(t('form.messages.turnstileError'));
+      },
+    });
+  }, [isTurnstileEnabled, turnstileReady, turnstileSiteKey, t]);
+
+  useEffect(() => {
+    if (state.status === 'success') {
+      setFormValues(initialValues);
+      setHoneypotValue('');
+      setTurnstileToken(null);
+      setClientMessage(null);
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.reset(widgetIdRef.current);
+      }
+      formRef.current?.reset();
+    }
+  }, [state.status]);
+
+  const fieldErrors = state.fieldErrors ?? {};
+  const fallbackMessage = !isTurnstileEnabled ? t('form.messages.turnstileDisabled') : null;
+  const combinedMessage = clientMessage ?? state.message ?? fallbackMessage;
+  const showSuccess =
+    state.status === 'success' && state.message !== undefined && clientMessage === null;
+  const showFeedback = Boolean(combinedMessage);
+
+  const selectedMethod =
+    methodOptions.find(option => option.value === formValues.preferredMethod) ?? methodOptions[0];
+
+  function SubmitButton() {
+    const { pending } = useFormStatus();
+    const isDisabled = pending || (isTurnstileEnabled && !turnstileToken);
+
+    return (
+      <Button
+        type="submit"
+        disabled={isDisabled}
+        className={cn(
+          'group relative inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-500 px-6 py-3 text-base font-medium text-white shadow-lg shadow-indigo-500/30 transition-all hover:bg-indigo-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60',
+          pending ? 'opacity-90' : ''
+        )}
+      >
+        {pending ? (
+          <>
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/80 border-t-transparent" />
+            {t('form.button.pending')}
+          </>
+        ) : showSuccess ? (
+          <>
+            <CheckCircle className="h-5 w-5" />
+            {t('form.button.success')}
+          </>
+        ) : (
+          <>
+            {t('form.button.default')}
+            <ArrowRight className="h-5 w-5" />
+          </>
+        )}
+      </Button>
+    );
+  }
 
   return (
     <motion.div
-      id="contact-form"
-      ref={formRef}
-      className="max-w-3xl mx-auto pt-8 scroll-mt-24"
       initial={{ opacity: 0, y: 20 }}
-      animate={isFormInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: 0.2 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="mx-auto w-full max-w-xl"
     >
-      <div className="text-center mb-8">
-        <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-[color:var(--primary)] via-[color:var(--blue)] to-[color:var(--primary)] bg-clip-text text-transparent">
-          Vamos Conversar
-        </h2>
-        <div className="h-1 w-16 bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--blue)] mx-auto rounded-full mb-4" />
-        <p className="text-gray-600 dark:text-gray-300">
-          Quer começar um novo projeto? Tem alguma ideia inovadora? Vamos trabalhar juntos!
-        </p>
-      </div>
-
-      <motion.form
-        onSubmit={handleSubmit}
-        className="relative bg-white/95 dark:bg-gray-800/90 backdrop-blur-md rounded-xl p-8 shadow-lg border border-gray-100/50 dark:border-gray-700/50"
-        initial={{ opacity: 0, y: 20 }}
-        animate={isFormInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        <div className="grid grid-cols-1 gap-6">
-          <div className="relative">
-            <label
-              htmlFor="name"
-              className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
-                focusedField === 'name'
-                  ? 'text-[color:var(--primary)]'
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <LuUser className="w-4 h-4" />
-                Nome
-              </span>
-            </label>
-            <Input
-              id="name"
-              name="name"
-              placeholder="Seu nome"
-              value={formState.name}
-              onChange={handleInputChange}
-              onFocus={() => setFocusedField('name')}
-              onBlur={() => setFocusedField(null)}
-              required
-              className={`transition-all duration-300 border-gray-300 dark:border-gray-600 ${
-                focusedField === 'name'
-                  ? 'ring-2 ring-[color:var(--primary)]/30 border-transparent'
-                  : ''
-              }`}
-            />
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg shadow-slate-900/40">
+        <div className="space-y-6">
+          <div className="space-y-1.5">
+            <h1 className="text-3xl font-semibold text-white">{t('form.title')}</h1>
+            <p className="text-sm text-slate-400">{t('form.subtitle')}</p>
           </div>
 
-          <div className="relative">
-            <label
-              htmlFor="email"
-              className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
-                focusedField === 'email'
-                  ? 'text-[color:var(--primary)]'
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <LuMail className="w-4 h-4" />
-                Email
-              </span>
-            </label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="seu@email.com"
-              value={formState.email}
-              onChange={handleInputChange}
-              onFocus={() => setFocusedField('email')}
-              onBlur={() => setFocusedField(null)}
-              required
-              className={`transition-all duration-300 border-gray-300 dark:border-gray-600 ${
-                focusedField === 'email'
-                  ? 'ring-2 ring-[color:var(--primary)]/30 border-transparent'
-                  : ''
-              }`}
+          <form ref={formRef} action={formAction} onSubmit={handleSubmit} className="space-y-6">
+            <input
+              type="hidden"
+              name="turnstileToken"
+              value={isTurnstileEnabled ? (turnstileToken ?? '') : 'dev-bypass'}
             />
-          </div>
+            <input type="hidden" name="language" value={language} />
 
-          <div className="relative">
-            <label
-              htmlFor="message"
-              className={`block text-sm font-medium mb-2 transition-colors duration-200 ${
-                focusedField === 'message'
-                  ? 'text-[color:var(--primary)]'
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <LuSend className="w-4 h-4" />
-                Mensagem
-              </span>
-            </label>
-            <Textarea
-              id="message"
-              name="message"
-              placeholder="Em que posso ajudar? Conte-me sobre seu projeto..."
-              value={formState.message}
-              onChange={handleInputChange}
-              onFocus={() => setFocusedField('message')}
-              onBlur={() => setFocusedField(null)}
-              required
-              className={`min-h-32 transition-all duration-300 border-gray-300 dark:border-gray-600 ${
-                focusedField === 'message'
-                  ? 'ring-2 ring-[color:var(--primary)]/30 border-transparent'
-                  : ''
-              }`}
-            />
-            <div className="absolute bottom-3 right-3 text-xs text-gray-400 dark:text-gray-500">
-              {formState.message.length > 0 && <span>{formState.message.length} caracteres</span>}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+              <label htmlFor="contact-website" className="hidden">
+                Website
+              </label>
+              <input
+                id="contact-website"
+                tabIndex={-1}
+                autoComplete="off"
+                name="honeypot"
+                value={honeypotValue}
+                onChange={event => setHoneypotValue(event.target.value)}
+              />
             </div>
-          </div>
 
-          <Button
-            type="submit"
-            disabled={formStatus === 'submitting'}
-            className={`w-full py-4 text-base relative overflow-hidden bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--blue)] hover:from-[color:var(--blue)] hover:to-[color:var(--primary)] transition-colors duration-500 ${
-              formStatus === 'submitting' ? 'opacity-90' : ''
-            }`}
-          >
-            {formStatus === 'submitting' ? (
-              <span className="flex items-center justify-center">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                Enviando...
-              </span>
-            ) : formStatus === 'success' ? (
-              <span className="flex items-center justify-center">
-                <CheckCircle className="mr-2" />
-                Mensagem Enviada!
-              </span>
-            ) : formStatus === 'error' ? (
-              <span className="flex items-center justify-center">
-                <AlertCircle className="mr-2" />
-                Erro! Tente novamente.
-              </span>
-            ) : (
-              <span className="flex items-center justify-center">
-                <LuSend className="mr-2" />
-                Enviar Mensagem
-              </span>
-            )}
-          </Button>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <label htmlFor="name" className="text-sm font-medium text-slate-300">
+                  {t('form.fields.name.label')}
+                </label>
+                <Input
+                  id="name"
+                  name="name"
+                  placeholder={t('form.fields.name.placeholder')}
+                  value={formValues.name}
+                  onChange={handleInputChange}
+                  required
+                  autoComplete="name"
+                  aria-invalid={Boolean(fieldErrors.name?.length)}
+                  className="h-11 rounded-lg border-slate-700 bg-slate-800/50 text-white placeholder:text-slate-500"
+                />
+                {fieldErrors.name?.length ? (
+                  <p className="text-sm text-red-400">{fieldErrors.name[0]}</p>
+                ) : null}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium text-slate-300">
+                  {t('form.fields.email.label')}
+                </label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder={t('form.fields.email.placeholder')}
+                  value={formValues.email}
+                  onChange={handleInputChange}
+                  required
+                  autoComplete="email"
+                  aria-invalid={Boolean(fieldErrors.email?.length)}
+                  className="h-11 rounded-lg border-slate-700 bg-slate-800/50 text-white placeholder:text-slate-500"
+                />
+                {fieldErrors.email?.length ? (
+                  <p className="text-sm text-red-400">{fieldErrors.email[0]}</p>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="intent" className="text-sm font-medium text-slate-300">
+                {t('form.fields.intent.label')}
+              </label>
+              <select
+                id="intent"
+                name="intent"
+                value={formValues.intent}
+                onChange={handleIntentChange}
+                aria-invalid={Boolean(fieldErrors.intent?.length)}
+                className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              >
+                {intentOptions.map(option => (
+                  <option key={option.value} value={option.value} className="bg-slate-900">
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {fieldErrors.intent?.length ? (
+                <p className="text-sm text-red-400">{fieldErrors.intent[0]}</p>
+              ) : null}
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <label htmlFor="preferredMethod" className="text-sm font-medium text-slate-300">
+                  {t('form.fields.preferredMethod.label')}
+                </label>
+                <select
+                  id="preferredMethod"
+                  name="preferredMethod"
+                  value={formValues.preferredMethod}
+                  onChange={handleMethodChange}
+                  aria-invalid={Boolean(fieldErrors.preferredMethod?.length)}
+                  className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                >
+                  {methodOptions.map(option => (
+                    <option key={option.value} value={option.value} className="bg-slate-900">
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {fieldErrors.preferredMethod?.length ? (
+                  <p className="text-sm text-red-400">{fieldErrors.preferredMethod[0]}</p>
+                ) : null}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="preferredValue" className="text-sm font-medium text-slate-300">
+                  {t('form.fields.preferredValue.label')}
+                </label>
+                <Input
+                  id="preferredValue"
+                  name="preferredValue"
+                  placeholder={selectedMethod?.placeholder ?? ''}
+                  value={formValues.preferredValue}
+                  onChange={handleInputChange}
+                  required
+                  aria-invalid={Boolean(fieldErrors.preferredValue?.length)}
+                  className="h-11 rounded-lg border-slate-700 bg-slate-800/50 text-white placeholder:text-slate-500"
+                />
+                {selectedMethod?.helper ? (
+                  <p className="text-xs text-slate-500">{selectedMethod.helper}</p>
+                ) : null}
+                {fieldErrors.preferredValue?.length ? (
+                  <p className="text-sm text-red-400">{fieldErrors.preferredValue[0]}</p>
+                ) : null}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="message" className="text-sm font-medium text-slate-300">
+                {t('form.fields.message.label')}
+              </label>
+              <Textarea
+                id="message"
+                name="message"
+                placeholder={t('form.fields.message.placeholder')}
+                value={formValues.message}
+                onChange={handleInputChange}
+                required
+                maxLength={4000}
+                aria-invalid={Boolean(fieldErrors.message?.length)}
+                className="min-h-[120px] rounded-lg border-slate-700 bg-slate-800/50 text-white placeholder:text-slate-500"
+              />
+              {fieldErrors.message?.length ? (
+                <p className="text-sm text-red-400">{fieldErrors.message[0]}</p>
+              ) : null}
+            </div>
+
+            {showFeedback ? (
+              <div
+                className={cn(
+                  'rounded-lg border px-4 py-3 text-sm',
+                  showSuccess
+                    ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-300'
+                    : 'border-amber-500/50 bg-amber-500/10 text-amber-300'
+                )}
+              >
+                {combinedMessage}
+              </div>
+            ) : null}
+
+            <div className="space-y-4 pt-2">
+              {isTurnstileEnabled ? (
+                <div ref={turnstileRef} className="flex justify-center" />
+              ) : (
+                <p className="text-center text-xs text-slate-500">{t('form.turnstile.disabled')}</p>
+              )}
+              <SubmitButton />
+            </div>
+          </form>
         </div>
-      </motion.form>
-
-      <div className="text-center mt-6 text-sm text-gray-600 dark:text-gray-400">
-        <p>
-          Você também pode me enviar um email direto para{' '}
-          <a
-            href={`mailto:${ContactLinks.email}`}
-            className="text-[color:var(--primary)] hover:underline"
-          >
-            {ContactLinks.email}
-          </a>
-        </p>
       </div>
     </motion.div>
   );
@@ -402,113 +439,58 @@ const ContactForm = memo(() => {
 ContactForm.displayName = 'ContactForm';
 
 export default function ContactClient() {
+  const t = useTranslations('Contact');
+
+  const highlights = useMemo(
+    () => [t('hero.highlights.item1'), t('hero.highlights.item2'), t('hero.highlights.item3')],
+    [t]
+  );
+
+  const contactEmail = t('hero.callout.email');
+
   return (
-    <>
-      {/* Simplified Contact Header */}
-      <div className="relative mt-[115px]">
-        <div className="text-center z-10 relative py-12">
-          <motion.h1
-            className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[color:var(--primary)] via-[color:var(--blue)] to-[color:var(--primary)] bg-clip-text text-transparent"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            Entre em Contato
-          </motion.h1>
+    <div className="relative min-h-screen bg-slate-950 px-6 pb-24 pt-[calc(var(--navbar-height,4rem)+2rem)] sm:px-10">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.15),_transparent_65%)]" />
 
-          <motion.div
-            className="h-1 w-20 bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--blue)] mx-auto rounded-full mb-6"
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 80, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-          />
-
-          <motion.p
-            className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            Estou sempre aberto a novas oportunidades, colaborações e projetos inovadores. Escolha
-            um canal de contato abaixo ou utilize o formulário para iniciarmos uma conversa.
-          </motion.p>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 pb-24">
-        {/* Profile Information */}
-        <motion.div
-          className="bg-white/80 dark:bg-gray-800/50 backdrop-blur-md rounded-xl p-6 mb-12 shadow-lg border border-gray-100/40 dark:border-gray-700/30"
-          initial={{ opacity: 0, y: 20 }}
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col gap-12 lg:flex-row lg:items-start lg:gap-16 mt-2">
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
+          transition={{ duration: 0.4 }}
+          className="space-y-6 text-slate-300 lg:max-w-sm"
         >
-          <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-            <div className="relative">
-              <div className="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-md">
-                <Image
-                  src={selfie}
-                  alt="Lucas HDO"
-                  width={160}
-                  height={160}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            <div className="text-center md:text-left">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Lucas HDO</h2>
-              <div className="flex items-center justify-center md:justify-start mb-4 text-gray-500 dark:text-gray-400">
-                <LuMapPin className="mr-2" />
-                <span>Rio Grande do Sul, Brasil</span>
-              </div>
-
-              <p className="text-gray-600 dark:text-gray-300 mb-4 max-w-xl">
-                Desenvolvedor Full-stack apaixonado por criar experiências digitais impactantes.
-                Especializado em React, Next.js e Node.js, com experiência em design de interfaces e
-                desenvolvimento de aplicações web modernas.
-              </p>
-
-              <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                <div className="flex items-center bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-full text-sm">
-                  <LuUser className="mr-2 text-[color:var(--primary)]" />
-                  <span>Engenharia de Software</span>
-                </div>
-                <div className="flex items-center bg-gray-100 dark:bg-gray-700 px-3 py-1.5 rounded-full text-sm">
-                  <LuMapPin className="mr-2 text-[color:var(--primary)]" />
-                  <span>Disponível para trabalho remoto</span>
-                </div>
-              </div>
-            </div>
+          <div className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.32em] text-indigo-200">{t('hero.badge')}</p>
+            <h1 className="text-3xl font-semibold text-white">{t('hero.title')}</h1>
+            <p className="text-sm">{t('hero.description')}</p>
           </div>
-        </motion.div>
 
-        {/* Contact Cards */}
-        <div className="mb-16">
-          <motion.h2
-            className="text-2xl font-bold text-center mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            Como me encontrar
-          </motion.h2>
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            {contactCards.map((card, index) => (
-              <ContactCard key={card.type} card={card} index={index} />
+          <ul className="space-y-2 text-sm">
+            {highlights.map(item => (
+              <li key={item} className="flex items-start gap-2">
+                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-indigo-400" />
+                <span>{item}</span>
+              </li>
             ))}
-          </motion.div>
-        </div>
+          </ul>
 
-        {/* Contact Form Section */}
+          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-4 text-indigo-100">
+            <p className="text-xs uppercase tracking-[0.28em] text-indigo-200/80">
+              {t('hero.callout.title')}
+            </p>
+            <a
+              href={`mailto:${contactEmail}`}
+              className="mt-1 inline-flex items-center gap-2 text-lg font-semibold text-white hover:text-indigo-100"
+            >
+              {contactEmail}
+            </a>
+            <p className="mt-1 text-xs text-indigo-100/80">{t('hero.callout.footnote')}</p>
+          </div>
+        </motion.section>
+
         <ContactForm />
       </div>
-    </>
+    </div>
   );
 }

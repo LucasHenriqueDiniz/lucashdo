@@ -29,6 +29,7 @@ const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({ entries }) => {
           fill
           className={styles.testimonialAvatarImage}
           style={{ objectFit: 'cover' }}
+          sizes="(max-width: 768px) 80px, 120px"
         />
       );
     }

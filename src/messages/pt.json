@@ -1,8 +1,10 @@
 {
   "Navigation": {
+    "home": "Início",
     "about": "Sobre",
     "projects": "Projetos",
-    "contact": "Contato"
+    "contact": "Contato",
+    "viewCV": "Ver CV"
   },
   "Footer": {
     "links": "Links",
@@ -20,6 +22,99 @@
     "english": "Inglês",
     "portuguese": "Português"
   },
+  "Contact": {
+    "hero": {
+      "badge": "Aberto a novos projetos",
+      "title": "Vamos conversar sobre o próximo passo.",
+      "description": "Compartilhe o cenário atual e alinhamos, rapidamente, como posso ajudar seu time a gerar impacto real.",
+      "highlights": {
+        "item1": "Retorno em até 24h úteis com próximos passos claros.",
+        "item2": "Briefing direto, sem burocracia ou formulários longos.",
+        "item3": "Posso responder pelo canal que você preferir (email, telefone, etc.)."
+      },
+      "callout": {
+        "title": "Contato direto",
+        "footnote": "Sinta-se à vontade para incluir mais de um email ou canal no campo de preferência.",
+        "email": "lucashdo@protonmail.com"
+      }
+    },
+    "form": {
+      "title": "Contato",
+      "subtitle": "Preencha o formulário e retorno em até 24h úteis com os próximos passos.",
+      "fields": {
+        "name": {
+          "label": "Nome completo",
+          "placeholder": "Seu nome"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "seu@email.com"
+        },
+        "intent": {
+          "label": "Motivo do contato"
+        },
+        "preferredMethod": {
+          "label": "Preferência de resposta"
+        },
+        "preferredValue": {
+          "label": "Detalhe do contato"
+        },
+        "message": {
+          "label": "Mensagem",
+          "placeholder": "Descreva o contexto e objetivos..."
+        }
+      },
+      "intentOptions": {
+        "hire": "Contratação full-time",
+        "project": "Projeto sob demanda",
+        "consult": "Consultoria técnica",
+        "partner": "Parcerias estratégicas",
+        "press": "Imprensa & palestras"
+      },
+      "methodOptions": {
+        "email": {
+          "label": "Email",
+          "placeholder": "nome@empresa.com",
+          "helper": "Retorno direto pelo endereço informado."
+        },
+        "telefone": {
+          "label": "Telefone / WhatsApp",
+          "placeholder": "+55 (11) 99999-9999",
+          "helper": "Informe o número com DDD ou o link curto."
+        },
+        "discord": {
+          "label": "Discord",
+          "placeholder": "usuario#0000 ou link",
+          "helper": "Uso o canal para sincronizar agendas rápidas."
+        },
+        "linkedin": {
+          "label": "LinkedIn",
+          "placeholder": "linkedin.com/in/seu-perfil",
+          "helper": "Envio um convite e seguimos por lá."
+        },
+        "outro": {
+          "label": "Outro canal",
+          "placeholder": "Ex: Signal, Calendly, Telegram...",
+          "helper": "Explique como prefere ser contatado."
+        }
+      },
+      "button": {
+        "pending": "Enviando...",
+        "success": "Enviado!",
+        "default": "Enviar mensagem"
+      },
+      "messages": {
+        "turnstileDisabled": "Validação anti-spam desativada em ambiente local.",
+        "turnstileRequired": "Confirme que você não é um robô antes de enviar.",
+        "turnstileUnavailable": "Não foi possível carregar o desafio anti-spam. Recarregue a página e tente novamente.",
+        "turnstileExpired": "O desafio expirou. Clique novamente para validar.",
+        "turnstileError": "Falha ao validar o desafio anti-spam. Recarregue a página."
+      },
+      "turnstile": {
+        "disabled": "Turnstile desativado no ambiente local."
+      }
+    }
+  },
   "Hero": {
     "developerPrefix": "Um desenvolvedor"
   },
@@ -35,11 +130,37 @@
     "readMore": "Ler mais",
     "greeting": "Olá, eu sou",
     "browseProjects": "Navegue pelos projetos",
-    "mobilePlaceholder": "Mais seções em breve na versão mobile."
+    "availableForHire": "Disponível para contratação",
+    "mobilePlaceholder": "Mais seções em breve na versão mobile.",
+    "mobile": {
+      "availability": "Disponível para novos projetos",
+      "subtitle": "Construindo produtos digitais completos com foco em performance, design e acessibilidade.",
+      "description": "Combino desenvolvimento full-stack, design estratégico e animações para criar experiências envolventes em qualquer dispositivo.",
+      "stats": {
+        "experience": {
+          "value": "3+",
+          "label": "Anos de experiência",
+          "caption": "Projetos web, mobile e desktop que unem performance e estética."
+        },
+        "projects": {
+          "value": "20+",
+          "label": "Projetos entregues",
+          "caption": "Resultados reais para empresas, comunidades e iniciativas pessoais."
+        }
+      }
+    }
   },
   "About": {
     "title": "Sobre Mim",
     "description": "Conheça mais sobre minha jornada e experiência.",
+    "sectionNav": {
+      "hero": "Início",
+      "profile": "Perfil",
+      "journey": "Jornada",
+      "skills": "Skills",
+      "interests": "Interesses",
+      "cta": "Contato"
+    },
     "hero": {
       "greeting": "Olá, eu sou",
       "name": "Lucas HDO",
@@ -49,6 +170,8 @@
       "description": "Código com propósito. Design com lógica. Soluções que funcionam.",
       "viewProjects": "Ver Projetos",
       "contact": "Entre em Contato",
+      "closeMenu": "Fechar menu",
+      "openMenu": "Abrir menu",
       "stats": {
         "yearsExperience": "Anos de Experiência",
         "yearsExperienceDesc": "De landing pages a plataformas completas, com foco em performance, design e usabilidade.",
@@ -64,11 +187,18 @@
     },
     "profile": {
       "title": "Quem Sou Eu",
+      "name": "Lucas Diniz",
       "role": "Desenvolvedor Full-stack",
       "bio": {
-        "summary": "Comecei a programar por curiosidade, buscando automatizar tarefas e resolver problemas do dia a dia. Tenho paixão por aprender, já explorei desde automação, desenvolvimento de ferramentas, game design e muito mais. Sou proativo, criativo e meus diversos projetos mostram meu entusiasmo por tecnologia. Atualmente curso {course} e tenho experiência em {skills}."
+        "summary": "Curso {course} e transformo ideias em produtos digitais completos. Já liderei plataformas SaaS em tempo real, automações com hardware e experiências web centradas no usuário. Minha stack favorita inclui {skills}, e busco sempre novas tecnologias para gerar impacto rápido."
       },
       "education": "Engenharia de Software",
+      "stats": {
+        "totalProjects": "Projetos publicados",
+        "featuredProjects": "Projetos em destaque",
+        "completedProjects": "Projetos concluídos",
+        "techsUsed": "Tecnologias exploradas"
+      },
       "social": {
         "github": "GitHub",
         "linkedin": "LinkedIn",
@@ -106,12 +236,20 @@
       },
       "noSkills": "Nenhuma habilidade encontrada nesta categoria"
     },
+    "skillsHighlight": {
+      "badge": "Core Tech Stack",
+      "title": "Arquitetando experiências com tecnologia",
+      "description": "Uma curadoria das tecnologias que sustentam meus projetos — do front animado ao backend resiliente. Escolhidas pela combinação de performance, DX e compatibilidade com produtos que não param.",
+      "alwaysLearning": "Sempre aprendendo",
+      "currentlyExploring": "Atualmente explorando: Three.js, WebGL, Rust e Web3"
+    },
     "experience": {
       "professional": "Experiência Profissional",
       "academic": "Formação Acadêmica"
     },
     "interests": {
       "title": "Interesses",
+      "subtitle": "Painel em tempo real",
       "loading": "Carregando...",
       "noData": "Nenhum dado disponível.",
       "music": {
@@ -120,17 +258,25 @@
         "totalScrobbles": "Scrobbles totais",
         "topArtists": "Artistas favoritos",
         "recentTracks": "Faixas recentes",
-        "plays": "execuções"
+        "plays": "execuções",
+        "liveTicker": "Scrobbles em tempo real",
+        "nextUpdate": "Próxima atualização em {seconds}s"
       },
       "games": {
         "tab": "Jogos",
         "totalGames": "Jogos na biblioteca",
+        "totalGamesLabel": "jogos na biblioteca",
         "totalPlaytime": "Tempo total jogado",
         "online": "Online",
         "recentGames": "Jogos recentes",
         "mostPlayed": "Mais jogados",
         "total": "total",
-        "recent": "recente"
+        "recent": "recente",
+        "totalHours": "Horas totais",
+        "lastTwoWeeks": "Últimas 2 semanas",
+        "activeGames": "Jogos ativos",
+        "recentHighlight": "Destaque recente",
+        "topRecently": "Jogos recentemente"
       },
       "fitness": {
         "tab": "Fitness",
@@ -141,7 +287,17 @@
         "longestStreak": "Maior sequência",
         "favoriteExercise": "Exercício favorito",
         "lastWorkout": "Último treino",
-        "volume": "Volume"
+        "volume": "Volume",
+        "lastWorkoutVolume": "Volume do último treino",
+        "sessionOverview": "Resumo da sessão",
+        "sessionOverviewFallback": "Mantenha a constância",
+        "totalExercises": "{count, plural, one {# exercício} other {# exercícios}}",
+        "totalSets": "{count, plural, one {# série} other {# séries}}",
+        "sessionDuration": "Duração da sessão: {duration}",
+        "bestSets": "Melhores sets",
+        "categoryLabel": "Categoria",
+        "noExercise": "Nenhum exercício registrado",
+        "noWorkout": "Sem treino recente"
       }
     },
     "testimonials": {
@@ -151,22 +307,51 @@
     },
     "stats": {
       "yearsExperience": "Anos de Experiência",
+      "yearsExperienceDesc": "De landing pages a plataformas completas, com foco em performance, design e usabilidade.",
       "projectsCompleted": "Projetos Entregues",
+      "projectsCompletedDesc": "De landing pages a plataformas completas, com foco em performance, design e usabilidade.",
       "technologies": "Tecnologias Dominadas",
+      "technologiesDesc": "Stack moderna: React, Next.js, Node.js, TypeScript, Python, AWS, Docker e mais.",
       "githubStars": "Estrelas no GitHub",
+      "githubStarsDesc": "Projetos open-source e contribuições que impactam a comunidade de desenvolvedores.",
       "certifications": "Certificações & Cursos",
+      "certificationsDesc": "Formação contínua em desenvolvimento web, design, cloud e metodologias ágeis por Microsoft, Udemy, LinkedIn e outros.",
       "multidisciplinary": "Perfil Multidisciplinar",
+      "multidisciplinaryDesc": "Do design ao backend e infra, entrego soluções completas.",
       "fullstack": "Full-stack"
     },
     "journey": {
+      "title": "Minha Jornada",
+      "subtitle": "Experiências, aprendizados e projetos",
+      "projects": "Projetos",
       "professional": "Profissional",
-      "academic": "Acadêmica"
+      "academic": "Acadêmica",
+      "visit": "Visitar",
+      "current": "Atual",
+      "seeDetails": "Ver detalhes",
+      "description": "Descrição",
+      "technologies": "Tecnologias",
+      "demo": "Demo",
+      "repo": "Repositório",
+      "personalProject": "Projeto Pessoal",
+      "status": {
+        "workInProgress": "Em desenvolvimento",
+        "discontinued": "Descontinuado",
+        "experimental": "Experimental",
+        "completed": "Concluído"
+      }
     },
     "cta": {
       "title": "Vamos trabalhar juntos?",
-      "description": "Estou sempre aberto a novos projetos desafiadores e oportunidades para aplicar minhas melhores habilidades em tecnologia e design. Se você busca soluções inovadoras e profissionais, vamos conversar!",
+      "description": "Pronto para transformar suas ideias em realidade. Entre em contato e vamos criar algo incrível!",
       "subtitle": "Transforme suas ideias em projetos de sucesso.",
       "contact": "Entre em contato",
+      "card": {
+        "title": "Precisa de ajuda no seu projeto?",
+        "description": "Desenvolvimento full-stack, UI/UX e integrações. Vamos construir uma experiência incrível para seus usuários.",
+        "button": "Iniciar conversa",
+        "responseTime": "Resposta em 24h"
+      },
       "benefits": {
         "communication": {
           "title": "Comunicação Clara",
@@ -272,8 +457,8 @@
     "titleWhitePart": "Livro de",
     "titleBluePart": "Visitas",
     "rulesTitle": "Regras do Guestbook:",
-    "rule1": "• Máximo 3 posts a cada 15 minutos",
-    "rule2": "• Intervalo de 2 minutos entre posts",
+    "rule1": "• Máximo 1 post por dia (por IP)",
+    "rule2": "• Aguarde 24 horas antes de postar novamente",
     "rule3": "• Nome: até {max} caracteres",
     "rule4": "• Mensagem: {min} a {max} caracteres",
     "rule5": "• Evite links e conteúdo inadequado",
@@ -307,7 +492,10 @@
     "genericError": "❌ Erro ao enviar comentário. Tente novamente em alguns minutos.",
     "unexpectedError": "❌ Erro inesperado. Tente novamente mais tarde.",
     "messageTooShortHint": "Mínimo {min} caracteres (faltam {current})",
-    "emojiRules": "Escolha um emoji que represente seu humor ou personalidade!"
+    "emojiRules": "Escolha um emoji que represente seu humor ou personalidade!",
+    "serviceUnavailableTitle": "Serviço temporariamente indisponível",
+    "serviceUnavailableMessage": "Os servidores do guestbook estão fora do ar no momento. Tente novamente mais tarde.",
+    "serviceUnavailableAction": "Tentar novamente"
   },
   "FeaturedProjects": {
     "subTitle": "Veja alguns dos meus projetos em destaque",
@@ -323,10 +511,20 @@
     "titleBluePart": "Skills",
     "showLess": "Mostrar Menos",
     "showAll": "Mostrar Todos {total} Skills",
+    "currentlyLearning": "Aprendendo Agora",
     "legend": {
-      "working": "Trabalhando",
-      "total": "Total",
+      "working": "Trabalho",
+      "total": "Total (Trabalho + Hobby)",
       "favorite": "Favorito"
+    },
+    "tooltip": {
+      "work": "Trabalho",
+      "total": "Total"
+    },
+    "years": {
+      "one": "1 ano",
+      "three": "3 anos",
+      "six": "6 anos"
     }
   },
   "Browser": {
