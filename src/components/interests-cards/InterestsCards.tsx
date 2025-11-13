@@ -134,7 +134,7 @@ const getSafeImageUrl = (imageArray: any[] | undefined): string | null => {
   for (const size of preferredSizes) {
     const match = imageArray.find((img: any) => img?.size === size && img['#text']);
     if (match?.['#text']) {
-      return match['#text'];
+      return match['#text'];  
     }
   }
   const fallbackImage = imageArray.find((img: any) => img?.['#text']);
