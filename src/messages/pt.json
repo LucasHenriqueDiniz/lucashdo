@@ -112,6 +112,11 @@
       },
       "turnstile": {
         "disabled": "Turnstile desativado no ambiente local."
+      },
+      "success": {
+        "title": "Mensagem enviada!",
+        "message": "Recebi sua mensagem e vou entrar em contato em breve pelo canal indicado.",
+        "subtitle": "Obrigado pela confiança!"
       }
     }
   },

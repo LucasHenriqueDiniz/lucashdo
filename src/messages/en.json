@@ -112,6 +112,11 @@
       },
       "turnstile": {
         "disabled": "Turnstile is disabled in the local environment."
+      },
+      "success": {
+        "title": "Message sent!",
+        "message": "I received your message and will get in touch soon via your preferred channel.",
+        "subtitle": "Thanks for reaching out!"
       }
     }
   },
