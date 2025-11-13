@@ -1,7 +1,7 @@
 export const ContactLinks = {
   linkedin: 'https://www.linkedin.com/in/lucas-diniz-ostroski/',
   discord: 'amayacrab',
-  website: 'http://lucashdo.com/',
+  website: 'https://www.lucashdo.com/',
   email: 'lucashdo@protonmail.com',
   steam: 'https://steamcommunity.com/id/Amayacrab/',
   github: 'https://github.com/LucasHenriqueDiniz',
