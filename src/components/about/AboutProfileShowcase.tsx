@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import {
   LuBadgeCheck,
-  LuCode,
+  LuGlobe,
   LuGithub,
   LuLinkedin,
   LuMail,
@@ -16,19 +16,20 @@ import {
 } from 'react-icons/lu';
 import { ContactLinks } from '@/constants/contacts';
 import { projects } from '@/constants/projects';
+import { academicExperiences } from '@/constants/academicExperiences';
 
 const projectAggregates = (() => {
   const counts = {
     total: projects.length,
     featured: 0,
-    completed: 0,
+    withDemo: 0,
     inProgress: 0,
   };
   const technologies = new Set<string>();
 
   projects.forEach(project => {
     if (project.featured) counts.featured += 1;
-    if (project.status === 'completed') counts.completed += 1;
+    if (project.demoUrl) counts.withDemo += 1;
     if (project.status === 'workInProgress') counts.inProgress += 1;
     project.tags.forEach(tag => technologies.add(tag));
   });
@@ -38,6 +39,29 @@ const projectAggregates = (() => {
     technologies: technologies.size,
   };
 })();
+
+// Calculate years since starting to code (based on academic experiences)
+const calculateYearsCoding = (): number => {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+
+  // Find the earliest programming-related academic experience
+  const programmingStart = academicExperiences.find(exp => 
+    exp.id === 'uergs' || exp.id === 'unicv'
+  );
+
+  if (!programmingStart) return 2; // Fallback
+
+  const [startYear, startMonth] = programmingStart.startDate.split('-').map(Number);
+  
+  // Calculate months since start
+  const monthsSinceStart = (currentYear - startYear) * 12 + (currentMonth - startMonth);
+  
+  // Convert to years (rounded down, minimum 1)
+  const years = Math.floor(monthsSinceStart / 12);
+  return Math.max(1, years) + 1;
+};
 
 interface AnimatedCounterProps {
   value: number;
@@ -138,11 +162,13 @@ export default function AboutProfileShowcase() {
   const skills = ['React', 'Next.js', 'Node.js', 'TypeScript', 'Python', 'Docker'].join(', ');
   const tSocial = useTranslations('About.profile.social');
 
+  const yearsCoding = calculateYearsCoding();
+
   const stats = [
     {
-      icon: LuCode,
-      label: t('stats.totalProjects'),
-      value: projectAggregates.total,
+      icon: LuBadgeCheck,
+      label: t('stats.yearsCoding'),
+      value: yearsCoding,
       suffix: '+',
       color: 'from-blue-500 to-cyan-500',
     },
@@ -154,9 +180,10 @@ export default function AboutProfileShowcase() {
       color: 'from-purple-500 to-pink-500',
     },
     {
-      icon: LuBadgeCheck,
-      label: t('stats.completedProjects'),
-      value: projectAggregates.completed,
+      icon: LuGlobe,
+      label: t('stats.projectsOnline'),
+      value: projectAggregates.withDemo,
+      suffix: '+',
       color: 'from-emerald-500 to-teal-500',
     },
     {

@@ -187,9 +187,9 @@
       },
       "education": "Computer Engineering",
       "stats": {
-        "totalProjects": "Projects shipped",
+        "yearsCoding": "Years coding",
         "featuredProjects": "Featured projects",
-        "completedProjects": "Projects completed",
+        "projectsOnline": "Projects online",
         "techsUsed": "Technologies covered"
       },
       "social": {

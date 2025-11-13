@@ -199,9 +199,9 @@
       },
       "education": "Engenharia de Software",
       "stats": {
-        "totalProjects": "Projetos publicados",
+        "yearsCoding": "Anos programando",
         "featuredProjects": "Projetos em destaque",
-        "completedProjects": "Projetos concluídos",
+        "projectsOnline": "Projetos online",
         "techsUsed": "Tecnologias exploradas"
       },
       "social": {
