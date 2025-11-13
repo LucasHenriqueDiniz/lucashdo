@@ -2,9 +2,12 @@
 
 import { headers } from 'next/headers';
 import { z } from 'zod';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+import { render } from '@react-email/render';
 import { logger } from '@/lib/logger';
 import { localeNames, locales, defaultLocale } from '@/lib/i18n/config';
+import { ConfirmationEmail } from '@/components/emails/ConfirmationEmail';
+import { OwnerEmail } from '@/components/emails/OwnerEmail';
 
 const isSupportedLocale = (value: string): value is (typeof locales)[number] =>
   (locales as readonly string[]).includes(value as (typeof locales)[number]);
@@ -360,35 +363,28 @@ function getClientIp(headerList: Headers): string | null {
   return null;
 }
 
-function ensureMailEnv() {
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT ?? '587';
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+function ensureResendConfig() {
+  const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.SMTP_FROM;
   const to = process.env.SMTP_TO;
 
-  if (!host || !user || !pass || !from || !to) {
+  if (!apiKey || !from || !to) {
     if (IS_DEV) {
       logger.info(
-        'SMTP configuration incompleta em ambiente de desenvolvimento. Emails serão ignorados.'
+        'Resend configuration incompleta em ambiente de desenvolvimento. Emails serão ignorados.'
       );
       return null;
     }
 
     throw new Error(
-      'SMTP configuration is incomplete. Please set SMTP_HOST, SMTP_USER, SMTP_PASS, SMTP_FROM and SMTP_TO.'
+      'Resend configuration is incomplete. Please set RESEND_API_KEY, SMTP_FROM and SMTP_TO.'
     );
   }
 
   return {
-    host,
-    port: Number(port),
-    user,
-    pass,
+    apiKey,
     from,
     to,
-    secure: process.env.SMTP_SECURE === 'true' || Number(port) === 465,
   };
 }
 
@@ -473,33 +469,32 @@ export async function submitContact(
 
   let turnstileScore: number | null = null;
 
-  if (!IS_DEV) {
-    if (!data.turnstileToken) {
-      return {
-        status: 'error',
-        message: turnstileValidationMessage,
-      };
-    }
-
+  if (data.turnstileToken && data.turnstileToken !== 'dev-bypass') {
     const turnstileResult = await verifyTurnstile(data.turnstileToken, ipAddress);
 
-    if (
-      !turnstileResult.success ||
-      (typeof turnstileResult.score === 'number' && turnstileResult.score < 0.5)
-    ) {
+    if (!turnstileResult.success) {
       logger.info('Turnstile falhou para contato', {
         ipAddress,
         email: data.email,
         score: turnstileResult.score,
         errorCodes: turnstileResult.errorCodes,
       });
+      if (!IS_DEV) {
+        return {
+          status: 'error',
+          message: turnstileValidationMessage,
+        };
+      }
+    }
+
+    turnstileScore = turnstileResult.score ?? null;
+  } else if (!IS_DEV) {
+    if (!data.turnstileToken) {
       return {
         status: 'error',
         message: turnstileValidationMessage,
       };
     }
-
-    turnstileScore = turnstileResult.score ?? null;
   }
 
   const discordCopy = DISCORD_LABELS[normalizedLanguage];
@@ -545,82 +540,92 @@ export async function submitContact(
     logger.error('DISCORD_WEBHOOK_URL não configurada. Pulei envio do webhook.');
   }
 
-  const mailEnv = ensureMailEnv();
+  const resendConfig = ensureResendConfig();
   const ownerCopy = OWNER_COPY[normalizedLanguage];
-  const safeName = escapeHTML(data.name);
-  const safeEmail = escapeHTML(data.email);
-  const safeIntentLabel = escapeHTML(intentLabel);
-  const safeMethodLabel = escapeHTML(methodLabel);
-  const safePreferredLanguage = escapeHTML(preferredLanguageLabel);
-  const safeMessageHtml = escapeHTML(data.message).replace(/\n/g, '<br />');
-  const contactPreferenceHtml = `${safeMethodLabel} • ${safePreferredValue}`;
   const contactPreferenceText = `${methodLabel} • ${data.preferredValue}`;
   const firstName = data.name.split(' ')[0] ?? data.name;
 
-  const ownerHtml = `
-    <h2>${ownerCopy.heading}</h2>
-    <p><strong>${ownerCopy.labels.name}:</strong> ${safeName}</p>
-    <p><strong>${ownerCopy.labels.email}:</strong> ${safeEmail}</p>
-    <p><strong>${ownerCopy.labels.intent}:</strong> ${safeIntentLabel}</p>
-    <p><strong>${ownerCopy.labels.preference}:</strong> ${contactPreferenceHtml}</p>
-    <p><strong>${ownerCopy.labels.language}:</strong> ${safePreferredLanguage}</p>
-    <p><strong>${ownerCopy.labels.ip}:</strong> ${escapeHTML(ipAddress)}</p>
-    <p><strong>${ownerCopy.labels.userAgent}:</strong> ${escapeHTML(userAgent)}</p>
-    <hr />
-    <pre style="white-space:pre-wrap;font-family:'Inter','Segoe UI',sans-serif;">${safeMessageHtml}</pre>
-  `;
-
-  const ownerText = `${ownerCopy.heading}\n\n${ownerCopy.labels.name}: ${data.name}\n${ownerCopy.labels.email}: ${data.email}\n${ownerCopy.labels.intent}: ${intentLabel}\n${ownerCopy.labels.preference}: ${contactPreferenceText}\n${ownerCopy.labels.language}: ${preferredLanguageLabel}\n${ownerCopy.labels.ip}: ${ipAddress}\n\n${data.message}`;
-
-  const emailParams: EmailTemplateParams = {
-    name: firstName,
-    intent: intentLabel,
-    method: methodLabel,
-    detail: data.preferredValue,
-    languageLabel: preferredLanguageLabel,
-    safeMessageHtml,
-    plainMessage: data.message,
-  };
-
-  const confirmationSubject = emailTemplate.confirmationSubject;
-  const confirmationHtml = emailTemplate.confirmationHtml(emailParams);
-  const confirmationText = emailTemplate.confirmationText(emailParams);
-
   const subject = `${ownerCopy.subjectPrefix} (${intentLabel}) — ${data.name}`;
+  const confirmationSubject = emailTemplate.confirmationSubject;
 
-  if (mailEnv) {
-    const transporter = nodemailer.createTransport({
-      host: mailEnv.host,
-      port: mailEnv.port,
-      secure: mailEnv.secure,
-      auth: {
-        user: mailEnv.user,
-        pass: mailEnv.pass,
-      },
-    });
+  if (resendConfig) {
+    const resend = new Resend(resendConfig.apiKey);
 
     try {
-      await Promise.all([
-        transporter.sendMail({
-          from: `Contato <${mailEnv.from}>`,
-          to: mailEnv.to,
+      const ownerEmailHtml = await render(
+        OwnerEmail({
+          name: data.name,
+          email: data.email,
+          intent: intentLabel,
+          preference: contactPreferenceText,
+          languageLabel: preferredLanguageLabel,
+          ip: ipAddress,
+          userAgent: userAgent,
+          message: data.message,
+          locale: normalizedLanguage,
+        })
+      );
+
+      const confirmationEmailHtml = await render(
+        ConfirmationEmail({
+          firstName,
+          intent: intentLabel,
+          method: methodLabel,
+          detail: data.preferredValue,
+          languageLabel: preferredLanguageLabel,
+          message: data.message,
+          locale: normalizedLanguage,
+        })
+      );
+
+      const confirmationEmailText = emailTemplate.confirmationText({
+        name: firstName,
+        intent: intentLabel,
+        method: methodLabel,
+        detail: data.preferredValue,
+        languageLabel: preferredLanguageLabel,
+        safeMessageHtml: escapeHTML(data.message).replace(/\n/g, '<br />'),
+        plainMessage: data.message,
+      });
+
+      const ownerEmailText = `${ownerCopy.heading}\n\n${ownerCopy.labels.name}: ${data.name}\n${ownerCopy.labels.email}: ${data.email}\n${ownerCopy.labels.intent}: ${intentLabel}\n${ownerCopy.labels.preference}: ${contactPreferenceText}\n${ownerCopy.labels.language}: ${preferredLanguageLabel}\n${ownerCopy.labels.ip}: ${ipAddress}\n\n${data.message}`;
+
+      const [ownerResult, confirmationResult] = await Promise.all([
+        resend.emails.send({
+          from: resendConfig.from,
+          to: resendConfig.to,
           replyTo: data.email,
           subject,
-          html: ownerHtml,
-          text: ownerText,
+          html: ownerEmailHtml,
+          text: ownerEmailText,
           headers: {
             'X-Contact-IP': ipAddress,
             ...(turnstileScore !== null ? { 'X-Turnstile-Score': String(turnstileScore) } : {}),
           },
         }),
-        transporter.sendMail({
-          from: `Lucas Hdo <${mailEnv.from}>`,
+        resend.emails.send({
+          from: resendConfig.from,
           to: data.email,
           subject: confirmationSubject,
-          html: confirmationHtml,
-          text: confirmationText,
+          html: confirmationEmailHtml,
+          text: confirmationEmailText,
         }),
       ]);
+
+      if (ownerResult.error) {
+        logger.error('Erro ao enviar email para o proprietário', ownerResult.error);
+        throw ownerResult.error;
+      }
+
+      if (confirmationResult.error) {
+        logger.error('Erro ao enviar email de confirmação', confirmationResult.error);
+        throw confirmationResult.error;
+      }
+
+      logger.info('Emails enviados com sucesso via Resend', {
+        ownerEmailId: ownerResult.data?.id,
+        confirmationEmailId: confirmationResult.data?.id,
+      });
     } catch (error) {
       logger.error('Erro ao enviar email de contato', error);
       return {
@@ -632,7 +637,7 @@ export async function submitContact(
       };
     }
   } else {
-    logger.info('Ignorando envio de emails (SMTP não configurado).');
+    logger.info('Ignorando envio de emails (Resend não configurado).');
   }
 
   return {

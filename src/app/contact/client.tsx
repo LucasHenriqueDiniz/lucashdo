@@ -3,7 +3,7 @@
 import { memo, useActionState, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Mail } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -215,8 +215,8 @@ const ContactForm = memo(() => {
         type="submit"
         disabled={isDisabled}
         className={cn(
-          'group relative inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-500 px-6 py-3 text-base font-medium text-white shadow-lg shadow-indigo-500/30 transition-all hover:bg-indigo-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60',
-          pending ? 'opacity-90' : ''
+          'group relative inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 px-6 py-3.5 text-base font-medium text-white shadow-lg shadow-indigo-500/30 transition-all hover:from-indigo-600 hover:to-indigo-700 hover:shadow-xl hover:shadow-indigo-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60 disabled:opacity-50 disabled:cursor-not-allowed',
+          pending && 'opacity-70'
         )}
       >
         {pending ? (
@@ -239,21 +239,58 @@ const ContactForm = memo(() => {
     );
   }
 
+  if (showSuccess) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+        className="mx-auto w-full max-w-2xl"
+      >
+        <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-slate-900/80 to-slate-900/80 p-12 shadow-2xl shadow-emerald-500/20 backdrop-blur-sm">
+          <div className="flex flex-col items-center justify-center space-y-6 text-center">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+              className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/20"
+            >
+              <CheckCircle className="h-12 w-12 text-emerald-400" />
+            </motion.div>
+            <div className="space-y-3">
+              <h2 className="text-3xl font-bold text-white">{t('form.success.title')}</h2>
+              <p className="text-lg text-slate-300">{t('form.success.message')}</p>
+              <p className="text-sm text-emerald-400/80">{t('form.success.subtitle')}</p>
+            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-4"
+            >
+              <Mail className="h-8 w-8 text-emerald-400/50" />
+            </motion.div>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="mx-auto w-full max-w-xl"
+      className="mx-auto w-full max-w-2xl"
     >
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg shadow-slate-900/40">
-        <div className="space-y-6">
-          <div className="space-y-1.5">
-            <h1 className="text-3xl font-semibold text-white">{t('form.title')}</h1>
+      <div className="rounded-3xl border border-slate-800/50 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-900/80 p-8 shadow-2xl shadow-slate-900/50 backdrop-blur-sm">
+        <div className="space-y-8">
+          <div className="space-y-2 text-center">
+            <h2 className="text-2xl font-semibold text-white">{t('form.title')}</h2>
             <p className="text-sm text-slate-400">{t('form.subtitle')}</p>
           </div>
 
-          <form ref={formRef} action={formAction} onSubmit={handleSubmit} className="space-y-6">
+          <form ref={formRef} action={formAction} onSubmit={handleSubmit} className="space-y-5">
             <input
               type="hidden"
               name="turnstileToken"
@@ -275,9 +312,9 @@ const ContactForm = memo(() => {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium text-slate-300">
+                <label htmlFor="name" className="text-sm font-medium text-slate-200">
                   {t('form.fields.name.label')}
                 </label>
                 <Input
@@ -289,15 +326,15 @@ const ContactForm = memo(() => {
                   required
                   autoComplete="name"
                   aria-invalid={Boolean(fieldErrors.name?.length)}
-                  className="h-11 rounded-lg border-slate-700 bg-slate-800/50 text-white placeholder:text-slate-500"
+                  className="h-12 rounded-xl border-slate-700/50 bg-slate-800/40 text-white placeholder:text-slate-500 transition-all focus:border-indigo-500/50 focus:bg-slate-800/60"
                 />
                 {fieldErrors.name?.length ? (
-                  <p className="text-sm text-red-400">{fieldErrors.name[0]}</p>
+                  <p className="text-xs text-red-400">{fieldErrors.name[0]}</p>
                 ) : null}
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-slate-300">
+                <label htmlFor="email" className="text-sm font-medium text-slate-200">
                   {t('form.fields.email.label')}
                 </label>
                 <Input
@@ -310,16 +347,16 @@ const ContactForm = memo(() => {
                   required
                   autoComplete="email"
                   aria-invalid={Boolean(fieldErrors.email?.length)}
-                  className="h-11 rounded-lg border-slate-700 bg-slate-800/50 text-white placeholder:text-slate-500"
+                  className="h-12 rounded-xl border-slate-700/50 bg-slate-800/40 text-white placeholder:text-slate-500 transition-all focus:border-indigo-500/50 focus:bg-slate-800/60"
                 />
                 {fieldErrors.email?.length ? (
-                  <p className="text-sm text-red-400">{fieldErrors.email[0]}</p>
+                  <p className="text-xs text-red-400">{fieldErrors.email[0]}</p>
                 ) : null}
               </div>
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="intent" className="text-sm font-medium text-slate-300">
+              <label htmlFor="intent" className="text-sm font-medium text-slate-200">
                 {t('form.fields.intent.label')}
               </label>
               <select
@@ -328,7 +365,7 @@ const ContactForm = memo(() => {
                 value={formValues.intent}
                 onChange={handleIntentChange}
                 aria-invalid={Boolean(fieldErrors.intent?.length)}
-                className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="h-12 w-full rounded-xl border border-slate-700/50 bg-slate-800/40 px-4 text-white transition-all focus:border-indigo-500/50 focus:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
               >
                 {intentOptions.map(option => (
                   <option key={option.value} value={option.value} className="bg-slate-900">
@@ -337,13 +374,13 @@ const ContactForm = memo(() => {
                 ))}
               </select>
               {fieldErrors.intent?.length ? (
-                <p className="text-sm text-red-400">{fieldErrors.intent[0]}</p>
+                <p className="text-xs text-red-400">{fieldErrors.intent[0]}</p>
               ) : null}
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="space-y-2">
-                <label htmlFor="preferredMethod" className="text-sm font-medium text-slate-300">
+                <label htmlFor="preferredMethod" className="text-sm font-medium text-slate-200">
                   {t('form.fields.preferredMethod.label')}
                 </label>
                 <select
@@ -352,7 +389,7 @@ const ContactForm = memo(() => {
                   value={formValues.preferredMethod}
                   onChange={handleMethodChange}
                   aria-invalid={Boolean(fieldErrors.preferredMethod?.length)}
-                  className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 text-white focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="h-12 w-full rounded-xl border border-slate-700/50 bg-slate-800/40 px-4 text-white transition-all focus:border-indigo-500/50 focus:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 >
                   {methodOptions.map(option => (
                     <option key={option.value} value={option.value} className="bg-slate-900">
@@ -361,12 +398,12 @@ const ContactForm = memo(() => {
                   ))}
                 </select>
                 {fieldErrors.preferredMethod?.length ? (
-                  <p className="text-sm text-red-400">{fieldErrors.preferredMethod[0]}</p>
+                  <p className="text-xs text-red-400">{fieldErrors.preferredMethod[0]}</p>
                 ) : null}
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="preferredValue" className="text-sm font-medium text-slate-300">
+                <label htmlFor="preferredValue" className="text-sm font-medium text-slate-200">
                   {t('form.fields.preferredValue.label')}
                 </label>
                 <Input
@@ -377,19 +414,19 @@ const ContactForm = memo(() => {
                   onChange={handleInputChange}
                   required
                   aria-invalid={Boolean(fieldErrors.preferredValue?.length)}
-                  className="h-11 rounded-lg border-slate-700 bg-slate-800/50 text-white placeholder:text-slate-500"
+                  className="h-12 rounded-xl border-slate-700/50 bg-slate-800/40 text-white placeholder:text-slate-500 transition-all focus:border-indigo-500/50 focus:bg-slate-800/60"
                 />
                 {selectedMethod?.helper ? (
                   <p className="text-xs text-slate-500">{selectedMethod.helper}</p>
                 ) : null}
                 {fieldErrors.preferredValue?.length ? (
-                  <p className="text-sm text-red-400">{fieldErrors.preferredValue[0]}</p>
+                  <p className="text-xs text-red-400">{fieldErrors.preferredValue[0]}</p>
                 ) : null}
               </div>
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-medium text-slate-300">
+              <label htmlFor="message" className="text-sm font-medium text-slate-200">
                 {t('form.fields.message.label')}
               </label>
               <Textarea
@@ -401,32 +438,27 @@ const ContactForm = memo(() => {
                 required
                 maxLength={4000}
                 aria-invalid={Boolean(fieldErrors.message?.length)}
-                className="min-h-[120px] rounded-lg border-slate-700 bg-slate-800/50 text-white placeholder:text-slate-500"
+                className="min-h-[140px] rounded-xl border-slate-700/50 bg-slate-800/40 text-white placeholder:text-slate-500 transition-all focus:border-indigo-500/50 focus:bg-slate-800/60"
               />
               {fieldErrors.message?.length ? (
-                <p className="text-sm text-red-400">{fieldErrors.message[0]}</p>
+                <p className="text-xs text-red-400">{fieldErrors.message[0]}</p>
               ) : null}
             </div>
 
-            {showFeedback ? (
-              <div
-                className={cn(
-                  'rounded-lg border px-4 py-3 text-sm',
-                  showSuccess
-                    ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-300'
-                    : 'border-amber-500/50 bg-amber-500/10 text-amber-300'
-                )}
+            {showFeedback && !showSuccess ? (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl border border-amber-500/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-300"
               >
                 {combinedMessage}
-              </div>
+              </motion.div>
             ) : null}
 
             <div className="space-y-4 pt-2">
               {isTurnstileEnabled ? (
                 <div ref={turnstileRef} className="flex justify-center" />
-              ) : (
-                <p className="text-center text-xs text-slate-500">{t('form.turnstile.disabled')}</p>
-              )}
+              ) : null}
               <SubmitButton />
             </div>
           </form>
@@ -453,43 +485,58 @@ export default function ContactClient() {
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.15),_transparent_65%)]" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col gap-12 lg:flex-row lg:items-start lg:gap-16 mt-2">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
         <motion.section
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="space-y-6 text-slate-300 lg:max-w-sm"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-8 text-slate-300 lg:max-w-md lg:sticky lg:top-24"
         >
-          <div className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.32em] text-indigo-200">{t('hero.badge')}</p>
-            <h1 className="text-3xl font-semibold text-white">{t('hero.title')}</h1>
-            <p className="text-sm">{t('hero.description')}</p>
+          <div className="space-y-4">
+            <p className="text-xs uppercase tracking-[0.32em] text-indigo-400 font-medium">
+              {t('hero.badge')}
+            </p>
+            <h1 className="text-4xl font-bold text-white leading-tight">{t('hero.title')}</h1>
+            <p className="text-base text-slate-400 leading-relaxed">{t('hero.description')}</p>
           </div>
 
-          <ul className="space-y-2 text-sm">
-            {highlights.map(item => (
-              <li key={item} className="flex items-start gap-2">
-                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-indigo-400" />
-                <span>{item}</span>
-              </li>
+          <ul className="space-y-3 text-sm">
+            {highlights.map((item, index) => (
+              <motion.li
+                key={item}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 * index, duration: 0.3 }}
+                className="flex items-start gap-3"
+              >
+                <span className="mt-1.5 h-2 w-2 rounded-full bg-indigo-400 flex-shrink-0" />
+                <span className="text-slate-300">{item}</span>
+              </motion.li>
             ))}
           </ul>
 
-          <div className="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-4 text-indigo-100">
-            <p className="text-xs uppercase tracking-[0.28em] text-indigo-200/80">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+            className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 to-indigo-600/5 p-5 backdrop-blur-sm"
+          >
+            <p className="text-xs uppercase tracking-[0.28em] text-indigo-300/80 font-medium mb-2">
               {t('hero.callout.title')}
             </p>
             <a
               href={`mailto:${contactEmail}`}
-              className="mt-1 inline-flex items-center gap-2 text-lg font-semibold text-white hover:text-indigo-100"
+              className="inline-flex items-center gap-2 text-lg font-semibold text-white hover:text-indigo-200 transition-colors"
             >
               {contactEmail}
             </a>
-            <p className="mt-1 text-xs text-indigo-100/80">{t('hero.callout.footnote')}</p>
-          </div>
+            <p className="mt-2 text-xs text-indigo-200/70">{t('hero.callout.footnote')}</p>
+          </motion.div>
         </motion.section>
 
-        <ContactForm />
+        <div className="flex-1">
+          <ContactForm />
+        </div>
       </div>
     </div>
   );
