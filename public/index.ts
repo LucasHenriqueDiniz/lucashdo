@@ -29,7 +29,6 @@ export { default as selfie } from './selfie.webp';
 // Misc
 export { default as placeholderImage } from './placeholder.webp';
 export { default as vinylDisk } from './vinyl.webp';
-export { default as placeholderAvatar } from './placeholder_avatar.webp';
 
 // Icons
 export { default as ZustandLogo } from './icons/zunstand.webp';

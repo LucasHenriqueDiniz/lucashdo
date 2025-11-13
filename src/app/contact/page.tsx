@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: 'Lucas Hdo - Portfolio',
     images: [
       {
-        url: '/logo.webp',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Contato - Lucas Hdo Portfolio',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: 'Contato | Lucas Hdo - Desenvolvedor Full Stack',
     description:
       'Entre em contato comigo para oportunidades de trabalho, colaborações em projetos, consultoria ou apenas para bater um papo sobre tecnologia.',
-    images: ['/logo.webp'],
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: 'https://lucashdo.com/contact',

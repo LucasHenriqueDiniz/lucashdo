@@ -41,16 +41,4 @@ export const galleryItems: ArtItem[] = [
     tags: ['vetor', 'gif'],
   },
   // LIVE2D
-  {
-    id: 'shizuku',
-    title: 'Shizuku',
-    description: {
-      pt: 'Modelo Live2D Shizuku.',
-      en: 'Live2D model Shizuku.',
-    },
-    type: 'live2d',
-    image: '/gallery/live2d/shizuku/runtime/shizuku.1024/texture_00.png',
-    live2dModelUrl: '/gallery/live2d/shizuku/runtime/shizuku.model3.json',
-    tags: ['live2d', 'avatar'],
-  },
 ];

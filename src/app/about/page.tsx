@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     siteName: 'Lucas Hdo - Portfolio',
     images: [
       {
-        url: '/selfie.webp',
-        width: 800,
-        height: 600,
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
         alt: 'Lucas Hdo - Desenvolvedor Full Stack',
       },
     ],
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: 'Sobre | Lucas Hdo - Desenvolvedor Full Stack',
     description:
       'Conheça mais sobre minha jornada como desenvolvedor Full Stack, habilidades técnicas e experiências profissionais.',
-    images: ['/selfie.webp'],
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: 'https://lucashdo.com/about',

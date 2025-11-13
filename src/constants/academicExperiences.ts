@@ -235,4 +235,12 @@ export const certificates = [
     skills: ['Web Development'],
     icon: SiUdemy,
   },
+  {
+    title: 'Digital Advertising Certification: Develop a Winning Online Advertising Strategy',
+    issuer: 'HubSpot Academy',
+    issueDate: '2025-01',
+    url: 'https://app.hubspot.com/academy/achievements/cn50rk94/en/1/amayacrab-na/digital-advertising',
+    skills: ['Digital Advertising', 'Marketing', 'Social Media Advertising', 'Google Ads'],
+    icon: SiOpenbadges,
+  },
 ];

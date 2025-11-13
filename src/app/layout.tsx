@@ -4,7 +4,6 @@ import { IntlProviderClient } from '@/lib/i18n/IntlProviderClient';
 import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
 import AppShell from '@/components/layout/AppShell';
 import './globals.css';
-import { logo } from '../../public';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -75,7 +74,7 @@ export const metadata: Metadata = {
       'Portfólio de Lucas Hdo - Desenvolvedor Full Stack especializado em React, Next.js, TypeScript e design criativo. Projetos inovadores e soluções web modernas.',
     images: [
       {
-        url: logo.src,
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
@@ -89,7 +88,7 @@ export const metadata: Metadata = {
     title: 'Lucas Hdo - Desenvolvedor Full Stack & Designer',
     description:
       'Portfólio de Lucas Hdo - Desenvolvedor Full Stack especializado em React, Next.js, TypeScript e design criativo.',
-    images: [logo.src],
+    images: ['/og-image.png'],
   },
   icons: {
     icon: '/logo.webp',
