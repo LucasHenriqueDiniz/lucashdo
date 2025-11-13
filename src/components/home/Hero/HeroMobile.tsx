@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useCallback, useMemo } from 'react';
-import { LuExternalLink, LuMail } from 'react-icons/lu';
+import { LuExternalLink, LuMail, LuFileText } from 'react-icons/lu';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { TypingText } from '@/components/animate-ui/text/typing';
@@ -26,7 +26,7 @@ export default function HeroMobile() {
     []
   );
 
-  const highlightedSkills = useMemo(() => featuredSkills.slice(0, 4), [featuredSkills]);
+  const highlightedSkills = useMemo(() => featuredSkills.slice(0, 3), [featuredSkills]);
 
   const stats = useMemo(
     () => [
@@ -52,149 +52,150 @@ export default function HeroMobile() {
     router.push('/projects');
   }, [router]);
 
-  return (
-    <section className="relative w-full overflow-hidden px-4 pb-16 pt-16 md:hidden sm:px-6 sm:pt-20">
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -left-20 top-8 h-40 w-40 rounded-full bg-[color:var(--blue)]/30 blur-3xl sm:-left-24 sm:h-48 sm:w-48"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute bottom-[-120px] right-[-80px] h-56 w-56 rounded-full bg-[color:var(--cyan)]/25 blur-[100px] sm:bottom-[-140px] sm:right-[-60px] sm:h-64 sm:w-64"
-        aria-hidden="true"
-      />
-      <motion.div
-        className="relative z-10 mx-auto flex w-full max-w-md flex-col items-center gap-6 rounded-[28px] border border-[color:var(--blue)]/15 bg-background/85 p-6 text-center shadow-[0_20px_70px_-45px_rgba(56,189,248,0.7)] backdrop-blur sm:max-w-xl sm:gap-8 sm:rounded-[32px] sm:p-8"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-      >
-        <motion.span
-          className="inline-flex items-center gap-2 rounded-full border border-[color:var(--cyan)]/30 bg-[color:var(--cyan)]/10 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--cyan)] sm:px-4 sm:text-xs"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-        >
-          <span className="h-2 w-2 rounded-full bg-[color:var(--cyan)] shadow-[0_0_0_4px_rgba(56,189,248,0.15)] animate-pulse" />
-          {mobile('availability')}
-        </motion.span>
+  const handleCVClick = useCallback(() => {
+    router.push('/cv');
+  }, [router]);
 
-        <div className="flex w-full flex-col gap-3 sm:gap-4">
-          <motion.h1
-            className="text-3xl font-bold leading-tight text-foreground sm:text-4xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
+  return (
+    <section className="relative w-full max-w-[100vw] overflow-x-hidden px-4 py-6 md:py-12 md:hidden">
+      {/* Background gradient effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[min(384px,100vw)] h-96 bg-[var(--primary)]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-[min(320px,100vw)] h-80 bg-[var(--cyan)]/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative z-10 max-w-md mx-auto flex flex-col items-center gap-6">
+        {/* Availability Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--cyan)]/10 border border-[var(--cyan)]/30 backdrop-blur-sm">
+            <motion.span
+              className="w-2 h-2 rounded-full bg-[var(--cyan)]"
+              animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <span className="text-xs font-medium text-[var(--cyan)] uppercase tracking-wider">
+              {mobile('availability')}
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Main Heading */}
+        <motion.div
+          className="text-center space-y-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <h1 className="text-4xl font-bold leading-tight">
             {t('Home.greeting')}{' '}
-            <span className="bg-gradient-to-r from-[color:var(--blue)] via-[color:var(--cyan)] to-[color:var(--blue)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[var(--primary)] via-[var(--cyan)] to-[var(--primary)] bg-clip-text text-transparent">
               Lucas HDO
             </span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            className="text-sm text-muted-foreground sm:text-base"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.6 }}
-          >
-            {mobile('subtitle')}
-          </motion.p>
-        </div>
-
-        <motion.div
-          className="flex w-full flex-col items-center gap-2 sm:gap-3"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          <TypingText
-            className="text-xs font-semibold uppercase tracking-[0.25em] text-[color:var(--cyan)] sm:text-sm"
-            text={featuredSkills}
-            cursor
-            cursorClassName="h-4 w-[2px] bg-[color:var(--cyan)] sm:h-5"
-            holdDelay={1200}
-            loop
-          />
-          <AnimatedRole lang={lang} />
+          {/* Typing Skills */}
+          <div className="flex flex-col items-center gap-2">
+            <TypingText
+              className="text-xs font-semibold uppercase tracking-wider text-[var(--cyan)]"
+              text={featuredSkills}
+              cursor
+              cursorClassName="h-4 w-[2px] bg-[var(--cyan)]"
+              holdDelay={1200}
+              loop
+            />
+            <AnimatedRole lang={lang} />
+          </div>
         </motion.div>
 
-        <motion.p
-          className="text-left text-sm leading-relaxed text-muted-foreground sm:max-w-md sm:text-center sm:text-base"
+        {/* Skills Tags */}
+        <motion.div
+          className="flex flex-wrap justify-center gap-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {mobile('description')}
-        </motion.p>
-
-        <motion.div
-          className="flex w-full flex-wrap justify-center gap-2"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-        >
-          {highlightedSkills.map(skill => (
-            <span
+          {highlightedSkills.map((skill, index) => (
+            <motion.span
               key={skill}
-              className="rounded-full border border-[color:var(--blue)]/25 bg-[color:var(--blue)]/10 px-3 py-1 text-[0.7rem] font-medium text-[color:var(--blue)] sm:text-xs"
+              className="px-3 py-1.5 rounded-lg bg-[var(--primary)]/10 border border-[var(--primary)]/20 text-xs font-medium text-[var(--primary)]"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 + index * 0.1, type: 'spring', stiffness: 200 }}
             >
               {skill}
-            </span>
+            </motion.span>
           ))}
         </motion.div>
 
+        {/* Stats */}
         <motion.div
-          className="grid w-full grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2"
+          className="grid grid-cols-2 gap-3 w-full"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45, duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
-          {stats.map(stat => (
-            <div
+          {stats.map((stat, index) => (
+            <motion.div
               key={stat.label}
-              className="rounded-2xl border border-[color:var(--blue)]/15 bg-background/85 p-4 text-left shadow-[0_18px_50px_-40px_rgba(56,189,248,0.6)] sm:p-5"
+              className="relative p-4 rounded-xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-[var(--primary)]/10 backdrop-blur-sm"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 + index * 0.1, type: 'spring' }}
+              whileHover={{ scale: 1.02, borderColor: 'var(--primary)' }}
             >
-              <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-[color:var(--cyan)]/80 sm:text-xs">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-[var(--cyan)]/70 mb-1">
                 {stat.label}
               </p>
-              <p className="mt-1 text-2xl font-bold text-foreground sm:mt-2 sm:text-3xl">
-                {stat.value}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">{stat.caption}</p>
-            </div>
+              <p className="text-2xl font-bold text-foreground mb-1">{stat.value}</p>
+              <p className="text-xs text-[var(--muted-foreground)]">{stat.caption}</p>
+            </motion.div>
           ))}
         </motion.div>
 
+        {/* Action Buttons */}
         <motion.div
-          className="flex w-full flex-col gap-3 pt-1 sm:pt-2"
+          className="flex flex-col gap-3 w-full"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
         >
           <Button
-            onClick={handleContactClick}
-            variant="outline"
-            className="flex w-full items-center justify-center gap-2 border-[1.5px] border-[color:var(--blue)] text-sm text-[color:var(--blue)] hover:bg-[color:var(--blue)] hover:text-white sm:text-base"
-            size="lg"
-          >
-            <LuMail className="h-5 w-5" />
-            {t('Navigation.contact')}
-          </Button>
-
-          <Button
             onClick={handleProjectsClick}
-            className="flex w-full items-center justify-center gap-2 bg-[color:var(--blue)] text-sm text-white hover:bg-[color:var(--blue)]/90 sm:text-base"
+            className="w-full bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] text-white hover:shadow-lg hover:shadow-[var(--primary)]/30 transition-all"
             size="lg"
           >
-            <LuExternalLink className="h-5 w-5" />
+            <LuExternalLink className="h-4 w-4 mr-2" />
             {t('Navigation.projects')}
           </Button>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              onClick={handleContactClick}
+              variant="outline"
+              className="border-[var(--primary)]/30 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-all"
+              size="lg"
+            >
+              <LuMail className="h-4 w-4 mr-2" />
+              {t('Navigation.contact')}
+            </Button>
+
+            <Button
+              onClick={handleCVClick}
+              variant="outline"
+              className="border-[var(--cyan)]/30 text-[var(--cyan)] hover:bg-[var(--cyan)] hover:text-white transition-all"
+              size="lg"
+            >
+              <LuFileText className="h-4 w-4 mr-2" />
+              {t('Navigation.viewCV')}
+            </Button>
+          </div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }
+

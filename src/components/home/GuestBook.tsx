@@ -11,6 +11,7 @@ import HomeSectionTitle from '@/components/ui/HomeSectionTitle';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GUESTBOOK_EMOJIS } from '@/constants/guestbookEmojis';
 import { useGuestbookStore } from '@/store/guestbookStore';
+import { useLanguageStore } from '@/store/languageStore';
 import { GuestbookEntry } from '@/types/guestbook.types';
 import CarouselGuestbook from './CarouselGuestbook';
 import styles from './GuestBook.module.css';
@@ -34,6 +35,7 @@ const useDebounce = <T,>(value: T, delay: number): T => {
 
 const GuestBook: React.FC = () => {
   const t = useTranslations('ModernGuestBook');
+  const lang = useLanguageStore(state => state.lang);
   const { entries, isLoading, error, fetchEntries, addEntry } = useGuestbookStore();
   const isServiceUnavailable = useMemo(() => error === 'SERVICE_UNAVAILABLE', [error]);
   const [formData, setFormData] = useState({
@@ -47,6 +49,7 @@ const GuestBook: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [avatarStatus, setAvatarStatus] = useState<'idle' | 'loading' | 'success' | 'error'>(
     'idle'
   );
@@ -210,6 +213,7 @@ const GuestBook: React.FC = () => {
         });
         setAvatarStatus('idle');
         setShowSuccess(true);
+        setFormSubmitted(true);
         setTimeout(() => setShowSuccess(false), 4000);
       } catch (err) {
         console.error('Error submitting guestbook entry:', err);
@@ -260,7 +264,7 @@ const GuestBook: React.FC = () => {
 
   return (
     <div className={styles.guestbookContainer}>
-      {/* Grid de fundo - avatares flutuantes */}
+      {/* Grid de fundo - avatares flutuantes - Visible on mobile with improved size */}
       <div className={styles.backgroundGrid}>
         {gridEntries.map((entry: GuestbookEntry, index: number) => (
           <motion.div
@@ -331,7 +335,53 @@ const GuestBook: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          {isServiceUnavailable ? (
+          {formSubmitted ? (
+            <AnimatePresence>
+              <motion.div
+                className="flex flex-col items-center gap-6 text-center p-6 md:p-8"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.4 }}
+              >
+                <motion.div
+                  className="w-16 h-16 md:w-20 md:h-20 bg-green-500/20 rounded-full flex items-center justify-center border-2 border-green-500/50"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                >
+                  <motion.div
+                    className="text-3xl md:text-4xl"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
+                  >
+                    ✓
+                  </motion.div>
+                </motion.div>
+                <div>
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
+                    {t('commentSuccess')}
+                  </h3>
+                  <p className="text-sm md:text-base text-gray-400">
+                    {lang === 'pt' ? 'Obrigado por deixar sua mensagem!' : 'Thank you for leaving your message!'}
+                  </p>
+                </div>
+                <motion.button
+                  type="button"
+                  onClick={() => {
+                    setFormSubmitted(false);
+                    setShowSuccess(false);
+                  }}
+                  className="px-6 py-3 rounded-xl font-semibold bg-blue-500 text-white shadow-lg shadow-blue-500/25 hover:bg-blue-400 transition-colors text-sm md:text-base"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {lang === 'pt' ? 'Deixar outra mensagem' : 'Leave another message'}
+                </motion.button>
+              </motion.div>
+            </AnimatePresence>
+          ) : isServiceUnavailable ? (
             <div className={`${styles.form} flex flex-col items-center gap-6 text-center`}>
               <motion.div
                 className="flex flex-col items-center gap-4 w-full bg-red-500/10 border border-red-500/30 rounded-2xl p-8"
@@ -357,8 +407,8 @@ const GuestBook: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className={styles.form}>
-              <motion.div className="flex items-center justify-center gap-2 mb-8">
-                <h3 className="text-2xl md:text-3xl font-bold text-white text-center">
+              <motion.div className="flex items-center justify-center gap-2 mb-6 md:mb-8">
+                <h3 className="text-xl md:text-3xl font-bold text-white text-center">
                   {t('leaveCommentTitle')}
                 </h3>
                 <Tooltip>
@@ -439,7 +489,7 @@ const GuestBook: React.FC = () => {
               </div>
 
               {/* Campos de input */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="grid grid-cols-1 gap-4 md:gap-6 mb-4 md:mb-6">
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <label className="block text-sm font-medium text-gray-300">
@@ -464,7 +514,7 @@ const GuestBook: React.FC = () => {
                     placeholder={t('namePlaceholder')}
                     maxLength={MAX_NAME_LENGTH}
                     required
-                    className={`w-full bg-gray-800/50 border rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200 ${
+                    className={`w-full bg-gray-800/50 border rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200 ${
                       formData.name.length > MAX_NAME_LENGTH
                         ? 'border-red-500 focus:border-red-500'
                         : 'border-gray-600 focus:border-blue-500'
@@ -486,7 +536,7 @@ const GuestBook: React.FC = () => {
                           ? t('githubUsernamePlaceholder')
                           : t('instagramUsernamePlaceholder')
                       }
-                      className="w-full bg-gray-800/50 border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200"
+                      className="w-full bg-gray-800/50 border border-gray-600 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200"
                     />
                     {formData.is_developer && formData.username && (
                       <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -552,7 +602,7 @@ const GuestBook: React.FC = () => {
               </div>
 
               {/* Selector de emoji com scroll horizontal (sem animações desnecessárias) */}
-              <div className="mb-6">
+              <div className="mb-4 md:mb-6">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <label className="block text-sm font-medium text-gray-300 mb-3">
@@ -595,7 +645,7 @@ const GuestBook: React.FC = () => {
               </div>
 
               {/* Textarea para mensagem */}
-              <div className="mb-6">
+              <div className="mb-4 md:mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <label className="block text-sm font-medium text-gray-300">
                     {t('messageLabel')}
@@ -619,7 +669,7 @@ const GuestBook: React.FC = () => {
                   rows={4}
                   maxLength={MAX_MESSAGE_LENGTH}
                   required
-                  className={`w-full bg-gray-800/50 border rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200 resize-none ${
+                  className={`w-full bg-gray-800/50 border rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500/25 transition-all duration-200 resize-none ${
                     formData.message.length > MAX_MESSAGE_LENGTH
                       ? 'border-red-500 focus:border-red-500'
                       : 'border-gray-600 focus:border-blue-500'
@@ -646,7 +696,7 @@ const GuestBook: React.FC = () => {
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                className="relative w-full bg-gradient-to-r from-blue-500 via-purple-600 to-blue-500 bg-size-200 text-white font-bold py-5 px-8 rounded-2xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 overflow-hidden"
+                className="relative w-full bg-gradient-to-r from-blue-500 via-purple-600 to-blue-500 bg-size-200 text-white font-bold py-4 md:py-5 px-6 md:px-8 rounded-xl md:rounded-2xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-500 overflow-hidden text-sm md:text-base"
                 style={{ backgroundSize: '200% 100%' }}
                 whileHover={
                   !isSubmitting

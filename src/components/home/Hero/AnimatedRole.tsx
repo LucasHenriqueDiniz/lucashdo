@@ -50,13 +50,13 @@ const AnimatedRole: React.FC<AnimatedRoleProps> = React.memo(({ lang }) => {
   return (
     <div className="w-full flex justify-center items-center">
       <div className="relative flex flex-col items-center" style={{ minHeight: 48 }}>
-        <div className="flex items-end justify-center gap-2 relative">
-          <span className="font-medium text-2xl whitespace-nowrap mb-[0.35rem]">{prefix}</span>
+        <div className="flex items-end justify-center gap-2 relative flex-wrap justify-center">
+          <span className="font-medium text-base md:text-2xl whitespace-nowrap mb-[0.35rem]">{prefix}</span>
           <div className="relative flex flex-col items-center">
             <AnimatePresence mode="wait">
               <motion.span
                 key={roleText}
-                className="font-semibold text-2xl whitespace-nowrap relative"
+                className="font-semibold text-base md:text-2xl whitespace-nowrap relative"
                 style={{ color: 'var(--cyan)' }}
                 initial={{ opacity: 0, y: -40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -87,7 +87,7 @@ const AnimatedRole: React.FC<AnimatedRoleProps> = React.memo(({ lang }) => {
               key={currentRole.emoji}
               role="img"
               aria-label="developer icon"
-              className="inline-block ml-2 text-2xl"
+              className="inline-block ml-2 text-base md:text-2xl"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1, y: [0, -5, 0] }}
               exit={{ opacity: 0, scale: 0.5, rotate: 20 }}

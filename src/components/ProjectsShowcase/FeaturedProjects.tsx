@@ -139,10 +139,87 @@ const ProjectsShowcase = () => {
         }
       />
 
-      {/* Featured projects in browser */}
+      {/* Mobile version - Simple card grid */}
+      <div className="md:hidden w-full">
+        <div className="grid grid-cols-1 gap-6 mt-8">
+          {topFeaturedProjects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.4 }}
+              className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-xl shadow-xl border border-slate-700/50 overflow-hidden"
+            >
+              <div
+                className="h-48 bg-cover bg-center relative"
+                style={{ backgroundImage: `url(${project.image})` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.slice(0, 3).map(tag => (
+                      <span
+                        key={tag}
+                        className="bg-blue-500/20 text-blue-200 text-xs px-2 py-1 rounded-full border border-blue-500/30"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {project.tags.length > 3 && (
+                      <span className="bg-slate-700/50 text-slate-300 text-xs px-2 py-1 rounded-full">
+                        +{project.tags.length - 3}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="p-4">
+                <p className="text-sm text-slate-300 mb-4 line-clamp-3">
+                  {lang === 'pt' ? project.description.pt : project.description.en}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href={project.repoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <Code size={16} />
+                    <span>{t('viewCode')}</span>
+                  </Link>
+                  {project.demoUrl && (
+                    <Link
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      <ExternalLink size={16} />
+                      <span>{t('liveDemo')}</span>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <div className="flex justify-center mt-8">
+          <Link
+            href="/projects"
+            className="bg-gradient-to-r from-blue-600/90 to-blue-700/90 hover:from-blue-500/90 hover:to-blue-600/90 text-white font-medium py-3 px-7 rounded-lg shadow-md transition-all duration-300 flex items-center gap-3"
+          >
+            <span>{t('viewAllProjects')}</span>
+            <ArrowRight size={18} />
+          </Link>
+        </div>
+      </div>
+
+      {/* Featured projects in browser - Desktop only */}
       {topFeaturedProjects.length > 0 && (
         <motion.div
-          className="featured-projects-section mb-24"
+          className="featured-projects-section mb-24 hidden md:block"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -426,8 +503,8 @@ const ProjectsShowcase = () => {
         </motion.div>
       )}
 
-      {/* View all projects link */}
-      <div className="flex justify-center mt-12">
+      {/* View all projects link - Desktop only */}
+      <div className="hidden md:flex justify-center mt-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

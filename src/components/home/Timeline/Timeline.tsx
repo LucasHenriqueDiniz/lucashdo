@@ -1,6 +1,6 @@
 'use client';
-import { motion, useScroll } from 'framer-motion';
-import { BriefcaseBusiness, GraduationCap, LucideArrowRight } from 'lucide-react';
+import { AnimatePresence, motion, useScroll } from 'framer-motion';
+import { BriefcaseBusiness, ChevronDown, GraduationCap, LucideArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, {
   memo,
@@ -414,6 +414,7 @@ const MemoBallContainer = memo(BallContainer);
 const Timeline = () => {
   const lang = useLanguageStore(state => state.lang);
   const [windowHeight, setWindowHeight] = useState(0);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('Timeline');
@@ -486,9 +487,114 @@ const Timeline = () => {
         titleWhitePart={t('titleWhitePart')}
         titleBluePart={t('titleBluePart')}
       />
+      
+      {/* Mobile version - Accordion */}
+      <div className="md:hidden w-full max-w-[calc(100vw-2rem)] mx-auto px-4 mt-8 space-y-4">
+        {[...timelineItems].reverse().map((item, index) => {
+          const isAcademic = jobExperiences.findIndex(exp => exp.id === item.id) === -1;
+          const TypeIcon = isAcademic ? GraduationCap : BriefcaseBusiness;
+          const itemId = item.id || `item-${index}`;
+          const isExpanded = expandedItem === itemId;
+          
+          return (
+            <motion.div
+              key={itemId}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.05, duration: 0.4 }}
+              className="relative pl-8"
+            >
+              {/* Timeline line */}
+              {index < timelineItems.length - 1 && (
+                <div className="absolute left-3 top-8 bottom-0 w-0.5 bg-gray-800" />
+              )}
+              
+              {/* Icon */}
+              <div className="absolute left-0 top-0 flex items-center justify-center w-6 h-6 bg-[var(--primary)] rounded-full z-10">
+                <TypeIcon className="w-4 h-4 text-white" />
+              </div>
+              
+              {/* Card */}
+              <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-xl rounded-xl shadow-xl border border-slate-700/50 overflow-hidden">
+                {/* Header - Always visible */}
+                <button
+                  onClick={() => setExpandedItem(isExpanded ? null : itemId)}
+                  className="w-full p-4 flex items-center justify-between gap-3 hover:bg-slate-700/30 transition-colors"
+                >
+                  <div className="flex-1 text-left">
+                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-200 border border-blue-500/30">
+                        {isAcademic ? t('education') : t('job')}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {formatExperienceDates(item.startDate, item.endDate, lang)}
+                      </span>
+                    </div>
+                    <h3 className="text-base font-bold text-white">{item.title}</h3>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: isExpanded ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-shrink-0"
+                  >
+                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                  </motion.div>
+                </button>
+                
+                {/* Expandable content */}
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-4 pb-4 space-y-3 border-t border-slate-700/50 pt-4">
+                        {/* Institution */}
+                        {item.institution && (
+                          <p className="text-sm text-blue-400 font-medium">{item.institution}</p>
+                        )}
+                        
+                        {/* Tags */}
+                        {item.tags && item.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {item.tags.map((tag: TimelineTagProps, tagIndex: number) => (
+                              <div
+                                key={tagIndex}
+                                className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--primary)]/10 border border-[var(--primary)]/20"
+                              >
+                                {tag.icon &&
+                                  React.createElement(tag.icon, {
+                                    className: 'w-4 h-4 text-[var(--accent)]',
+                                  })}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Description */}
+                        <p className="text-sm text-gray-300 leading-relaxed">
+                          {typeof item.description === 'object'
+                            ? item.description[lang] || item.description.en || item.description.pt
+                            : item.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+      
+      {/* Desktop version */}
       <div
         ref={timelineRef}
-        className="relative w-full max-w-[1400px] mx-auto px-4 md:px-8 timeline-container"
+        className="hidden md:block relative w-full max-w-[1400px] mx-auto px-4 md:px-8 timeline-container"
         style={{ height: totalHeight }}
       >
         {/* Linha vertical no fundo */}
@@ -515,12 +621,12 @@ const Timeline = () => {
           );
         })}
       </div>
-      {/* Mini Linha para criar um espaçamento */}
-      <div className="w-1 bg-gray-900 z-0" style={{ height: '25px' }} />
+      {/* Mini Linha para criar um espaçamento - Desktop only */}
+      <div className="hidden md:block w-1 bg-gray-900 z-0" style={{ height: '25px' }} />
       {/* CTA */}
       <motion.div
         key={lang}
-        className="mb-8 flex flex-col items-center justify-center gap-2"
+        className="mb-8 mt-8 flex flex-col items-center justify-center gap-2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}

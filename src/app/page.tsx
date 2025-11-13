@@ -138,7 +138,7 @@ export default async function Home() {
       <WebsiteStructuredData />
       <OrganizationStructuredData />
 
-      <main className="min-h-screen w-full flex flex-col items-center mt-[--navbar-height] px-4">
+      <main className="min-h-screen w-full max-w-[100vw] overflow-x-hidden flex flex-col items-center mt-[--navbar-height] md:px-4">
         {/* HERO */}
         <Hero />
 
@@ -160,9 +160,19 @@ export default async function Home() {
           <GuestBook />
         </div>
 
-        {/* Mobile placeholder */}
-        <div className="md:hidden w-full max-w-4xl mx-auto my-12 text-center text-muted-foreground">
-          {t('mobilePlaceholder')}
+        {/* Mobile sections */}
+        <div className="md:hidden flex flex-col items-center w-full">
+          {/* HERO BROWSER - Mobile (simplified, rendered inside HeroBrowser) */}
+          <HeroBrowser />
+
+          {/* EXPERIENCE GRAPH - Mobile */}
+          <ExpGraph />
+
+          {/* TIMELINE - Mobile (simplified) */}
+          <Timeline />
+
+          {/* GUESTBOOK - Mobile */}
+          <GuestBook />
         </div>
       </main>
     </>

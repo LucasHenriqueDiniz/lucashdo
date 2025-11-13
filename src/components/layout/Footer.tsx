@@ -28,7 +28,7 @@ const ContactButton = memo(() => {
 
   return (
     <motion.button
-      className="relative py-3 px-6 rounded-xl bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] text-white font-medium shadow-lg hover:shadow-xl transition-shadow duration-300"
+      className="relative w-full md:w-auto py-3 px-6 rounded-xl bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] text-white font-medium shadow-lg hover:shadow-xl transition-shadow duration-300 text-sm md:text-base"
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -36,7 +36,7 @@ const ContactButton = memo(() => {
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      <span className="flex items-center gap-2">
+      <span className="flex items-center justify-center gap-2">
         <motion.span
           animate={{ x: isHovered ? -2 : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -265,15 +265,15 @@ const Footer = memo(() => {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
+            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
           >
-            <h3 className="text-xl font-semibold mb-4 relative inline-block">
+            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block">
               {t('projectsTitle') || 'Projetos em destaque'}
               <motion.span
                 className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)]"
@@ -283,7 +283,7 @@ const Footer = memo(() => {
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               />
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2 md:space-y-3">
               {featuredProjects.map(project => (
                 <FooterLink
                   key={project.id}
@@ -300,9 +300,9 @@ const Footer = memo(() => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
-            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
+            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
           >
-            <h3 className="text-xl font-semibold mb-4 relative inline-block">
+            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block">
               {t('links')}
               <motion.span
                 className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)]"
@@ -312,7 +312,7 @@ const Footer = memo(() => {
                 transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
               />
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-2 md:space-y-4">
               <FooterLink href="/" label={t('home')} />
               <FooterLink href="/about" label={t('about')} />
               <FooterLink href="/projects" label={t('projects')} />
@@ -326,9 +326,9 @@ const Footer = memo(() => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
-            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
+            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
           >
-            <h3 className="text-xl font-semibold mb-4 relative inline-block">
+            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block">
               {t('connect')}
               <motion.span
                 className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)]"
@@ -338,7 +338,7 @@ const Footer = memo(() => {
                 transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
               />
             </h3>
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-2 md:space-y-4">
               {socialLinks.map(link => (
                 <SocialLink
                   key={link.label}
@@ -355,7 +355,7 @@ const Footer = memo(() => {
         </div>
 
         <motion.div
-          className="mt-12 relative backdrop-blur-sm bg-[rgba(30,30,40,0.4)] p-8 rounded-2xl border border-[rgba(255,255,255,0.08)] overflow-hidden"
+          className="mt-8 md:mt-12 relative backdrop-blur-sm bg-[rgba(30,30,40,0.4)] p-4 md:p-8 rounded-2xl border border-[rgba(255,255,255,0.08)] overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
@@ -377,9 +377,9 @@ const Footer = memo(() => {
             }}
           />
 
-          <div className="flex items-center justify-between gap-8 relative">
-            <div className="flex items-center gap-6 z-10">
-              <div className="relative flex items-center justify-center w-14 h-14">
+          <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 md:gap-8 relative">
+            <div className="flex items-center gap-4 md:gap-6 z-10">
+              <div className="relative flex items-center justify-center w-10 h-10 md:w-14 md:h-14">
                 <motion.div
                   className="relative z-20"
                   animate={{ rotate: [0, 2, -2, 0] }}
@@ -389,21 +389,23 @@ const Footer = memo(() => {
                     ease: 'easeInOut',
                   }}
                 >
-                  <RiMessage2Line size={32} className="text-[var(--cyan)]" />
+                  <RiMessage2Line size={24} className="md:w-8 md:h-8 text-[var(--cyan)]" />
                 </motion.div>
               </div>
 
-              <h3 className="text-xl md:text-2xl font-semibold">{t('contactTitle')}</h3>
+              <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-center md:text-left">
+                {t('contactTitle')}
+              </h3>
             </div>
 
-            <div className="relative">
+            <div className="relative w-full md:w-auto">
               <ContactButton />
             </div>
           </div>
         </motion.div>
 
         <motion.div
-          className="relative mt-12 pt-8 text-center text-sm text-muted-foreground overflow-hidden"
+          className="relative mt-8 md:mt-12 pt-6 md:pt-8 text-center text-xs md:text-sm text-muted-foreground overflow-hidden"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-20px' }}
@@ -421,7 +423,7 @@ const Footer = memo(() => {
             transition={{ duration: 0.8, ease: 'easeOut' }}
           />
 
-          <div className="flex items-center justify-center gap-4 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 py-4 md:py-6">
             <motion.div
               className="flex items-center gap-2"
               whileHover={{ scale: 1.05 }}
@@ -443,7 +445,7 @@ const Footer = memo(() => {
               ></motion.span>
             </motion.div>
 
-            <div className="w-px h-4 bg-[var(--border)]" />
+            <div className="hidden md:block w-px h-4 bg-[var(--border)]" />
 
             <motion.div
               className="flex items-center gap-2"

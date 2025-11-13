@@ -29,24 +29,24 @@ export const StatusFilter = memo(
     }, [onStatusChange]);
 
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2 md:gap-3">
         <Button
           variant={status === 'all' ? 'default' : 'outline'}
           size="sm"
           onClick={handleAllClick}
-          className={`relative transition-all duration-200 ${
+          className={`relative transition-all duration-200 text-xs md:text-sm ${
             status === 'all'
               ? 'bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--blue)] text-white shadow-sm hover:from-[color:var(--primary)]/90 hover:to-[color:var(--blue)]/90'
               : 'bg-white/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 hover:border-gray-300/50 dark:hover:border-gray-600/50'
           }`}
         >
           <FolderOpen
-            className={`relative z-10 h-4 w-4 ${
+            className={`relative z-10 h-3 w-3 md:h-4 md:w-4 ${
               status === 'all' ? 'text-white' : 'text-gray-600 dark:text-gray-400'
             }`}
           />
           <span
-            className={`relative z-10 ml-2 ${
+            className={`relative z-10 ml-1 md:ml-2 ${
               status === 'all' ? 'text-white' : 'text-gray-700 dark:text-gray-300'
             }`}
           >
@@ -54,7 +54,7 @@ export const StatusFilter = memo(
           </span>
           <Badge
             variant={status === 'all' ? 'secondary' : 'outline'}
-            className={`relative z-10 ml-2 ${
+            className={`relative z-10 ml-1 md:ml-2 text-xs ${
               status === 'all' ? 'bg-white/20 text-white' : 'bg-gray-100/50 dark:bg-gray-700/50'
             }`}
           >
@@ -66,19 +66,19 @@ export const StatusFilter = memo(
           variant={status === 'featured' ? 'default' : 'outline'}
           size="sm"
           onClick={handleFeaturedClick}
-          className={`relative transition-all duration-200 ${
+          className={`relative transition-all duration-200 text-xs md:text-sm ${
             status === 'featured'
               ? 'bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--blue)] text-white shadow-sm hover:from-[color:var(--primary)]/90 hover:to-[color:var(--blue)]/90'
               : 'bg-white/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 hover:border-gray-300/50 dark:hover:border-gray-600/50'
           }`}
         >
           <Star
-            className={`relative z-10 h-4 w-4 ${
+            className={`relative z-10 h-3 w-3 md:h-4 md:w-4 ${
               status === 'featured' ? 'text-white' : 'text-yellow-500'
             }`}
           />
           <span
-            className={`relative z-10 ml-2 ${
+            className={`relative z-10 ml-1 md:ml-2 ${
               status === 'featured' ? 'text-white' : 'text-gray-700 dark:text-gray-300'
             }`}
           >
@@ -86,7 +86,7 @@ export const StatusFilter = memo(
           </span>
           <Badge
             variant={status === 'featured' ? 'secondary' : 'outline'}
-            className={`relative z-10 ml-2 ${
+            className={`relative z-10 ml-1 md:ml-2 text-xs ${
               status === 'featured'
                 ? 'bg-white/20 text-white'
                 : 'bg-gray-100/50 dark:bg-gray-700/50'

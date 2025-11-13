@@ -75,12 +75,12 @@ export const ProjectCard = memo(({ project, index, locale, translations }: Proje
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         </div>
 
-        <div className="p-6 space-y-4 flex-grow flex flex-col">
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 group-hover:text-[color:var(--primary)] transition-colors duration-300">
+        <div className="p-4 md:p-6 space-y-3 md:space-y-4 flex-grow flex flex-col">
+          <h3 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 group-hover:text-[color:var(--primary)] transition-colors duration-300">
             {project.title}
           </h3>
 
-          <p className="text-gray-600 dark:text-gray-300 line-clamp-2">
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 line-clamp-2">
             {project.description[locale]}
           </p>
 
@@ -325,19 +325,19 @@ export const ProjectsGrid = memo(
     );
 
     return (
-      <div className="space-y-8 container mx-auto px-4 lg:px-8 py-12">
+      <div className="space-y-6 md:space-y-8 container mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-12 max-w-[100vw] overflow-x-hidden">
         {/* Header melhorado */}
-        <div className="bg-white/50 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 p-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-white/50 dark:bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 p-4 md:p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 md:mb-6">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--blue)] rounded-lg">
-                <Filter className="h-5 w-5 text-white" />
+                <Filter className="h-4 w-4 md:h-5 md:w-5 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100">
                   Filtros e Visualização
                 </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
                   {filteredProjects.length} de {totalCount} projetos encontrados
                 </p>
               </div>
@@ -349,7 +349,7 @@ export const ProjectsGrid = memo(
             />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
             {/* Status Filter */}
             <div className="space-y-3">
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
@@ -389,7 +389,7 @@ export const ProjectsGrid = memo(
                 </div>
               </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-7xl mx-auto">
               {filteredProjects.slice(0, 50).map((project, index) => (
                 <ProjectCard
                   key={project.id}

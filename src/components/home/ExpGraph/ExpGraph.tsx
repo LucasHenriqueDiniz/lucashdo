@@ -299,6 +299,29 @@ const ExpGraph = () => {
     <section className="w-full max-w-7xl mx-auto my-24 px-4 sm:px-6" id="skills-section">
       <div className="w-full rounded-2xl bg-[rgb(12,12,12)] shadow-2xl relative">
         <div className="flex flex-col lg:flex-row">
+          {/* Mobile: Show title first */}
+          <div className="lg:hidden p-6 pb-0">
+            <HomeSectionTitle
+              subTitle={t('subTitle')}
+              titleWhitePart={t('titleWhitePart')}
+              titleBluePart={t('titleBluePart')}
+              icon={
+                <motion.div
+                  key={currentSkillIndex}
+                  className="w-10 h-10 mr-3 flex items-center justify-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 360 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {React.createElement(skillsData[currentSkillIndex].icon, {
+                    size: 32,
+                    color: 'var(--primary)',
+                  })}
+                </motion.div>
+              }
+            />
+          </div>
           {/* CHART SECTION */}
           <div
             className="flex-1 p-4 sm:p-8 border-b lg:border-b-0 lg:border-r border-[#333]"
@@ -402,31 +425,34 @@ const ExpGraph = () => {
             </div>
           </div>
           {/* SKILLS SECTION */}
-          <div className="w-full lg:w-96 p-8 relative bg-[rgb(12,12,12)]">
+          <div className="w-full lg:w-96 p-4 sm:p-8 relative bg-[rgb(12,12,12)]">
             {/* Single large background icon */}
             <div className="relative z-10">
-              <HomeSectionTitle
-                subTitle={t('subTitle')}
-                titleWhitePart={t('titleWhitePart')}
-                titleBluePart={t('titleBluePart')}
-                icon={
-                  <motion.div
-                    key={currentSkillIndex}
-                    className="w-10 h-10 mr-3 flex items-center justify-center"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1, rotate: 360 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    {React.createElement(skillsData[currentSkillIndex].icon, {
-                      size: 32,
-                      color: 'var(--primary)',
-                    })}
-                  </motion.div>
-                }
-              />
+              {/* Desktop title */}
+              <div className="hidden lg:block">
+                <HomeSectionTitle
+                  subTitle={t('subTitle')}
+                  titleWhitePart={t('titleWhitePart')}
+                  titleBluePart={t('titleBluePart')}
+                  icon={
+                    <motion.div
+                      key={currentSkillIndex}
+                      className="w-10 h-10 mr-3 flex items-center justify-center"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1, rotate: 360 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {React.createElement(skillsData[currentSkillIndex].icon, {
+                        size: 32,
+                        color: 'var(--primary)',
+                      })}
+                    </motion.div>
+                  }
+                />
+              </div>
               {/* Technology icons grid */}
-              <div className="grid grid-cols-5 gap-4">
+              <div className="grid grid-cols-4 sm:grid-cols-5 gap-3 sm:gap-4 mt-4 lg:mt-0">
                 {orderedSkills.map((skill, index) => {
                   const isHovered = hoveredSkill === skill.name;
 

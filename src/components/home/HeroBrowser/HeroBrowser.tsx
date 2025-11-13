@@ -5,6 +5,7 @@ import { projects } from '@/constants/projects';
 import { useLanguageStore } from '@/store/languageStore';
 import Browser from '../Browser/Browser';
 import { BrowserTab } from '../Browser/types/BrowserTab';
+import HeroBrowserMobile from './HeroBrowserMobile';
 import './HeroBrowser.css';
 
 /**
@@ -274,13 +275,23 @@ export default function HeroBrowser() {
   };
 
   return (
-    <Browser
-      tabs={allProjectTabs}
-      homeContent={<CustomHomeScreen />}
-      width={1200}
-      height={600}
-      isInteractive={true}
-      showWindowControls={true}
-    />
+    <>
+      {/* Desktop Browser */}
+      <div className="hidden md:block">
+        <Browser
+          tabs={allProjectTabs}
+          homeContent={<CustomHomeScreen />}
+          width={1200}
+          height={600}
+          isInteractive={true}
+          showWindowControls={true}
+        />
+      </div>
+
+      {/* Mobile Simplified Version */}
+      <div className="md:hidden">
+        <HeroBrowserMobile />
+      </div>
+    </>
   );
 }

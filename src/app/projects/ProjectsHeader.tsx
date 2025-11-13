@@ -62,14 +62,14 @@ export const ProjectsHeader = ({
 }: ProjectsHeaderProps) => {
   return (
     <motion.div
-      className="relative mt-[110px]"
+      className="relative mt-[110px] px-4"
       initial="initial"
       animate="animate"
       variants={staggerChildrenVariants}
     >
-      <div className="text-center z-10 relative">
+      <div className="text-center z-10 relative max-w-[100vw] overflow-x-hidden">
         <motion.h1
-          className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-[color:var(--primary)] via-[color:var(--blue)] to-[color:var(--primary)] bg-clip-text text-transparent"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-[color:var(--primary)] via-[color:var(--blue)] to-[color:var(--primary)] bg-clip-text text-transparent"
           variants={fadeInUpVariants}
         >
           {title}
@@ -81,21 +81,21 @@ export const ProjectsHeader = ({
         />
 
         <motion.p
-          className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+          className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-2"
           variants={fadeInUpVariants}
         >
           {description}
         </motion.p>
 
         <motion.div
-          className="mt-8 flex flex-wrap justify-center gap-4"
+          className="mt-6 md:mt-8 flex flex-wrap justify-center gap-3 md:gap-4 px-2"
           variants={fadeInUpVariants}
         >
           <motion.a
             href="https://github.com/LucasHDO"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--blue)] text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+            className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--blue)] text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
             variants={buttonHoverVariants}
             whileHover="hover"
             whileTap="tap"
@@ -113,7 +113,7 @@ export const ProjectsHeader = ({
           <motion.div variants={buttonHoverVariants} whileHover="hover" whileTap="tap">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-full shadow hover:shadow-md transition-all duration-300"
+              className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 font-medium rounded-full shadow hover:shadow-md transition-all duration-300"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path

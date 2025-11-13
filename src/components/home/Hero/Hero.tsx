@@ -143,12 +143,12 @@ function HeroComponent() {
 
   return (
     <section
-      className="hidden md:flex min-h-[60vh] w-full max-w-4xl mx-auto px-4 relative flex-col justify-center items-center"
+      className="hidden md:flex min-h-[60vh] w-full max-w-4xl mx-auto px-2 relative flex-col justify-center items-center"
       style={{ justifyContent: 'center' }}
     >
       {/* Badge de Disponibilidade */}
       <motion.div 
-        className="absolute top-12 left-1/2 -translate-x-1/2 z-20"
+        className="absolute top-6 left-1/2 -translate-x-1/2 z-20"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
@@ -226,7 +226,7 @@ function HeroComponent() {
 
         {/* Call to action buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 mt-6 justify-center w-full"
+          className="flex flex-col sm:flex-row gap-3 mt-4 justify-center w-full"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -242,7 +242,7 @@ function HeroComponent() {
               onClick={handleContactClick}
               size="lg"
               variant="outline"
-              className="relative overflow-hidden border-2 border-[color:var(--blue)] hover:text-white px-8 py-3 rounded-xl text-lg font-semibold w-full transition-all duration-300 bg-background hover:shadow-xl hover:shadow-blue-500/20"
+              className="relative overflow-hidden border-2 border-[color:var(--blue)] hover:text-white px-6 py-2.5 rounded-xl text-base font-semibold w-full transition-all duration-300 bg-background hover:shadow-xl hover:shadow-blue-500/20"
             >
               <span className="relative z-10 flex items-center gap-2">
                 <LuMail className="w-5 h-5" />
@@ -268,7 +268,7 @@ function HeroComponent() {
               onClick={handleCVClick}
               size="lg"
               variant="outline"
-              className="relative overflow-hidden border-2 border-[color:var(--cyan)] hover:text-white px-8 py-3 rounded-xl text-lg font-semibold w-full transition-all duration-300 bg-background hover:shadow-xl hover:shadow-cyan-500/20"
+              className="relative overflow-hidden border-2 border-[color:var(--cyan)] hover:text-white px-6 py-2.5 rounded-xl text-base font-semibold w-full transition-all duration-300 bg-background hover:shadow-xl hover:shadow-cyan-500/20"
             >
               <span className="relative z-10 flex items-center gap-2">
                 <LuFileText className="w-5 h-5" />
@@ -293,7 +293,7 @@ function HeroComponent() {
             <Button
               onClick={handleProjectsClick}
               size="lg"
-              className="relative bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--cyan)] text-white hover:shadow-xl hover:shadow-cyan-500/30 px-8 py-3 rounded-xl text-lg font-semibold w-full overflow-hidden transition-all duration-300"
+              className="relative bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--cyan)] text-white hover:shadow-xl hover:shadow-cyan-500/30 px-6 py-2.5 rounded-xl text-base font-semibold w-full overflow-hidden transition-all duration-300"
             >
               <span className="flex items-center gap-2">
                 <LuExternalLink className="w-5 h-5" />
@@ -306,7 +306,7 @@ function HeroComponent() {
 
       {/* "See more projects" indicator  */}
       <motion.div
-        className="absolute bottom-8 left-0 right-0 mx-auto w-fit hidden md:flex flex-col items-center gap-2 cursor-pointer"
+        className="absolute bottom-4 left-0 right-0 mx-auto w-fit hidden md:flex flex-col items-center gap-2 cursor-pointer"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.5 }}
