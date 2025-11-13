@@ -2,7 +2,7 @@
 
 import { useLanguageStore } from '@/store/languageStore';
 import CVLayout from '@/components/cv/CVLayout';
-import { LuPrinter, LuLanguages, LuSparkles, LuList, LuShare2, LuArrowUp, LuX, LuCopy, LuCheck } from 'react-icons/lu';
+import { LuPrinter, LuLanguages, LuSparkles, LuList, LuShare2, LuArrowUp, LuX, LuCopy, LuCheck, LuMenu } from 'react-icons/lu';
 import { useCallback, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -52,6 +52,7 @@ export default function CVClient() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showTopIndicator, setShowTopIndicator] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // Scroll to top handler
   useEffect(() => {
@@ -201,7 +202,7 @@ export default function CVClient() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 print:bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 print:bg-white max-w-[100vw] overflow-x-hidden">
       {/* Floating Section Indicator - Top */}
       <AnimatePresence>
         {activeSection && showTopIndicator && (
@@ -209,26 +210,24 @@ export default function CVClient() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed top-4 left-0 right-0 z-40 print:hidden pointer-events-none"
+            className="fixed top-2 md:top-4 left-0 right-0 z-40 print:hidden pointer-events-none"
           >
-            <div className="max-w-4xl mx-auto px-8">
+            <div className="max-w-4xl mx-auto px-3 md:px-8">
               <motion.div
-                className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl px-4 py-2.5"
+                className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-2xl md:rounded-xl shadow-lg md:shadow-xl px-4 py-2.5 md:px-4 md:py-2.5"
                 initial={{ scale: 0.95 }}
                 animate={{ scale: 1 }}
               >
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-gray-500 dark:text-gray-400 font-medium">
-                    {lang === 'pt' ? 'Seção:' : 'Section:'}
-                  </span>
-                  <span className="text-gray-900 dark:text-gray-100 font-semibold">
-                    {sectionLabels[activeSection as keyof typeof sectionLabels]?.[lang]}
-                  </span>
-                  <motion.div
-                    className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-500"
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
+                <div className="flex items-center gap-2 text-xs md:text-sm">
+                  <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                    <div className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0" />
+                    <span className="text-gray-500 dark:text-gray-400 font-medium flex-shrink-0">
+                      {lang === 'pt' ? 'Seção:' : 'Section:'}
+                    </span>
+                    <span className="text-gray-900 dark:text-gray-100 font-semibold truncate">
+                      {sectionLabels[activeSection as keyof typeof sectionLabels]?.[lang]}
+                    </span>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -584,13 +583,162 @@ export default function CVClient() {
         </motion.ul>
       </div>
 
+      {/* Mobile Floating Action Button */}
+      <div className="fixed bottom-6 right-6 z-50 md:hidden print:hidden">
+        <AnimatePresence>
+          {showMobileMenu && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowMobileMenu(false)}
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+              />
+              {/* Menu Items */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className="absolute bottom-20 right-0 flex flex-col gap-3 mb-2 z-50"
+              >
+                {actions.map((action, index) => {
+                  const Icon = action.id === 'show-all' && showAll && action.activeIcon ? action.activeIcon : action.icon;
+                  const label = action.id === 'show-all' && showAll && action.activeLabel ? action.activeLabel : action.label;
+                  const isHighlighted = action.id === 'show-all' && showAll;
+
+                  if (!Icon) return null;
+
+                  return (
+                    <motion.div
+                      key={action.id}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      {action.isLink ? (
+                        <motion.a
+                          href={action.getHref ? action.getHref() : '#'}
+                          onClick={() => setShowMobileMenu(false)}
+                          whileTap={{ scale: 0.95 }}
+                          className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 min-w-[180px]"
+                        >
+                          <div className={`p-2 rounded-lg ${
+                            action.id === 'contact'
+                              ? 'bg-green-100 dark:bg-green-900/30'
+                              : 'bg-gray-100 dark:bg-gray-700'
+                          }`}>
+                            <Icon className={`h-5 w-5 ${
+                              action.id === 'contact'
+                                ? 'text-green-600 dark:text-green-400'
+                                : 'text-gray-700 dark:text-gray-300'
+                            }`} />
+                          </div>
+                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                            {lang === 'pt' ? label.pt : label.en}
+                          </span>
+                        </motion.a>
+                      ) : (
+                        <motion.button
+                          onClick={() => {
+                            handleAction(action.id);
+                            setShowMobileMenu(false);
+                          }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border min-w-[180px] ${
+                            isHighlighted
+                              ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent'
+                              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                          }`}
+                        >
+                          <div className={`p-2 rounded-lg ${
+                            isHighlighted
+                              ? 'bg-white/20'
+                              : 'bg-gray-100 dark:bg-gray-700'
+                          }`}>
+                            <Icon className={`h-5 w-5 ${
+                              isHighlighted
+                                ? 'text-white'
+                                : 'text-gray-700 dark:text-gray-300'
+                            }`} />
+                          </div>
+                          <span className={`text-sm font-medium ${
+                            isHighlighted
+                              ? 'text-white'
+                              : 'text-gray-900 dark:text-gray-100'
+                          }`}>
+                            {lang === 'pt' ? label.pt : label.en}
+                          </span>
+                        </motion.button>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+        {/* Main Floating Button */}
+        <motion.button
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className={`h-14 w-14 rounded-full shadow-lg flex items-center justify-center transition-all ${
+            showMobileMenu
+              ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+              : 'bg-gray-800 dark:bg-gray-700 text-white'
+          }`}
+        >
+          <motion.div
+            animate={{ rotate: showMobileMenu ? 45 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {showMobileMenu ? (
+              <LuX className="h-6 w-6" />
+            ) : (
+              <LuMenu className="h-6 w-6" />
+            )}
+          </motion.div>
+        </motion.button>
+      </div>
+
+      {/* Mobile Home and Scroll to Top Buttons */}
+      <div className="fixed bottom-6 left-6 z-50 md:hidden print:hidden flex flex-col gap-3">
+        {/* Home Button */}
+        <motion.button
+          onClick={() => router.push('/')}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="h-12 w-12 rounded-full bg-gray-800/90 dark:bg-gray-700/90 backdrop-blur-sm text-white shadow-lg flex items-center justify-center"
+        >
+          <Home size={20} />
+        </motion.button>
+        {/* Scroll to Top Button */}
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={handleScrollToTop}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="h-12 w-12 rounded-full bg-gray-800/90 dark:bg-gray-700/90 backdrop-blur-sm text-white shadow-lg flex items-center justify-center"
+            >
+              <LuArrowUp className="h-5 w-5" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
       {/* CV Content */}
-      <div className="max-w-4xl mx-auto p-8 print:p-0 print:max-w-full">
+      <div className="max-w-4xl mx-auto p-4 md:p-8 print:p-0 print:max-w-full">
         <CVLayout lang={lang} showAll={showAll} />
       </div>
 
       {/* CTA Section - Outside CV, Web Only */}
-      <div className="max-w-4xl mx-auto px-8 pb-12 print:hidden">
+      <div className="max-w-4xl mx-auto px-4 md:px-8 pb-12 md:pb-12 print:hidden">
         <motion.section
           className="cv-cta-section"
           initial={{ opacity: 0, y: 20 }}
