@@ -69,7 +69,7 @@ export const academicExperiences: ExperienceProps[] = [
     title: 'Engenharia de Software',
     institution: 'UNICV',
     url: 'https://www.unicv.edu.br/',
-    startDate: '2025-03',
+    startDate: '2025-02',
     endDate: null,
     showInTimeline: true,
     tags: [
@@ -99,8 +99,8 @@ export const academicExperiences: ExperienceProps[] = [
     title: 'Bolsa de Estudos - Include Gurias',
     institution: 'UERGS',
     url: 'https://www.uergs.edu.br/',
-    startDate: '2024-01',
-    endDate: '2024-12',
+    startDate: '2023-06',
+    endDate: '2024-01',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'Inclusão', en: 'Inclusion' }, icon: FaHeart },

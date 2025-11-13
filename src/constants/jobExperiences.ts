@@ -55,7 +55,7 @@ export const jobExperiences: ExperienceProps[] = [
     title: 'Desenvolvedor Full Stack',
     institution: 'Engenharia do Futuro',
     url: 'https://engenhariadofuturo.com.br/',
-    startDate: '2025-03',
+    startDate: '2025-04',
     endDate: null,
     showInTimeline: true,
     tags: [
@@ -78,8 +78,8 @@ export const jobExperiences: ExperienceProps[] = [
     title: 'CTO & Co-Founder',
     institution: 'Bots Channel',
     url: 'https://botschannel.com/',
-    startDate: '2024-02',
-    endDate: '2024-07',
+    startDate: '2024-01',
+    endDate: '2024-12',
     showInTimeline: true,
     tags: [
       { labels: { pt: 'React', en: 'React' }, icon: SiReact },
