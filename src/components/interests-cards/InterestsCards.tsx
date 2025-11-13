@@ -128,8 +128,8 @@ const formatDateTime = (isoDate?: string): string => {
   });
 };
 
-const getSafeImageUrl = (imageArray: any[] | undefined, fallback = '/placeholder.webp'): string => {
-  if (!imageArray || imageArray.length === 0) return fallback;
+const getSafeImageUrl = (imageArray: any[] | undefined): string | null => {
+  if (!imageArray || imageArray.length === 0) return null;
   const preferredSizes = ['mega', 'extralarge', 'large', 'medium', 'small'];
   for (const size of preferredSizes) {
     const match = imageArray.find((img: any) => img?.size === size && img['#text']);
@@ -138,22 +138,22 @@ const getSafeImageUrl = (imageArray: any[] | undefined, fallback = '/placeholder
     }
   }
   const fallbackImage = imageArray.find((img: any) => img?.['#text']);
-  return fallbackImage?.['#text'] || fallback;
+  return fallbackImage?.['#text'] || null;
 };
 
-const getSteamImageUrl = (game?: SteamGame): string => {
-  if (!game || !game.appid) return '/placeholder.webp';
+const getSteamImageUrl = (game?: SteamGame): string | null => {
+  if (!game || !game.appid) return null;
   if (game.img_logo_url) {
     return `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_logo_url}.jpg`;
   }
   if (game.img_icon_url) {
     return `https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.img_icon_url}.jpg`;
   }
-  return '/placeholder.webp';
+  return null;
 };
 
-const getSteamCoverImageUrl = (game?: SteamGame): string => {
-  if (!game || !game.appid) return '/placeholder.webp';
+const getSteamCoverImageUrl = (game?: SteamGame): string | null => {
+  if (!game || !game.appid) return null;
   return `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/library_hero.jpg`;
 };
 
@@ -229,6 +229,7 @@ const TRACKS_REFRESH_INTERVAL = 30;
 const InterestsCards = () => {
   const [activeTab, setActiveTab] = useState<TabId>('music');
   const [tracksCountdown, setTracksCountdown] = useState(TRACKS_REFRESH_INTERVAL);
+  const [isFirstUpdate, setIsFirstUpdate] = useState(true);
   const t = useTranslations('About.interests');
   const { user: lastfmUser } = useLastFmUser();
   const { tracks: lastfmTracks, refresh: refreshTracks } = useLastFmTracks();
@@ -309,12 +310,21 @@ const InterestsCards = () => {
       if (tracksCountdown !== TRACKS_REFRESH_INTERVAL) {
         setTracksCountdown(TRACKS_REFRESH_INTERVAL);
       }
+      setIsFirstUpdate(true);
       return;
     }
 
     if (tracksCountdown <= 0) {
       if (typeof refreshTracks === 'function') {
-        void refreshTracks(undefined, { revalidate: true });
+        if (isFirstUpdate) {
+          // Primeiro update após 30s: usuário ficou na página, busca dados novos
+          // O dedupingInterval do SWR (30s) garante que não busca se já buscou recentemente
+          void refreshTracks(undefined, { revalidate: true });
+          setIsFirstUpdate(false);
+        } else {
+          // Updates subsequentes: sempre busca dados novos (limpa cache)
+          void refreshTracks(undefined, { revalidate: true });
+        }
       }
       setTracksCountdown(TRACKS_REFRESH_INTERVAL);
       return;
@@ -325,7 +335,7 @@ const InterestsCards = () => {
     }, 1000);
 
     return () => window.clearTimeout(timeout);
-  }, [activeTab, tracksCountdown, refreshTracks]);
+  }, [activeTab, tracksCountdown, refreshTracks, isFirstUpdate]);
 
   return (
     <div className="relative flex w-full flex-col md:h-full">
@@ -445,17 +455,26 @@ const InterestsCards = () => {
                           className="h-full w-full object-contain"
                         />
                       </motion.div>
-                      {nowPlaying && (
-                        <div className="absolute h-24 w-24 overflow-hidden rounded-xl border border-white/20 shadow-xl">
-                          <Image
-                            src={getSafeImageUrl(nowPlaying.image)}
-                            alt={nowPlaying.name}
-                            width={96}
-                            height={96}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                      )}
+                      {nowPlaying && (() => {
+                        const imageUrl = getSafeImageUrl(nowPlaying.image);
+                        return (
+                          <div className="absolute h-24 w-24 overflow-hidden rounded-xl border border-white/20 shadow-xl">
+                            {imageUrl ? (
+                              <Image
+                                src={imageUrl}
+                                alt={nowPlaying.name}
+                                width={96}
+                                height={96}
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <div className="h-full w-full bg-gradient-to-br from-gray-400/20 to-gray-600/20 dark:from-gray-500/20 dark:to-gray-700/20 flex items-center justify-center">
+                                <Music className="h-8 w-8 text-gray-400 dark:text-gray-500" />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                     <div className="flex-1">
                       <div
@@ -521,28 +540,37 @@ const InterestsCards = () => {
                         </h4>
                       </div>
                       <div className="space-y-3">
-                        {(lastfmTracks?.slice(0, 4) || []).map(track => (
-                          <div
-                            key={`${track.name}-${track.mbid || track.date?.uts || track.url}`}
-                            className="flex items-center gap-3"
-                          >
-                            <Image
-                              src={getSafeImageUrl(track.image)}
-                              alt={track.name}
-                              width={40}
-                              height={40}
-                              className="h-10 w-10 rounded-lg object-cover"
-                            />
-                            <div className="min-w-0">
-                              <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
-                                {track.name}
-                              </p>
-                              <p className="truncate text-xs text-gray-500">
-                                {track.artist['#text'] || track.artist.name}
-                              </p>
+                        {(lastfmTracks?.slice(0, 4) || []).map(track => {
+                          const imageUrl = getSafeImageUrl(track.image);
+                          return (
+                            <div
+                              key={`${track.name}-${track.mbid || track.date?.uts || track.url}`}
+                              className="flex items-center gap-3"
+                            >
+                              {imageUrl ? (
+                                <Image
+                                  src={imageUrl}
+                                  alt={track.name}
+                                  width={40}
+                                  height={40}
+                                  className="h-10 w-10 rounded-lg object-cover"
+                                />
+                              ) : (
+                                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-gray-300/30 to-gray-400/30 dark:from-gray-600/30 dark:to-gray-700/30 flex items-center justify-center flex-shrink-0">
+                                  <Music className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                                </div>
+                              )}
+                              <div className="min-w-0">
+                                <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+                                  {track.name}
+                                </p>
+                                <p className="truncate text-xs text-gray-500">
+                                  {track.artist['#text'] || track.artist.name}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                     <div className="rounded-2xl border border-white/20 bg-white/70 p-5 shadow-sm transition-colors dark:bg-gray-900/60">
@@ -553,33 +581,42 @@ const InterestsCards = () => {
                         </h4>
                       </div>
                       <div className="space-y-3">
-                        {(lastfmArtists?.slice(0, 4) || []).map((artist, index) => (
-                          <div
-                            key={`${artist.name}-${artist.mbid || index}`}
-                            className="flex items-center gap-3"
-                          >
-                            <Image
-                              src={getSafeImageUrl(artist.image)}
-                              alt={artist.name}
-                              width={40}
-                              height={40}
-                              className="h-10 w-10 rounded-full object-cover"
-                            />
-                            <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
-                                {artist.name}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {formatNumber(artist.playcount)} {t('music.plays')}
-                              </p>
-                            </div>
-                            <span
-                              className={`text-xs font-semibold ${activeColors.accentSoft} ${activeColors.accent} rounded-full px-2 py-1`}
+                        {(lastfmArtists?.slice(0, 4) || []).map((artist, index) => {
+                          const imageUrl = getSafeImageUrl(artist.image);
+                          return (
+                            <div
+                              key={`${artist.name}-${artist.mbid || index}`}
+                              className="flex items-center gap-3"
                             >
-                              #{index + 1}
-                            </span>
-                          </div>
-                        ))}
+                              {imageUrl ? (
+                                <Image
+                                  src={imageUrl}
+                                  alt={artist.name}
+                                  width={40}
+                                  height={40}
+                                  className="h-10 w-10 rounded-full object-cover"
+                                />
+                              ) : (
+                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-gray-300/30 to-gray-400/30 dark:from-gray-600/30 dark:to-gray-700/30 flex items-center justify-center flex-shrink-0">
+                                  <Music className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                                </div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+                                  {artist.name}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {formatNumber(artist.playcount)} {t('music.plays')}
+                                </p>
+                              </div>
+                              <span
+                                className={`text-xs font-semibold ${activeColors.accentSoft} ${activeColors.accent} rounded-full px-2 py-1`}
+                              >
+                                #{index + 1}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -769,19 +806,26 @@ const InterestsCards = () => {
 
                   <div className="grid gap-4 lg:grid-cols-2">
                     <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-gray-900/80 p-6 shadow-sm transition-colors dark:border-white/10 dark:bg-gray-900/80 lg:col-span-2">
-                      {featuredGame && (
-                        <>
-                          <Image
-                            src={getSteamCoverImageUrl(featuredGame)}
-                            alt={featuredGame.name}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 70vw"
-                            className="absolute inset-0 h-full w-full object-cover opacity-70"
-                            priority={false}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/70 to-transparent" />
-                        </>
-                      )}
+                      {featuredGame && (() => {
+                        const coverUrl = getSteamCoverImageUrl(featuredGame);
+                        return (
+                          <>
+                            {coverUrl ? (
+                              <Image
+                                src={coverUrl}
+                                alt={featuredGame.name}
+                                fill
+                                sizes="(max-width: 1024px) 100vw, 70vw"
+                                className="absolute inset-0 h-full w-full object-cover opacity-70"
+                                priority={false}
+                              />
+                            ) : (
+                              <div className="absolute inset-0 bg-gradient-to-br from-gray-800/80 to-gray-900/80" />
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/70 to-transparent" />
+                          </>
+                        );
+                      })()}
                       <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                         <div className="flex items-center gap-4">
                           <div
@@ -798,31 +842,40 @@ const InterestsCards = () => {
                             </h4>
                           </div>
                         </div>
-                        {featuredGame && (
-                          <div className="flex items-center gap-4">
-                            <Image
-                              src={getSteamImageUrl(featuredGame)}
-                              alt={featuredGame.name}
-                              width={72}
-                              height={72}
-                              className="h-16 w-16 rounded-xl border border-white/20 object-cover shadow-lg"
-                            />
-                            <div className="text-sm text-gray-200">
-                              <p>
-                                {t('games.lastTwoWeeks')}:{' '}
-                                <span className={`font-semibold ${activeColors.accent}`}>
-                                  {formatHours(featuredGame.playtime_2weeks)}
-                                </span>
-                              </p>
-                              <p>
-                                {t('games.totalPlaytime')}:{' '}
-                                <span className={`font-semibold ${activeColors.accent}`}>
-                                  {formatHours(featuredGame.playtime_forever)}
-                                </span>
-                              </p>
+                        {featuredGame && (() => {
+                          const imageUrl = getSteamImageUrl(featuredGame);
+                          return (
+                            <div className="flex items-center gap-4">
+                              {imageUrl ? (
+                                <Image
+                                  src={imageUrl}
+                                  alt={featuredGame.name}
+                                  width={72}
+                                  height={72}
+                                  className="h-16 w-16 rounded-xl border border-white/20 object-cover shadow-lg"
+                                />
+                              ) : (
+                                <div className="h-16 w-16 rounded-xl border border-white/20 bg-gradient-to-br from-gray-700/50 to-gray-800/50 flex items-center justify-center flex-shrink-0">
+                                  <Gamepad2 className="h-8 w-8 text-gray-400" />
+                                </div>
+                              )}
+                              <div className="text-sm text-gray-200">
+                                <p>
+                                  {t('games.lastTwoWeeks')}:{' '}
+                                  <span className={`font-semibold ${activeColors.accent}`}>
+                                    {formatHours(featuredGame.playtime_2weeks)}
+                                  </span>
+                                </p>
+                                <p>
+                                  {t('games.totalPlaytime')}:{' '}
+                                  <span className={`font-semibold ${activeColors.accent}`}>
+                                    {formatHours(featuredGame.playtime_forever)}
+                                  </span>
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -836,37 +889,46 @@ const InterestsCards = () => {
                     </div>
 
                     <div className="space-y-3 md:max-h-60 md:overflow-y-auto md:pr-2">
-                      {(steamStats?.recentGames?.slice(0, 5) || []).map(game => (
-                        <div
-                          key={`${game.appid}-${game.name}`}
-                          className="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/60 p-4 dark:bg-white/5 md:flex-row md:items-center md:justify-between"
-                        >
-                          <div className="flex flex-col items-start gap-3 md:flex-row md:items-center">
-                            <Image
-                              src={getSteamCoverImageUrl(game)}
-                              alt={game.name}
-                              width={96}
-                              height={54}
-                              className="h-14 w-auto max-w-[96px] rounded-lg object-cover"
-                              style={{ width: 'auto' }}
-                            />
-                            <div className="min-w-0">
-                              <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                                {game.name}
-                              </p>
-                              <p className="text-xs text-gray-500 md:truncate">
-                                {formatHours(game.playtime_2weeks)}{' '}
-                                {t('games.lastTwoWeeks').toLowerCase()}
-                              </p>
-                            </div>
-                          </div>
-                          <span
-                            className={`text-xs font-semibold ${activeColors.accentSoft} ${activeColors.accent} self-start rounded-full px-2 py-1 md:self-auto`}
+                      {(steamStats?.recentGames?.slice(0, 5) || []).map(game => {
+                        const coverUrl = getSteamCoverImageUrl(game);
+                        return (
+                          <div
+                            key={`${game.appid}-${game.name}`}
+                            className="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/60 p-4 dark:bg-white/5 md:flex-row md:items-center md:justify-between"
                           >
-                            {formatHours(game.playtime_forever)}
-                          </span>
-                        </div>
-                      ))}
+                            <div className="flex flex-col items-start gap-3 md:flex-row md:items-center">
+                              {coverUrl ? (
+                                <Image
+                                  src={coverUrl}
+                                  alt={game.name}
+                                  width={96}
+                                  height={54}
+                                  className="h-14 w-auto max-w-[96px] rounded-lg object-cover"
+                                  style={{ width: 'auto' }}
+                                />
+                              ) : (
+                                <div className="h-14 w-24 rounded-lg bg-gradient-to-br from-gray-300/30 to-gray-400/30 dark:from-gray-600/30 dark:to-gray-700/30 flex items-center justify-center flex-shrink-0">
+                                  <Gamepad2 className="h-6 w-6 text-gray-400 dark:text-gray-500" />
+                                </div>
+                              )}
+                              <div className="min-w-0">
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                  {game.name}
+                                </p>
+                                <p className="text-xs text-gray-500 md:truncate">
+                                  {formatHours(game.playtime_2weeks)}{' '}
+                                  {t('games.lastTwoWeeks').toLowerCase()}
+                                </p>
+                              </div>
+                            </div>
+                            <span
+                              className={`text-xs font-semibold ${activeColors.accentSoft} ${activeColors.accent} self-start rounded-full px-2 py-1 md:self-auto`}
+                            >
+                              {formatHours(game.playtime_forever)}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

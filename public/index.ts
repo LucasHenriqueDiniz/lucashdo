@@ -27,7 +27,6 @@ export { default as sixteenBitLogo } from './logo_16bit.webp';
 export { default as selfie } from './selfie.webp';
 
 // Misc
-export { default as placeholderImage } from './placeholder.webp';
 export { default as vinylDisk } from './vinyl.webp';
 
 // Icons
