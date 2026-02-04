@@ -41,7 +41,7 @@
     "framer-motion": "^12.16.0",
     "lucide-react": "^0.513.0",
     "motion": "^12.23.6",
-    "next": "16.0.1",
+    "next": "16.0.10",
     "next-intl": "^4.1.0",
     "prettier": "^3.5.3",
     "react": "^19.0.0",
