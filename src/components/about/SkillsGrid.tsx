@@ -9,11 +9,11 @@ import { SkillDataType } from '@/constants/skillsData';
 const skillCategoryKeys = [
   'frontend',
   'backend',
-  'mobile',
-  'desktop',
-  'devops',
+  'integration',
+  'automation',
+  'ai',
   'database',
-  'tools',
+  'devops',
   'design',
   'other',
 ] as const;
@@ -41,23 +41,23 @@ const skillCategories: Record<
     textColor: 'text-green-600 dark:text-green-400',
     bgColor: 'bg-green-50 dark:bg-green-900/20',
   },
-  mobile: {
-    label: 'Mobile',
-    color: 'bg-purple-500/90 dark:bg-purple-600/90',
-    textColor: 'text-purple-600 dark:text-purple-400',
-    bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+  integration: {
+    label: 'Integration',
+    color: 'bg-cyan-500/90 dark:bg-cyan-600/90',
+    textColor: 'text-cyan-600 dark:text-cyan-400',
+    bgColor: 'bg-cyan-50 dark:bg-cyan-900/20',
   },
-  desktop: {
-    label: 'Desktop',
-    color: 'bg-orange-500/90 dark:bg-orange-600/90',
-    textColor: 'text-orange-600 dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-900/20',
+  automation: {
+    label: 'Automation',
+    color: 'bg-indigo-500/90 dark:bg-indigo-600/90',
+    textColor: 'text-indigo-600 dark:text-indigo-400',
+    bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
   },
-  devops: {
-    label: 'DevOps',
-    color: 'bg-amber-500/90 dark:bg-amber-600/90',
-    textColor: 'text-amber-600 dark:text-amber-400',
-    bgColor: 'bg-amber-50 dark:bg-amber-900/20',
+  ai: {
+    label: 'AI & LLM',
+    color: 'bg-pink-500/90 dark:bg-pink-600/90',
+    textColor: 'text-pink-600 dark:text-pink-400',
+    bgColor: 'bg-pink-50 dark:bg-pink-900/20',
   },
   database: {
     label: 'Database',
@@ -65,14 +65,14 @@ const skillCategories: Record<
     textColor: 'text-teal-600 dark:text-teal-400',
     bgColor: 'bg-teal-50 dark:bg-teal-900/20',
   },
-  tools: {
-    label: 'Tooling',
-    color: 'bg-gray-500/90 dark:bg-gray-600/90',
-    textColor: 'text-gray-600 dark:text-gray-400',
-    bgColor: 'bg-gray-50 dark:bg-gray-900/20',
+  devops: {
+    label: 'DevOps',
+    color: 'bg-amber-500/90 dark:bg-amber-600/90',
+    textColor: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-50 dark:bg-amber-900/20',
   },
   design: {
-    label: 'UI/UX',
+    label: 'Design & SEO',
     color: 'bg-fuchsia-500/90 dark:bg-fuchsia-600/90',
     textColor: 'text-fuchsia-600 dark:text-fuchsia-400',
     bgColor: 'bg-fuchsia-50 dark:bg-fuchsia-900/20',

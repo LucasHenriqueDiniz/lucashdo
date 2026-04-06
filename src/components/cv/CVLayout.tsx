@@ -117,23 +117,23 @@ export default function CVLayout({ lang, showAll = false }: CVLayoutProps) {
     pt: {
       frontend: 'Frontend',
       backend: 'Backend',
-      mobile: 'Mobile',
-      desktop: 'Desktop',
-      devops: 'DevOps',
+      integration: 'Integrações',
+      automation: 'Automação',
+      ai: 'IA & LLM',
       database: 'Banco de Dados',
-      tools: 'Ferramentas',
-      design: 'Design',
+      devops: 'DevOps',
+      design: 'Design & SEO',
       other: 'Outros',
     },
     en: {
       frontend: 'Frontend',
       backend: 'Backend',
-      mobile: 'Mobile',
-      desktop: 'Desktop',
-      devops: 'DevOps',
+      integration: 'Integration',
+      automation: 'Automation',
+      ai: 'AI & LLM',
       database: 'Database',
-      tools: 'Tools',
-      design: 'Design',
+      devops: 'DevOps',
+      design: 'Design & SEO',
       other: 'Other',
     },
   };
@@ -147,7 +147,7 @@ export default function CVLayout({ lang, showAll = false }: CVLayoutProps) {
             <div className="cv-header-text">
               <h1 className="cv-name">Lucas Henrique Diniz Ostroski</h1>
               <p className="cv-title">
-                {lang === 'pt' ? 'Desenvolvedor Full Stack & Designer' : 'Full Stack Developer & Designer'}
+                {lang === 'pt' ? 'Desenvolvedor Full Stack • Especialista em Integrações e Automação' : 'Full Stack Developer • Integration & Automation Specialist'}
               </p>
             </div>
             <div className="cv-photo-wrapper">
@@ -350,6 +350,46 @@ export default function CVLayout({ lang, showAll = false }: CVLayoutProps) {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Featured Projects */}
+      <section className="cv-section" id="cv-projects">
+        <h2 className="cv-section-title">{lang === 'pt' ? 'Projetos em Destaque' : 'Featured Projects'}</h2>
+        <div className="cv-projects-list">
+          <div className="cv-project-item">
+            <h3 className="cv-project-title">Heartopia Guide</h3>
+            <p className="cv-project-description">
+              {lang === 'pt' 
+                ? 'Plataforma de conteúdo production-grade construída com Next.js, com roteamento dinâmico, ingestão estruturada de dados, caching e arquitetura focada em SEO.'
+                : 'Production-grade content platform built with Next.js, featuring dynamic routing, structured data ingestion, caching and SEO-focused architecture.'}
+            </p>
+            <a href="https://heartopia.guide" target="_blank" rel="noopener noreferrer" className="cv-project-link">
+              <LuExternalLink className="cv-project-link-icon" />
+              heartopia.guide
+            </a>
+          </div>
+          
+          <div className="cv-project-item">
+            <h3 className="cv-project-title">Clearcut</h3>
+            <p className="cv-project-description">
+              {lang === 'pt'
+                ? 'Aplicação desktop para processamento em massa de imagens, automatizando workflows repetitivos usando Electron.'
+                : 'Desktop application for bulk image processing, automating repetitive workflows using Electron.'}
+            </p>
+            <a href="https://github.com/LucasHenriqueDiniz/clearcut" target="_blank" rel="noopener noreferrer" className="cv-project-link">
+              <LuExternalLink className="cv-project-link-icon" />
+              github.com/LucasHenriqueDiniz/clearcut
+            </a>
+          </div>
+        </div>
+        
+        <p className="cv-projects-footer">
+          {lang === 'pt' ? '+ outros projetos disponíveis em: ' : '+ other projects available at: '}
+          <a href="https://lucashdo.com" target="_blank" rel="noopener noreferrer" className="cv-footer-link cv-project-link">
+            <LuExternalLink className="cv-project-link-icon" />
+            lucashdo.com
+          </a>
+        </p>
       </section>
 
       {/* Certificates */}

@@ -42,8 +42,8 @@ export const jobExperiences: ExperienceProps[] = [
       { labels: { pt: 'ViteJS', en: 'ViteJS' }, icon: SiVite },
     ],
     description: {
-      pt: 'Ministrei workshop completo de Front-End para toda a equipe, apresentei código e boas práticas e fui responsável pelo desenvolvimento do firmware, front-end e back-end, marcando meu primeiro contato profissional com código em empresa.',
-      en: 'Led a comprehensive Front-End workshop for the entire team, demonstrating code best practices. Developed firmware, front-end and back-end features, marking my first professional coding experience in a corporate environment.',
+      pt: 'Conduzi workshop técnico de Front-End para a equipe, cobrindo arquitetura e padrões de código. Desenvolvi firmware embarcado, interface web e API backend, integrando hardware com aplicação fullstack.',
+      en: 'Led technical Front-End workshop covering architecture and code patterns. Developed embedded firmware, web interface, and backend API, integrating hardware with fullstack application.',
     },
   },
   {
@@ -65,8 +65,8 @@ export const jobExperiences: ExperienceProps[] = [
       { labels: { pt: 'Microcontroladores', en: 'Microcontrollers' }, icon: SiArduino },
     ],
     description: {
-      pt: 'Fui convidado para retornar pela qualidade do meu trabalho voluntário. Liderei o refactor completo da landing page e plataforma, ajustando brand guidelines e desenvolvendo protótipos no Figma. Implementei chamadas de API e sistemas Web Serial para instalação de firmware.',
-      en: 'Rehired based on the success of my volunteer contributions. Led a full refactor of the landing page and platform, updating brand guidelines and crafting Figma prototypes. Implemented API integrations and Web Serial interfaces for firmware installation.',
+      pt: 'Arquitetei e implementei refatoração completa da plataforma e landing page, estabelecendo design system e guidelines. Desenvolvi sistema de instalação de firmware via Web Serial API, automatizando processo de flash e comunicação serial diretamente no navegador.',
+      en: 'Architected and implemented complete platform and landing page refactor, establishing design system and guidelines. Built firmware installation system using Web Serial API, automating flash process and serial communication directly in browser.',
     },
   },
   {
@@ -90,8 +90,8 @@ export const jobExperiences: ExperienceProps[] = [
       { labels: { pt: 'TypeScript', en: 'TypeScript' }, icon: SiTypescript },
     ],
     description: {
-      pt: 'Desenvolvi toda identidade visual: logo, guidelines de marca e protótipos no Figma da plataforma e landing page. Implementei landing page e plataforma completa com login e sistema de desenvolvimento de chatbots usando interface baseada em cards sem código.',
-      en: 'Created the entire visual identity: logo, brand guidelines and Figma prototypes for both the platform and landing page. Developed the landing page and full platform with authentication and a codeless, card-based chatbot development system.',
+      pt: 'Arquitetei plataforma SaaS serverless para automação de chatbots multi-canal (WhatsApp, Telegram, Instagram). Implementei sistema de autenticação customizado, engine de processamento de fluxos JSON-based, e infraestrutura AWS Lambda com PostgreSQL. Desenvolvi interface no-code para construção visual de automações.',
+      en: 'Architected serverless SaaS platform for multi-channel chatbot automation (WhatsApp, Telegram, Instagram). Implemented custom authentication system, JSON-based flow processing engine, and AWS Lambda infrastructure with PostgreSQL. Built no-code interface for visual automation workflows.',
     },
   },
   {
@@ -113,8 +113,8 @@ export const jobExperiences: ExperienceProps[] = [
       { labels: { pt: 'Design Gráfico', en: 'Graphic Design' }, icon: PenTool },
     ],
     description: {
-      pt: 'Prestei serviços de design em dezenas de projetos, alcançando 98.7% de satisfação dos clientes. Criei identidades visuais, materiais promocionais e animações, garantindo entregas eficientes e comunicação direta com stakeholders.',
-      en: 'Provided design services across dozens of projects, achieving 98.7% client satisfaction. Crafted visual identities, promotional materials, and animations, ensuring efficient deliveries and direct stakeholder collaboration.',
+      pt: 'Gerenciei projetos de design end-to-end para múltiplos clientes, mantendo 98.7% de satisfação. Desenvolvi identidades visuais, materiais promocionais e motion graphics, coordenando entregas e comunicação com stakeholders.',
+      en: 'Managed end-to-end design projects for multiple clients, maintaining 98.7% satisfaction rate. Developed visual identities, promotional materials, and motion graphics, coordinating deliveries and stakeholder communication.',
     },
   },
   {

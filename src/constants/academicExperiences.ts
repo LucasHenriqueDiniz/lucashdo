@@ -42,24 +42,7 @@ export const academicExperiences: ExperienceProps[] = [
       en: 'Participated in academic projects focused on low-level programming, algorithm development, and embedded systems. Hands-on experience with microcontrollers and AI fundamentals.',
     },
   },
-  {
-    id: 'nihongo-center',
-    title: 'Curso de Japonês',
-    institution: 'Nihongo Center Sakuragaoka',
-    url: '',
-    startDate: '2025-07',
-    endDate: null,
-    showInTimeline: true,
-    topTags: [
-      { labels: { pt: 'Idioma', en: 'Language' } },
-      { labels: { pt: 'Japonês', en: 'Japanese' } },
-    ],
-    tags: [{ labels: { pt: 'Japonês', en: 'Japanese' }, icon: MdLanguage }],
-    description: {
-      pt: 'Curso ativo de língua japonesa com professores da Tokyo Sakuragaoka Gakuin. Aulas semanais com foco em leitura, conversação e cultura japonesa.',
-      en: 'Ongoing Japanese language course taught by instructors from Tokyo Sakuragaoka Gakuin. Weekly classes focused on reading, conversation, and Japanese culture.',
-    },
-  },
+
   {
     id: 'unicv',
     topTags: [
@@ -109,8 +92,8 @@ export const academicExperiences: ExperienceProps[] = [
       { labels: { pt: 'AWS', en: 'AWS' }, icon: FaAws },
     ],
     description: {
-      pt: 'Desenvolvimento completo da plataforma Include Gurias: prototipagem no Figma, chatbot interativo, site institucional com cards das integrantes e gibis educativos, além de painel administrativo no-code para gestão de conteúdo.',
-      en: 'Complete development of the Include Gurias platform: Figma prototyping, interactive chatbot, institutional website with member cards and educational comics, plus a no-code admin dashboard for content management.',
+      pt: 'Arquitetei plataforma institucional fullstack com CMS headless customizado. Implementei sistema de autenticação, chatbot interativo, e painel administrativo com CRUD completo para gestão de conteúdo educativo e membros.',
+      en: 'Architected fullstack institutional platform with custom headless CMS. Implemented authentication system, interactive chatbot, and admin dashboard with full CRUD for educational content and member management.',
     },
     
   },
@@ -134,8 +117,8 @@ export const academicExperiences: ExperienceProps[] = [
     { labels: { pt: 'Impacto Social', en: 'Social Impact' }, icon: FaHeart },
   ],
   description: {
-    pt: 'Bolsa focada no desenvolvimento da plataforma ComunicaMulher: intake de reclamações com validações, painel de moderação, políticas RLS no Supabase, e frontend em Next.js (App Router) com UI acessível. Entregas contínuas, métricas de engajamento e documentação técnica.',
-    en: 'Scholarship focused on building the ComunicaMulher platform: complaint intake with validations, moderation dashboard, Supabase RLS policies, and a Next.js (App Router) front-end with accessible UI. Continuous delivery, engagement metrics, and technical documentation.',
+    pt: 'Desenvolvi sistema de gestão de reclamações com workflow de moderação completo. Implementei pipeline de intake com validações e sanitização, políticas RLS granulares no Supabase, e painel administrativo com filtros avançados. Arquitetura focada em segurança e auditoria.',
+    en: 'Built complaint management system with complete moderation workflow. Implemented intake pipeline with validation and sanitization, granular Supabase RLS policies, and admin dashboard with advanced filters. Security-focused architecture with auditing.',
   },
 },
   {
@@ -210,6 +193,22 @@ export const certificates = [
     url: 'https://www.linkedin.com/learning/certificates/a12843799e16406ce15f775df2deb9c4bd3d4d8945e6fb1da9f3284d95587304?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_certifications_details%3BjbafyffeRIK7DYTpBc3v%2FA%3D%3D',
     skills: ['Software Development'],
     icon: FaMicrosoft,
+  },
+  {
+    title: 'Vibe Coding L1: Bronze',
+    issuer: 'Lovable',
+    issueDate: '2026-02',
+    url: 'https://www.linkedin.com/in/lucas-diniz-ostroski/details/certifications/',
+    skills: ['AI-Assisted Development', 'Prompt Engineering'],
+    icon: SiOpenbadges,
+  },
+  {
+    title: 'Curso de Japonês (JLPT N5)',
+    issuer: 'Tokyo Sakura Gaoka Institute',
+    issueDate: '2026-02',
+    url: '/documents/tokyo-sakura-gaoka.pdf',
+    skills: ['Japonês'],
+    icon: MdLanguage,
   },
   {
     title: 'EF SET English Certificate (C2 Proficiency)',
