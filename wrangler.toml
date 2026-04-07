@@ -5,10 +5,6 @@ pages_build_output_dir = ".open-next/worker"
 # Node.js compatibility
 compatibility_flags = ["nodejs_compat"]
 
-# Build configuration
-[build]
-command = "npx @opennextjs/cloudflare build"
-
 # Environment configurations
 [env.production]
 compatibility_flags = ["nodejs_compat"]
