@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import clsx from 'clsx';
-import { Press_Start_2P } from 'next/font/google';
 import { PokeLinkButton } from '../PokeButton';
 import RouteHeader from './RouteHeader';
 import BattleStage from './PokemonBattleStage';
 import PokemonSelectionScreen from './PokemonSelectionScreen';
 import type { BattleEndingKey, BattlePhase, PokemonDefinition, PokemonMove } from './types';
 
-const pixelFont = Press_Start_2P({ subsets: ['latin'], weight: '400' });
+const pixelFont = { className: 'font-mono tracking-wide' };
 
 export type BattleLog = { speaker: 'Narrador' | 'Você' | '404'; message: string };
 export type PlayerStatusEffect = { type: 'confused' | 'lag'; turns: number };

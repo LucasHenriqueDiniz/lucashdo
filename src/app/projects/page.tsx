@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { ProjectStructuredData } from '@/components/SEO/StructuredData';
+import { ProjectsBackground } from '@/components/projects/ProjectsBackground';
 import { projects } from '@/constants';
 
 const ProjectsClient = dynamic(() => import('./projects-client'));
@@ -79,7 +80,12 @@ export default function Projects() {
         />
       ))}
 
-      <ProjectsClient projects={featuredFirstProjects} />
+      {/* Background removed - now handled in client component */}
+
+      {/* Main Content - Semantic HTML structure */}
+      <main className="relative min-h-screen" style={{ zIndex: 10 }}>
+        <ProjectsClient projects={featuredFirstProjects} />
+      </main>
     </>
   );
 }

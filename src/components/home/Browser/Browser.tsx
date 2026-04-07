@@ -12,7 +12,6 @@ import {
   DefaultHomeScreen,
   DefaultRestoreButton,
   Tab,
-  TabPreviewTooltip,
   WindowControls,
 } from './components';
 import { useBrowserTabs } from './hooks/useBrowserTabs';
@@ -43,6 +42,7 @@ interface BrowserProps {
 
   // Controles de janela
   showWindowControls?: boolean;
+  allowMaximize?: boolean;
 
   // Componente customizado para quando o browser está fechado/minimizado
   customRestoreComponent?: ReactNode;
@@ -56,6 +56,9 @@ interface BrowserProps {
   onClose?: () => void;
   onMinimize?: () => void;
   onMaximize?: () => void;
+
+  // Controle externo do estado maximizado
+  externalIsMaximized?: boolean;
 
   // Controle externo da aba ativa
   externalActiveTabId?: string;
@@ -96,17 +99,23 @@ const Browser = function Browser({
   isInteractive = true,
   hideNewTabButton = false,
   showWindowControls = true,
+  allowMaximize = true,
   customRestoreComponent,
   onClose,
   onMinimize,
   onMaximize,
   externalActiveTabId,
+  externalIsMaximized = false,
 }: BrowserProps): React.ReactElement {
   // Browser state
   const t = useTranslations('Browser');
-  const [isMaximized, setIsMaximized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(externalIsMaximized);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
+  
+  // Navigation history
+  const [history, setHistory] = useState<number[]>([0]);
+  const [historyIndex, setHistoryIndex] = useState(0);
 
   // Initialize tabs state
   const initialTabs =
@@ -155,10 +164,6 @@ const Browser = function Browser({
     []
   );
 
-  // Tooltip state para Floating UI
-  const [previewTabId, setPreviewTabId] = useState<string | null>(null);
-  const [previewRef, setPreviewRef] = useState<HTMLElement | null>(null);
-
   // Responder ao controle externo da aba ativa
   useEffect(() => {
     if (externalActiveTabId && externalActiveTabId !== activeTab?.id) {
@@ -169,6 +174,11 @@ const Browser = function Browser({
       }
     }
   }, [externalActiveTabId, activeTab?.id, internalTabs, setActiveTab, setHomeScreen]);
+
+  // Sincronizar estado maximizado externo
+  useEffect(() => {
+    setIsMaximized(externalIsMaximized);
+  }, [externalIsMaximized]);
 
   // Window control handlers
   const handleCloseClick = useCallback((): void => {
@@ -192,14 +202,14 @@ const Browser = function Browser({
   }, [isInteractive, onMinimize]);
 
   const handleMaximizeClick = useCallback((): void => {
-    if (!isInteractive) return;
+    if (!isInteractive || !allowMaximize) return;
 
     if (onMaximize) {
       onMaximize();
     } else {
       setIsMaximized(!isMaximized);
     }
-  }, [isInteractive, onMaximize, isMaximized]);
+  }, [allowMaximize, isInteractive, onMaximize, isMaximized]);
 
   const handleRestore = useCallback((): void => {
     setIsClosed(false);
@@ -281,6 +291,7 @@ const Browser = function Browser({
   const handleTabClose = useCallback(
     (tabIndex: number): void => {
       if (!isInteractive) return;
+      
       // Não permitir fechar se só há uma aba - em vez disso, transforma em home
       if (internalTabs.length <= 1) {
         const homeTab = createHomeTab();
@@ -319,9 +330,9 @@ const Browser = function Browser({
         !isInteractive ? 'decorative-mode' : ''
       }`}
       style={{
-        width: '100%',
+        width: isMaximized ? '100%' : width,
         height: isMaximized ? '100vh' : height,
-        maxWidth: isMaximized ? '100%' : width,
+        maxWidth: '100%',
       }}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -331,35 +342,21 @@ const Browser = function Browser({
       {/* Browser header with tabs and controls */}
       <div className="browser-header">
         <div className="tab-container" role="tablist">
-          {internalTabs.map((tab: BrowserTab, index: number) =>
-            (() => {
-              const tabRef = React.createRef<HTMLDivElement>();
-              return (
-                <Tab
-                  key={tab.id}
-                  tab={tab}
-                  tabIndex={index}
-                  isActive={index === activeTabIndex}
-                  isInteractive={isInteractive}
-                  onClick={handleTabClick}
-                  onClose={handleTabClose}
-                  ref={tabRef}
-                  onMouseEnter={() => {
-                    setPreviewTabId(tab.id);
-                    setPreviewRef(tabRef.current);
-                  }}
-                  onMouseMove={() => {
-                    setPreviewTabId(tab.id);
-                    setPreviewRef(tabRef.current);
-                  }}
-                  onMouseLeave={() => {
-                    setPreviewTabId(null);
-                    setPreviewRef(null);
-                  }}
-                />
-              );
-            })()
-          )}
+          {internalTabs.map((tab: BrowserTab, index: number) => {
+            const tabRef = React.createRef<HTMLDivElement>();
+            return (
+              <Tab
+                key={tab.id}
+                ref={tabRef}
+                tab={tab}
+                tabIndex={index}
+                isActive={index === activeTabIndex}
+                isInteractive={isInteractive}
+                onClick={handleTabClick}
+                onClose={handleTabClose}
+              />
+            );
+          })}
           {isInteractive && !hideNewTabButton && (
             <button
               className="new-tab-btn"
@@ -375,6 +372,7 @@ const Browser = function Browser({
           <WindowControls
             isInteractive={isInteractive}
             isMaximized={isMaximized}
+            showMaximize={allowMaximize}
             onClose={handleCloseClick}
             onMinimize={handleMinimizeClick}
             onMaximize={handleMaximizeClick}
@@ -427,15 +425,6 @@ const Browser = function Browser({
           <Skeleton className="w-full h-full mb-4 min-h-[500px]" />
         )}
       </div>
-
-      {/* Tab Preview Tooltip */}
-      {previewTabId && previewRef && (
-        <TabPreviewTooltip
-          tab={internalTabs.find(tab => tab.id === previewTabId) || tabs[0]}
-          open={!!previewTabId}
-          reference={previewRef}
-        />
-      )}
     </motion.div>
   );
 };

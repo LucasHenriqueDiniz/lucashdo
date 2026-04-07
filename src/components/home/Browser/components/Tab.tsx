@@ -110,7 +110,18 @@ const Tab = React.memo(
         </div>
       );
     }
-  )
+  ),
+  (prevProps, nextProps) => {
+    // Custom comparison para evitar re-renders desnecessários
+    return (
+      prevProps.tab.id === nextProps.tab.id &&
+      prevProps.tab.title === nextProps.tab.title &&
+      prevProps.tab.hasUnsavedChanges === nextProps.tab.hasUnsavedChanges &&
+      prevProps.isActive === nextProps.isActive &&
+      prevProps.isInteractive === nextProps.isInteractive &&
+      prevProps.tabIndex === nextProps.tabIndex
+    );
+  }
 );
 
 Tab.displayName = 'Tab';

@@ -4,13 +4,21 @@ import './WindowControls.css';
 export interface WindowControlsProps {
   isInteractive?: boolean;
   isMaximized?: boolean;
+  showMaximize?: boolean;
   onClose?: () => void;
   onMinimize?: () => void;
   onMaximize?: () => void;
 }
 
 const WindowControls = React.memo<WindowControlsProps>(
-  ({ isInteractive = true, isMaximized = false, onClose, onMinimize, onMaximize }) => {
+  ({
+    isInteractive = true,
+    isMaximized = false,
+    showMaximize = true,
+    onClose,
+    onMinimize,
+    onMaximize,
+  }) => {
     const handleClose = React.useCallback(() => {
       if (isInteractive && onClose) {
         onClose();
@@ -39,14 +47,16 @@ const WindowControls = React.memo<WindowControlsProps>(
         >
           <div className="tooltip-text">Minimize</div>
         </button>
-        <button
-          className={`control-btn maximize relative group ${isMaximized ? 'active' : ''}`}
-          onClick={handleMaximize}
-          aria-label={isMaximized ? 'Restore' : 'Maximize'}
-          disabled={!isInteractive}
-        >
-          <div className="tooltip-text">{isMaximized ? 'Restore' : 'Maximize'}</div>
-        </button>
+        {showMaximize && (
+          <button
+            className={`control-btn maximize relative group ${isMaximized ? 'active' : ''}`}
+            onClick={handleMaximize}
+            aria-label={isMaximized ? 'Restore' : 'Maximize'}
+            disabled={!isInteractive}
+          >
+            <div className="tooltip-text">{isMaximized ? 'Restore' : 'Maximize'}</div>
+          </button>
+        )}
         <button
           className="control-btn close relative group"
           onClick={handleClose}

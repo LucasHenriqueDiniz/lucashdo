@@ -389,7 +389,7 @@
   },
   "Projects": {
     "title": "Projects",
-    "description": "A showcase of my latest and best projects.",
+    "description": "Explore my collection of projects built with modern technologies and creative solutions.",
     "featured": "Featured",
     "viewProject": "View Project",
     "viewDemo": "View Live Demo",
@@ -413,7 +413,9 @@
     "all": "All",
     "tags": "Tags",
     "status": "Status",
-    "viewCode": "View Code"
+    "viewCode": "View Code",
+    "projects": "Projects",
+    "technologies": "Technologies"
   },
   "Blog": {
     "title": "Blog",

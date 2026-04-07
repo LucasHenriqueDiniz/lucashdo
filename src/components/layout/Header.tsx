@@ -42,7 +42,7 @@ export default function Header() {
   const headerTranslateY = useTransform(scrollY, [0, 40], ['0px', '0px']);
   const headerBgOpacity = useTransform(scrollY, [0, 50], [0.4, 0.85]);
   const logoScale = useTransform(scrollY, [0, 50], [1, 0.92]);
-  const headerBlur = useTransform(scrollY, [0, 50], [8, 16]);
+  const headerBlur = useTransform(scrollY, [0, 50], [12, 20]);
   const borderGlowOpacity = useTransform(scrollY, [0, 30], [0, 0.8]);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function Header() {
   return (
     <motion.div
       className="fixed top-0 left-0 w-full z-50 will-change-transform"
-      style={{ transform: `translateY(${headerTranslateY})` }}
+      style={{ y: headerTranslateY }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
@@ -109,7 +109,9 @@ export default function Header() {
             backgroundColor: isScrolled
               ? `rgba(20, 20, 24, ${headerBgOpacity})`
               : `rgba(12, 12, 12, ${headerBgOpacity})`,
-            boxShadow: isScrolled ? '0 4px 30px rgba(0, 0, 0, 0.4)' : 'none',
+            boxShadow: isScrolled
+              ? '0 12px 38px rgba(0, 0, 0, 0.34), 0 0 28px rgba(1, 132, 252, 0.12)'
+              : '0 0 0 rgba(0, 0, 0, 0)',
             transition:
               'box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
@@ -119,7 +121,7 @@ export default function Header() {
             style={{
               backdropFilter: `blur(${isScrolled ? 16 : 8}px)`,
               WebkitBackdropFilter: `blur(${isScrolled ? 16 : 8}px)`,
-              background: isScrolled ? 'rgba(20, 20, 24, 0.45)' : 'rgba(12, 12, 12, 0.25)',
+              background: isScrolled ? 'rgba(20, 20, 24, 0.52)' : 'rgba(12, 12, 12, 0.28)',
               transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           />
@@ -128,8 +130,8 @@ export default function Header() {
             className="absolute inset-0"
             style={{
               background: isScrolled
-                ? 'linear-gradient(125deg, rgba(1, 132, 252, 0.12) 0%, rgba(0, 0, 0, 0) 40%, rgba(73, 186, 214, 0.1) 90%)'
-                : 'linear-gradient(125deg, rgba(1, 132, 252, 0.08) 0%, rgba(0, 0, 0, 0) 60%, rgba(73, 186, 214, 0.06) 90%)',
+                ? 'linear-gradient(125deg, rgba(1, 132, 252, 0.16) 0%, rgba(0, 0, 0, 0) 38%, rgba(73, 186, 214, 0.14) 90%)'
+                : 'linear-gradient(125deg, rgba(1, 132, 252, 0.1) 0%, rgba(0, 0, 0, 0) 58%, rgba(73, 186, 214, 0.08) 90%)',
               opacity: isScrolled ? 0.9 : 0.6,
               transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
             }}

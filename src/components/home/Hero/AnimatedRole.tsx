@@ -17,16 +17,15 @@ const AnimatedRole: React.FC<AnimatedRoleProps> = React.memo(({ lang }) => {
   const t = useTranslations('Hero');
 
   const roles: DeveloperCompletion[] = [
-    { text: { pt: 'front-end pleno', en: 'mid-level front-end developer' }, emoji: '💻' },
-    { text: { pt: 'fã de back-end', en: 'back-end enthusiast' }, emoji: '🔨' },
-    { text: { pt: 'entusiasta de UI/UX', en: 'UI/UX enthusiast' }, emoji: '🎨' },
-    { text: { pt: 'full-stack', en: 'full-stack developer' }, emoji: '🌐' },
-    { text: { pt: 'gamer nas horas vagas', en: 'gamer in their free time' }, emoji: '🎮' },
-    { text: { pt: 'eterno aprendiz', en: 'eternal learner' }, emoji: '🚀' },
     { text: { pt: 'católico', en: 'Catholic' }, emoji: '✝️' },
+    { text: { pt: 'front-end pleno', en: 'mid-level front-end developer' }, emoji: '💻' },
+    { text: { pt: 'gamer nas horas vagas', en: 'gamer in their free time' }, emoji: '🎮' },
+    { text: { pt: 'entusiasta de UI/UX', en: 'UI/UX enthusiast' }, emoji: '🎨' },
+    { text: { pt: 'rato de academia', en: 'gym rat' }, emoji: '🏋️‍♂️' },
+    { text: { pt: 'full-stack', en: 'full-stack developer' }, emoji: '🌐' },
+    { text: { pt: 'eterno aprendiz', en: 'eternal learner' }, emoji: '🚀' },
     { text: { pt: 'estudante de 日本語', en: '日本語 language student' }, emoji: '🍙' },
     { text: { pt: 'que ama música', en: 'who loves music' }, emoji: '🎶' },
-    { text: { pt: 'rato de academia', en: 'gym rat' }, emoji: '🏋️‍♂️' },
     {
       text: {
         pt: 'que já chorou vendo Shigatsu wa Kimi no Uso',

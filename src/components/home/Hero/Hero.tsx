@@ -1,346 +1,255 @@
 'use client';
 
-import type { Container, ISourceOptions } from '@tsparticles/engine';
-import Particles, { initParticlesEngine } from '@tsparticles/react';
-import { loadSlim } from '@tsparticles/slim';
-import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { HiOutlineArrowNarrowDown } from 'react-icons/hi';
+import { useTranslations } from 'next-intl';
+import { motion } from 'framer-motion';
 import { LuExternalLink, LuFileText, LuMail } from 'react-icons/lu';
-import { MdOutlineMouse } from 'react-icons/md';
-import { useLanguageStore } from '@/store/languageStore';
-import { skillsData } from '@/constants/skillsData';
+import LaserFlow from '@/components/LaserFlow';
+import RotatingText from '@/components/RotatingText';
+import HeroBrowser from '@/components/home/HeroBrowser/HeroBrowser';
 import { Button } from '@/components/ui/button';
-import { TypingText } from '@/components/animate-ui/text/typing';
-import AnimatedRole from './AnimatedRole';
-import './Hero.css';
+import { useLanguageStore } from '@/store/languageStore';
 
-export const networkPreset: ISourceOptions = {
-  background: {
-    color: {
-      value: 'transparent',
-    },
-  },
-  fpsLimit: 120,
-  interactivity: {
-    events: {
-      onClick: {
-        enable: true,
-        mode: 'push',
-      },
-      onHover: {
-        enable: true,
-        mode: 'repulse',
-      },
-    },
-    modes: {
-      push: {
-        quantity: 2,
-      },
-      repulse: {
-        distance: 100,
-        duration: 0.4,
-      },
-    },
-  },
-  particles: {
-    color: {
-      value: ['#60A5FA', '#22D3EE', '#3B82F6'],
-    },
-    links: {
-      color: '#60A5FA',
-      distance: 150,
-      enable: true,
-      opacity: 0.3,
-      width: 1,
-    },
-    move: {
-      direction: 'none',
-      enable: true,
-      outModes: {
-        default: 'out',
-      },
-      random: false,
-      speed: 1,
-      straight: false,
-    },
-    number: {
-      density: {
-        enable: true,
-      },
-      value: 40,
-    },
-    opacity: {
-      value: 0.5,
-    },
-    shape: {
-      type: 'circle',
-    },
-    size: {
-      value: { min: 1, max: 3 },
-    },
-  },
-  detectRetina: true,
-};
-
-const MemoizedParticles = React.memo(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ({ options, particlesLoaded }: { options: any; particlesLoaded: any }) => (
-    <Particles
-      id="tsparticles"
-      particlesLoaded={particlesLoaded}
-      options={options}
-      className="absolute inset-0 -z-10"
-    />
-  )
-);
-MemoizedParticles.displayName = 'MemoizedParticles';
-
-function HeroComponent() {
-  // State for typing effect
-  const [init, setInit] = useState(false);
-  const lang = useLanguageStore(state => state.lang);
-  const router = useRouter();
+export function Hero() {
   const t = useTranslations();
+  const router = useRouter();
+  const lang = useLanguageStore((state) => state.lang);
 
-  // Initialize tsParticles
-  useEffect(() => {
-    initParticlesEngine(async engine => {
-      await loadSlim(engine);
-    }).then(() => {
-      setInit(true);
-    });
-  }, []);
-
-  const particlesLoaded = useCallback(async (_container?: Container): Promise<void> => {
-    // Particle system loaded
-  }, []);
-
-  // Get featured skills for the typing effect - memoized
-  const featuredSkills = useMemo(
+  const rotatingRoles = useMemo(
     () =>
-      skillsData
-        .filter(skill => skill.featured)
-        .sort((a, b) => (a.order || 99) - (b.order || 99))
-        .map(skill => skill.name),
-    []
+      lang === 'pt'
+        ? [
+            'front-end pleno',
+            'f\u00e3 de back-end',
+            'entusiasta de UI/UX',
+            'full-stack',
+            'gamer nas horas vagas',
+            'eterno aprendiz',
+            'cat\u00f3lico',
+            'estudante de \u65e5\u672c\u8a9e',
+            'que ama m\u00fasica',
+            'rato de academia',
+            'que j\u00e1 chorou vendo Shigatsu wa Kimi no Uso',
+          ]
+        : [
+            'mid-level front-end developer',
+            'back-end enthusiast',
+            'full-stack developer',
+            'UI/UX enthusiast',
+            'gamer in their free time',
+            'eternal learner',
+            'Catholic',
+            '\u65e5\u672c\u8a9e language student',
+            'who loves music',
+            'gym rat',
+            'who cried watching Shigatsu wa Kimi no Uso',
+          ],
+    [lang]
   );
-
-  // Memoized event handlers
-  const handleContactClick = useCallback(() => {
-    router.push('/contact');
-  }, [router]);
-
-  const handleProjectsClick = useCallback(() => {
-    router.push('/projects');
-  }, [router]);
-
-  const handleCVClick = useCallback(() => {
-    router.push('/cv');
-  }, [router]);
 
   return (
     <section
-      className="hidden md:flex min-h-[60vh] w-full max-w-4xl mx-auto px-2 relative flex-col justify-center items-center"
-      style={{ justifyContent: 'center' }}
+      style={{
+        height: '1200px',
+        width: '100vw',
+        position: 'relative',
+        overflow: 'visible',
+        marginBottom: '320px',
+        marginLeft: 'calc(-50vw + 50%)',
+        marginRight: 'calc(-50vw + 50%)',
+      }}
     >
-      {/* Badge de Disponibilidade */}
-      <motion.div 
-        className="absolute top-6 left-1/2 -translate-x-1/2 z-20"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-      >
-        <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-green-500 via-emerald-500 to-green-500 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-300"></div>
-          <div className="relative px-5 py-2 bg-background rounded-full border border-green-500/30 text-green-500 text-xs sm:text-sm font-medium flex items-center gap-2 shadow-lg">
-            <motion.span 
-              className="w-2 h-2 rounded-full bg-green-500"
-              animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {t('Home.availableForHire')}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* tsParticles Background */}
-      {init && (
-        <Particles
-          id="tsparticles"
-          particlesLoaded={particlesLoaded}
-          options={networkPreset}
-          className="absolute inset-0 -z-10 hidden md:block"
+      <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+        <LaserFlow
+          className=""
+          style={{}}
+          dpr={undefined}
+          horizontalBeamOffset={0.1}
+          verticalBeamOffset={0.0}
+          color="#0184FC"
+          horizontalSizing={0.5}
+          verticalSizing={2}
+          wispDensity={1}
+          wispSpeed={15}
+          wispIntensity={5}
+          flowSpeed={0.35}
+          flowStrength={0.25}
+          fogIntensity={0.45}
+          fogScale={0.3}
+          fogFallSpeed={0.6}
+          decay={1.1}
+          falloffStart={1.2}
         />
-      )}
+      </div>
 
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 -z-5 bg-gradient-to-b from-transparent via-background/20 to-background/80" />
-
-      <div className="flex flex-col items-center gap-4 w-full">
-        {/* Typing effect for skills */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '16%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '86%',
+          maxWidth: '980px',
+          zIndex: 6,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
         <motion.div
-          className="mb-2"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.65, ease: 'easeOut' }}
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '28px',
+            textAlign: 'center',
+            padding: '24px 24px 0',
+          }}
         >
-          <TypingText
-            className="text-lg font-bold text-[color:var(--primary)]"
-            text={featuredSkills}
-            cursor
-            cursorClassName="h-6 w-1 mx-1 bg-[var(--primary)] dark:bg-[var(--primary)]"
-            loop
-            holdDelay={1200}
-          />
-        </motion.div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '18px',
+              alignItems: 'center',
+              maxWidth: '860px',
+            }}
+          >
+            <h1
+              style={{
+                margin: 0,
+                color: '#ffffff',
+                fontSize: 'clamp(3.2rem, 6vw, 5.8rem)',
+                lineHeight: 0.92,
+                fontWeight: 800,
+                letterSpacing: '-0.05em',
+                textWrap: 'balance',
+                textShadow: '0 18px 60px rgba(1, 132, 252, 0.28), 0 4px 18px rgba(0, 0, 0, 0.35)',
+              }}
+            >
+              <span
+                style={{
+                  color: '#dcecff',
+                }}
+              >
+                {t('Home.greeting')}
+              </span>{' '}
+              <span
+                style={{
+                  color: '#ffffff',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f8fbff 32%, #d9e4ef 68%, #b8c7d8 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 10px 30px rgba(0, 0, 0, 0.18)',
+                }}
+              >
+                Lucas HDO
+              </span>
+            </h1>
 
-        {/* Main heading */}
-        <motion.h1
-          className="text-5xl md:text-6xl font-bold text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          {t('Home.greeting')}{' '}
-          <span className="relative bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 bg-clip-text text-transparent font-extrabold">
-            Lucas HDO
-            <motion.div
-              className="absolute inset-0 bg-blue-400/15 blur-lg -z-10"
-              animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.6, 0.4] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </span>
-        </motion.h1>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '12px',
+                minHeight: '64px',
+                fontSize: 'clamp(1.1rem, 2vw, 1.6rem)',
+                fontWeight: 500,
+                color: 'rgba(237, 248, 255, 0.92)',
+              }}
+            >
+              <span
+                style={{
+                  color: 'rgba(222, 236, 248, 0.92)',
+                }}
+              >
+                {t('Hero.developerPrefix')}
+              </span>
+              <RotatingText
+                texts={rotatingRoles}
+                rotationInterval={2800}
+                staggerDuration={0.012}
+                splitBy="characters"
+                mainClassName="inline-flex w-fit px-2 sm:px-2 md:px-3 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg whitespace-nowrap flex-nowrap border border-[#6bbcff]/25 bg-[#0184FC] text-white shadow-[0_10px_30px_rgba(1,132,252,0.28)]"
+                splitLevelClassName="justify-center whitespace-nowrap"
+                elementLevelClassName="font-bold text-white"
+              />
+            </div>
+          </div>
 
-        {/* Subtitle with changing roles */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <AnimatedRole lang={lang} />
-        </motion.div>
-
-        {/* Call to action buttons */}
-        <motion.div
-          className="flex flex-col sm:flex-row gap-3 mt-4 justify-center w-full"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          {/* Contact button */}
-          <motion.div
-            className="w-full sm:w-auto"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gap: '14px',
+            }}
           >
             <Button
-              onClick={handleContactClick}
+              size="lg"
+              onClick={() => router.push('/projects')}
+              className="min-w-[220px] border border-sky-300/30 bg-[linear-gradient(135deg,#0d7ff2_0%,#0867cb_100%)] text-white shadow-[0_0_32px_rgba(8,103,203,0.28)] hover:brightness-110"
+            >
+              <LuExternalLink className="h-4 w-4" aria-hidden="true" />
+              {t('Home.browseProjects')}
+            </Button>
+
+            <Button
               size="lg"
               variant="outline"
-              className="relative overflow-hidden border-2 border-[color:var(--blue)] hover:text-white px-6 py-2.5 rounded-xl text-base font-semibold w-full transition-all duration-300 bg-background hover:shadow-xl hover:shadow-blue-500/20"
+              onClick={() => router.push('/contact')}
+              className="min-w-[220px] border-slate-200/10 bg-slate-950/45 text-slate-100 shadow-[0_10px_26px_rgba(2,8,20,0.18)] backdrop-blur-md hover:border-sky-300/25 hover:bg-slate-900/72"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                <LuMail className="w-5 h-5" />
-                {t('Navigation.contact')}
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--cyan)] -z-10"
-                initial={{ x: '-100%' }}
-                whileHover={{ x: '0%' }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-              />
+              <LuMail className="h-4 w-4" aria-hidden="true" />
+              {t('Navigation.contact')}
             </Button>
-          </motion.div>
 
-          {/* CV button */}
-          <motion.div
-            className="w-full sm:w-auto"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-          >
             <Button
-              onClick={handleCVClick}
               size="lg"
               variant="outline"
-              className="relative overflow-hidden border-2 border-[color:var(--cyan)] hover:text-white px-6 py-2.5 rounded-xl text-base font-semibold w-full transition-all duration-300 bg-background hover:shadow-xl hover:shadow-cyan-500/20"
+              onClick={() => router.push('/cv')}
+              className="min-w-[220px] border-slate-200/10 bg-slate-950/45 text-slate-100 shadow-[0_10px_26px_rgba(2,8,20,0.18)] backdrop-blur-md hover:border-sky-300/25 hover:bg-slate-900/72"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                <LuFileText className="w-5 h-5" />
-                {t('Navigation.viewCV')}
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-[color:var(--cyan)] to-[color:var(--blue)] -z-10"
-                initial={{ x: '-100%' }}
-                whileHover={{ x: '0%' }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-              />
+              <LuFileText className="h-4 w-4" aria-hidden="true" />
+              {t('Navigation.viewCV')}
             </Button>
-          </motion.div>
-
-          {/* Projects button */}
-          <motion.div
-            className="relative w-full sm:w-auto"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-          >
-            <Button
-              onClick={handleProjectsClick}
-              size="lg"
-              className="relative bg-gradient-to-r from-[color:var(--blue)] to-[color:var(--cyan)] text-white hover:shadow-xl hover:shadow-cyan-500/30 px-6 py-2.5 rounded-xl text-base font-semibold w-full overflow-hidden transition-all duration-300"
-            >
-              <span className="flex items-center gap-2">
-                <LuExternalLink className="w-5 h-5" />
-                {t('Navigation.projects')}
-              </span>
-            </Button>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
 
-      {/* "See more projects" indicator  */}
-      <motion.div
-        className="absolute bottom-4 left-0 right-0 mx-auto w-fit hidden md:flex flex-col items-center gap-2 cursor-pointer"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        whileHover={{
-          scale: 1.05,
-          y: -2,
-          transition: { type: 'spring', stiffness: 400, damping: 10 },
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '86%',
+          maxWidth: '1200px',
+          height: '60%',
+          backgroundColor: 'rgba(6, 0, 16, 0.4)',
+          borderRadius: '16px',
+          border: '2px solid #0184FC',
+          zIndex: 10,
+          overflow: 'visible',
+          backgroundImage: `
+            radial-gradient(circle, rgba(1, 132, 252, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '20px 20px',
         }}
-        whileTap={{ scale: 0.95 }}
       >
-        <span className="text-sm font-medium text-muted-foreground">
-          {t('Home.browseProjects')}
-        </span>
-
-        <motion.div
-          className="relative"
-          animate={{ y: [0, -2, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <MdOutlineMouse className="w-5 h-5 text-[color:var(--cyan)]" />
-        </motion.div>
-
-        <div className="flex flex-col items-center relative">
-          <HiOutlineArrowNarrowDown className="w-5 h-5 text-[color:var(--cyan)] opacity-70" />
-
-          <motion.div
-            className="absolute -inset-2 rounded-full bg-[color:var(--cyan)] opacity-[0.025] blur-md"
-            animate={{ scale: [1, 1.1, 1], opacity: [0.02, 0.04, 0.02] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          />
+        <div style={{ width: '100%', height: '100%' }}>
+          <HeroBrowser />
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
 
-export default React.memo(HeroComponent);
+export default Hero;

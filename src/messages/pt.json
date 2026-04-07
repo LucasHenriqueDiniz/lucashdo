@@ -375,7 +375,7 @@
   },
   "Projects": {
     "title": "Projetos",
-    "description": "Uma mostra dos meus projetos mais recentes e melhores.",
+    "description": "Explore minha coleção de projetos desenvolvidos com tecnologias modernas e soluções criativas.",
     "viewProject": "Ver Projeto",
     "allProjects": "Todos os Projetos",
     "featured": "Destaque",
@@ -399,7 +399,9 @@
     "all": "Todos",
     "tags": "Tags",
     "status": "Status",
-    "viewCode": "Ver Código"
+    "viewCode": "Ver Código",
+    "projects": "Projetos",
+    "technologies": "Tecnologias"
   },
   "Timeline": {
     "subTitle": "Linha do tempo da minha jornada",

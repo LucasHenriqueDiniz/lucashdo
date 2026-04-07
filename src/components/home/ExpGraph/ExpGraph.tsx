@@ -297,7 +297,7 @@ const ExpGraph = () => {
 
   return (
     <section className="w-full max-w-7xl mx-auto my-24 px-4 sm:px-6" id="skills-section">
-      <div className="w-full rounded-2xl bg-[rgb(12,12,12)] shadow-2xl relative">
+      <div className="w-full relative">
         <div className="flex flex-col lg:flex-row">
           {/* Mobile: Show title first */}
           <div className="lg:hidden p-6 pb-0">

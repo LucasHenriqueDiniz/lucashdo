@@ -144,9 +144,6 @@ export default async function Home() {
 
         {/* Desktop-only sections */}
         <div className="hidden md:flex flex-col items-center w-full">
-          {/* Hero Browser */}
-          <HeroBrowser />
-
           {/* EXPERIENCE GRAPH */}
           <ExpGraph />
 

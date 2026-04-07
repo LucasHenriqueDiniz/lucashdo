@@ -9,18 +9,20 @@
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 0.3s ease,
-    visibility 0.3s ease;
+    opacity 0.2s ease,
+    visibility 0.2s ease;
   pointer-events: none;
   z-index: 9999;
   overflow: hidden;
   filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4));
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 .tab-preview-tooltip.visible {
   opacity: 1;
   visibility: visible;
-  transition-delay: 0.5s;
 }
 
 .tab-preview-content {

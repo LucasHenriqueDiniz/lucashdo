@@ -1,3 +1,14 @@
+/* CSS Custom Properties for Theme Colors */
+:root {
+  --primary: #0184FC;
+  --secondary: #00D4FF;
+  --dark: #001F3F;
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-hover-bg: rgba(255, 255, 255, 0.15);
+  --glass-hover-border: rgba(255, 255, 255, 0.3);
+}
+
 /* Tab styling */
 .browser-container .tab {
   background: linear-gradient(to bottom, #2d2d35, #23232a);
@@ -473,6 +484,81 @@
   border-radius: 6px;
 }
 
+/* Simple Hero Section */
+.mac-browser-simple-hero {
+  text-align: center;
+  padding: 60px 40px;
+  margin: 0 0 40px 0;
+  background: linear-gradient(135deg, rgba(1, 132, 252, 0.05), rgba(0, 212, 255, 0.03));
+  border-radius: 16px;
+  border: 1px solid rgba(1, 132, 252, 0.1);
+}
+
+.mac-browser-simple-hero-title {
+  font-size: 42px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #b8c7d8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+}
+
+.mac-browser-simple-hero-subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mac-browser-simple-hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.mac-browser-simple-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+}
+
+.mac-browser-simple-hero-btn-primary {
+  background: linear-gradient(135deg, #0184FC, #0066CC);
+  color: white;
+  box-shadow: 0 4px 12px rgba(1, 132, 252, 0.3);
+}
+
+.mac-browser-simple-hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(1, 132, 252, 0.4);
+}
+
+.mac-browser-simple-hero-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mac-browser-simple-hero-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
 .mac-browser-home-header {
   text-align: center;
   margin-bottom: 45px;
@@ -631,259 +717,16 @@
   background: rgba(59, 130, 246, 0.2);
 }
 
-.mac-browser-featured-section {
-  margin-bottom: 40px;
-  position: relative;
-  padding: 10px 0;
-  animation: fadeIn 0.8s ease-out 0.1s;
+/* Featured section removed - styling now handled by .mac-browser-section */
+
+/* Project Sections - Updated for shared ProjectGrid component */
+.mac-browser-section {
+  margin-bottom: 48px;
+  animation: fadeIn 0.8s ease-out;
 }
 
-.mac-browser-featured-section::before {
-  content: '';
-  position: absolute;
-  left: -20px;
-  right: -20px;
-  height: 100%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(59, 130, 246, 0.05) 0%,
-    rgba(59, 130, 246, 0) 70%
-  );
-  border-radius: 20px;
-  z-index: -1;
-}
-
-.mac-browser-featured-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  perspective: 1000px;
-}
-
-.mac-browser-projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-}
-
-.mac-browser-project-card {
-  background: rgba(39, 39, 42, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  animation: fadeIn 0.5s ease-out forwards;
-  opacity: 0;
-}
-
-.mac-browser-project-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.mac-browser-project-card:before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  padding: 1px;
-  background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.3), transparent);
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.mac-browser-project-card:hover:before {
-  opacity: 1;
-}
-
-.mac-browser-featured-card {
-  animation: slideInFromRight 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-.mac-browser-featured-card:nth-child(even) {
-  animation: slideInFromLeft 0.6s ease-out forwards;
-  animation-delay: 0.2s;
-}
-
-.mac-browser-project-card-image {
-  height: 140px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  transition: all 0.5s ease;
-  overflow: hidden;
-}
-
-.mac-browser-project-card-image::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.6));
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-}
-
-.mac-browser-project-card:hover .mac-browser-project-card-image {
-  transform: scale(1.05);
-}
-
-.mac-browser-project-card:hover .mac-browser-project-card-image::after {
-  opacity: 0.4;
-}
-
-.mac-browser-featured-card .mac-browser-project-card-image {
-  height: 180px;
-}
-
-.mac-browser-project-card-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 204, 0, 0.3);
-  color: #ffcc00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 204, 0, 0.4);
-}
-
-.mac-browser-project-card-featured-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 204, 0, 0.3);
-  color: #ffcc00;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid rgba(255, 204, 0, 0.4);
-}
-
-.mac-browser-project-card-content {
-  padding: 14px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease;
-}
-
-.mac-browser-project-card:hover .mac-browser-project-card-content {
-  transform: translateY(-2px);
-}
-
-.mac-browser-project-card-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0 0 8px 0;
-  color: #e4e4e7;
-  transition: color 0.3s ease;
-  position: relative;
-  display: inline-block;
-}
-
-.mac-browser-project-card-title::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #0077ff, #fb542b);
-  transition: width 0.3s ease;
-}
-
-.mac-browser-project-card:hover .mac-browser-project-card-title::after {
-  width: 100%;
-}
-
-.mac-browser-project-card-description {
-  font-size: 13px;
-  color: #a1a1aa;
-  margin: 0 0 12px 0;
-  line-height: 1.5;
-  flex: 1;
-  transition: color 0.3s ease;
-}
-
-.mac-browser-project-card:hover .mac-browser-project-card-description {
-  color: #d1d1d6;
-}
-
-.mac-browser-featured-card .mac-browser-project-card-content {
-  padding: 16px;
-}
-
-.mac-browser-featured-card .mac-browser-project-card-title {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.mac-browser-featured-card .mac-browser-project-card-description {
-  font-size: 14px;
-  margin-bottom: 14px;
-}
-
-.mac-browser-project-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.mac-browser-project-card-tag {
-  background: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 12px;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.mac-browser-project-card-tag:hover {
-  background: rgba(59, 130, 246, 0.25);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.mac-browser-project-card-more-tags {
-  font-size: 11px;
-  color: #71717a;
-  padding: 3px 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
-}
-
-.mac-browser-project-card-more-tags:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e4e4e7;
+.mac-browser-section:last-child {
+  padding-bottom: 30px;
 }
 
 .mac-browser-no-results {
@@ -918,10 +761,7 @@
   line-height: 1.6;
 }
 
-.mac-browser-all-projects {
-  padding-bottom: 30px;
-  animation: fadeIn 0.8s ease-out 0.3s both;
-}
+/* All projects section removed - styling now handled by .mac-browser-section */
 
 /* Animation keyframes for transitions */
 @keyframes slideInFromRight {
@@ -980,23 +820,19 @@
   z-index: 10;
 }
 
-/* Staggered entrance for project cards */
-.mac-browser-project-card {
-  animation: fadeIn 0.5s ease-out forwards;
-  opacity: 0;
+/* Staggered entrance animations removed - now handled by shared ProjectCard component */
+
+/* Project Sections - Updated for shared ProjectGrid component */
+.browser-container .tab.active {
+  animation: pulseGlow 2s infinite;
 }
 
-.mac-browser-projects-grid .mac-browser-project-card:nth-child(2n) {
-  animation-delay: 0.1s;
+/* Add smooth transition when switching between tabs */
+.mac-project-browser-content {
+  animation: fadeIn 0.4s ease-out;
 }
 
-.mac-browser-projects-grid .mac-browser-project-card:nth-child(3n) {
-  animation-delay: 0.2s;
-}
-
-.mac-browser-projects-grid .mac-browser-project-card:nth-child(4n) {
-  animation-delay: 0.3s;
-}
+/* Featured badge animations removed - now handled by shared ProjectCard component */
 
 /* Tab animation */
 .browser-container .tab.active {
@@ -1008,11 +844,7 @@
   animation: fadeIn 0.4s ease-out;
 }
 
-/* Extra enhancements for featured badge */
-.mac-browser-project-card-featured-badge,
-.mac-browser-project-card-badge {
-  animation: pulseGlow 3s infinite;
-}
+/* Featured badge animations removed - now handled by shared ProjectCard component */
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -1020,27 +852,114 @@
     padding: 16px;
   }
 
+  .mac-browser-simple-hero {
+    padding: 40px 24px;
+    margin: 0 0 32px 0;
+  }
+
+  .mac-browser-simple-hero-title {
+    font-size: 32px;
+  }
+
+  .mac-browser-simple-hero-subtitle {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .mac-browser-simple-hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .mac-browser-simple-hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mac-browser-hero {
+    height: 320px;
+    margin: -16px -16px 32px -16px;
+  }
+
+  .mac-browser-hero-content {
+    padding: 24px;
+  }
+
+  .mac-browser-hero-title {
+    font-size: 32px;
+  }
+
+  .mac-browser-hero-subtitle {
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+
+  .mac-browser-hero-stats {
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .mac-browser-hero-stat {
+    padding: 14px 22px;
+    min-width: 95px;
+  }
+
+  .mac-browser-hero-stat-number {
+    font-size: 28px;
+  }
+
+  .mac-browser-hero-stat-label {
+    font-size: 11px;
+  }
+
+  .mac-browser-intro-section {
+    padding: 32px 24px;
+  }
+
+  .mac-browser-intro-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+  }
+
+  .mac-browser-intro-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mac-browser-intro-title {
+    font-size: 32px;
+  }
+
+  .mac-browser-intro-subtitle {
+    font-size: 14px;
+  }
+
+  .mac-browser-intro-description {
+    font-size: 15px;
+  }
+
+  .mac-browser-intro-stats {
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .mac-browser-intro-stat {
+    padding: 16px 24px;
+    min-width: 100px;
+  }
+
+  .mac-browser-intro-stat-number {
+    font-size: 28px;
+  }
+
   .mac-browser-section-title {
     font-size: 20px;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 
-  .mac-browser-featured-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .mac-browser-projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
-  }
-
-  .mac-browser-featured-card .mac-browser-project-card-image {
-    height: 160px;
-  }
-
-  .mac-browser-project-card-image {
-    height: 120px;
+  .mac-browser-section {
+    margin-bottom: 32px;
   }
 
   .mac-project-header {
@@ -1055,26 +974,11 @@
     padding: 20px;
     gap: 20px;
   }
-
-  .mac-browser-featured-section {
-    margin-bottom: 30px;
-  }
 }
 
 @media (max-width: 480px) {
   .mac-browser-home {
     padding: 12px;
-  }
-
-  .mac-browser-featured-grid,
-  .mac-browser-projects-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .mac-browser-project-card-image,
-  .mac-browser-featured-card .mac-browser-project-card-image {
-    height: 140px;
   }
 
   .mac-project-header {
@@ -1176,45 +1080,295 @@
   z-index: 1;
 }
 
-/* Introduction Section */
-.mac-browser-intro-section {
+/* Hero Section with Grainient */
+.mac-browser-hero {
+  position: relative;
+  height: 350px;
+  margin: -20px -20px 40px -20px;
+  border-radius: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: layout style paint;
+}
+
+.mac-browser-hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.mac-browser-hero-content {
+  position: relative;
+  z-index: 1;
   text-align: center;
-  margin-bottom: 45px;
-  padding: 30px 20px;
-  background: linear-gradient(135deg, rgba(0, 119, 255, 0.05), rgba(251, 84, 43, 0.05));
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  max-width: 900px;
+}
+
+.mac-browser-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
   animation: fadeInUp 0.6s ease-out;
 }
 
-.mac-browser-intro-title {
-  font-size: 32px;
-  font-weight: 700;
+.mac-browser-hero-badge svg {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    transform: rotate(0deg) scale(1) translateZ(0);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.2) translateZ(0);
+    opacity: 0.8;
+  }
+}
+
+.mac-browser-hero-title {
+  font-size: 48px;
+  font-weight: 900;
   margin-bottom: 16px;
-  background: linear-gradient(45deg, #0077ff, #fb542b);
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #ffffff 0%, #b8c7d8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.mac-browser-hero-subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 32px;
+  line-height: 1.6;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mac-browser-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.mac-browser-hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 28px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  min-width: 110px;
+  will-change: transform;
+  transform: translateZ(0);
+  contain: layout style;
+}
+
+.mac-browser-hero-stat:hover {
+  transform: translateY(-5px) translateZ(0);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.mac-browser-hero-stat-number {
+  font-size: 36px;
+  font-weight: 900;
+  color: white;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.mac-browser-hero-stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Introduction Section */
+.mac-browser-intro-section {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 50px 40px;
+  background: linear-gradient(135deg, rgba(1, 132, 252, 0.08), rgba(0, 212, 255, 0.05));
+  border-radius: 24px;
+  border: 1px solid rgba(1, 132, 252, 0.15);
+  animation: fadeInUp 0.6s ease-out;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(1, 132, 252, 0.1);
+}
+
+.mac-browser-intro-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #0184FC, transparent);
+  opacity: 0.8;
+}
+
+.mac-browser-intro-section::after {
+  content: '';
+  position: absolute;
+  bottom: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(1, 132, 252, 0.15), transparent 70%);
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.mac-browser-intro-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #0184FC, #00D4FF);
+  border-radius: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(1, 132, 252, 0.3);
+  animation: float 3s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+.mac-browser-intro-icon svg {
+  color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.mac-browser-intro-title {
+  font-size: 42px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #0184FC, #00D4FF);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 30px rgba(1, 132, 252, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.mac-browser-intro-subtitle {
+  font-size: 18px;
+  color: #60a5fa;
+  font-weight: 600;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
 
 .mac-browser-intro-description {
-  font-size: 16px;
+  font-size: 17px;
+  color: #b4b4bb;
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.mac-browser-intro-stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-top: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.mac-browser-intro-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 32px;
+  background: rgba(1, 132, 252, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(1, 132, 252, 0.2);
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.mac-browser-intro-stat:hover {
+  transform: translateY(-5px);
+  background: rgba(1, 132, 252, 0.1);
+  border-color: rgba(1, 132, 252, 0.4);
+  box-shadow: 0 10px 30px rgba(1, 132, 252, 0.2);
+}
+
+.mac-browser-intro-stat-number {
+  font-size: 36px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #0184FC, #00D4FF);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.mac-browser-intro-stat-label {
+  font-size: 13px;
   color: #a1a1aa;
-  line-height: 1.6;
-  max-width: 700px;
-  margin: 0 auto;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(20px) translateZ(0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) translateZ(0);
   }
 }
 
@@ -1259,4 +1413,255 @@
   background: linear-gradient(135deg, #0066dd, #0055bb);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 119, 255, 0.3);
+}
+
+/* Browser Compatibility Fallbacks */
+@supports not (backdrop-filter: blur(10px)) {
+  .mac-browser-hero-badge {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .mac-browser-hero-stat {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@supports not (background-clip: text) {
+  .mac-browser-hero-title {
+    color: white;
+    background: none;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .mac-browser-hero-badge,
+  .mac-browser-hero-title,
+  .mac-browser-hero-subtitle,
+  .mac-browser-hero-stats {
+    animation: none;
+  }
+  
+  .mac-browser-hero-badge svg {
+    animation: none;
+  }
+  
+  .mac-browser-hero-stat {
+    transition: none;
+  }
+  
+  .mac-browser-hero-stat:hover {
+    transform: none;
+  }
+}
+
+
+/* Project Tab Content Styles */
+.project-tab-content {
+  height: 100%;
+  overflow-y: auto;
+  background: #18181b;
+  color: #e4e4e7;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.project-tab-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.project-tab-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.project-tab-content::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.project-tab-header {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+}
+
+.project-tab-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.project-tab-image {
+  object-fit: cover;
+}
+
+.project-tab-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+}
+
+.project-tab-header-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px;
+  z-index: 1;
+}
+
+.project-tab-featured-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 204, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 204, 0, 0.4);
+  border-radius: 20px;
+  color: #ffd700;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.project-tab-title {
+  font-size: 42px;
+  font-weight: 900;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.project-tab-body {
+  padding: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.project-tab-section {
+  margin-bottom: 40px;
+}
+
+.project-tab-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #e4e4e7;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.project-tab-description {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #b4b4bb;
+  margin: 0;
+}
+
+.project-tab-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.project-tab-tag {
+  padding: 10px 18px;
+  background: rgba(1, 132, 252, 0.15);
+  border: 1px solid rgba(1, 132, 252, 0.3);
+  border-radius: 12px;
+  color: #60a5fa;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.project-tab-tag:hover {
+  background: rgba(1, 132, 252, 0.25);
+  border-color: rgba(1, 132, 252, 0.5);
+  transform: translateY(-2px);
+}
+
+.project-tab-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.project-tab-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.project-tab-link-repo {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e4e4e7;
+}
+
+.project-tab-link-repo:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.project-tab-link-demo {
+  background: linear-gradient(135deg, #0184FC, #0066CC);
+  border: 1px solid rgba(1, 132, 252, 0.5);
+  color: white;
+}
+
+.project-tab-link-demo:hover {
+  background: linear-gradient(135deg, #0066CC, #0055BB);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(1, 132, 252, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .project-tab-header {
+    height: 200px;
+  }
+
+  .project-tab-header-content {
+    padding: 24px;
+  }
+
+  .project-tab-title {
+    font-size: 32px;
+  }
+
+  .project-tab-body {
+    padding: 24px;
+  }
+
+  .project-tab-section-title {
+    font-size: 20px;
+  }
+
+  .project-tab-links {
+    flex-direction: column;
+  }
+
+  .project-tab-link {
+    width: 100%;
+    justify-content: center;
+  }
 }
