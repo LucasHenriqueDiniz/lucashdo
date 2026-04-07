@@ -80,6 +80,7 @@ const CarouselGuestbook: React.FC<CarouselGuestbookProps> = ({ entries }) => {
                 >
                   <div
                     style={{
+                      position: 'relative',
                       width: '100%',
                       height: '100%',
                       borderRadius: '12px',

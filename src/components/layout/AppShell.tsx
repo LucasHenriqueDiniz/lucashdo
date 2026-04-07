@@ -22,6 +22,7 @@ type AppShellContextValue = {
 const AppShellContext = createContext<AppShellContextValue | undefined>(undefined);
 
 const Header = dynamic(() => import('./Header'));
+const MobileMenu = dynamic(() => import('./Header').then(mod => ({ default: mod.MobileMenu })));
 const Footer = dynamic(() => import('./Footer'));
 
 const HIDDEN_PATH_PREFIXES = ['/about', '/cv'];
@@ -80,6 +81,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <AppShellContext.Provider value={value}>
       <div className="flex min-h-screen flex-col">
         {isVisible && <Header />}
+        {isVisible && <MobileMenu />}
         <div className="flex-1">{children}</div>
         {isVisible && <Footer />}
       </div>

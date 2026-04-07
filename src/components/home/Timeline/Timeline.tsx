@@ -227,6 +227,11 @@ const Blank = memo(() => {
 
 Blank.displayName = 'Blank';
 
+type ScrollYValue = {
+  get: () => number;
+  on: (eventName: 'change', callback: (value: number) => void) => () => void;
+};
+
 function BallContainer({
   index,
   scrollY,
@@ -239,7 +244,7 @@ function BallContainer({
   lang,
 }: {
   index: number;
-  scrollY: { get: () => number; onChange: (callback: (value: number) => void) => () => void };
+  scrollY: ScrollYValue;
   containerHeight: number;
   ballSpacing: number;
   centerY: number;
@@ -295,7 +300,7 @@ function BallContainer({
     let lastTime = 0;
     const throttleTime = 16;
     let lastScrollPosition = 0;
-    const unsubscribe = scrollY.onChange((scroll: number) => {
+    const unsubscribe = scrollY.on('change', (scroll: number) => {
       const now = performance.now();
       if (now - lastTime < throttleTime) return;
       if (Math.abs(lastScrollPosition - scroll) < 2) return;

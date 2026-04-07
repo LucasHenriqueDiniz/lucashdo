@@ -12,6 +12,10 @@ interface AddressBarProps {
   onTransformToHome?: (tabIndex: number) => void;
   currentTabIndex: number;
   isInteractive: boolean;
+  onBack?: () => void;
+  onForward?: () => void;
+  canGoBack?: boolean;
+  canGoForward?: boolean;
 }
 
 const AddressBar: React.FC<AddressBarProps> = ({
@@ -21,6 +25,10 @@ const AddressBar: React.FC<AddressBarProps> = ({
   onTransformToHome,
   currentTabIndex,
   isInteractive,
+  onBack,
+  onForward,
+  canGoBack = false,
+  canGoForward = false,
 }) => {
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,7 +62,8 @@ const AddressBar: React.FC<AddressBarProps> = ({
 
   // Selecionar uma tab da pesquisa
   const handleTabSelect = useCallback(
-    (tabId: string) => {
+    (tabId: string, event?: React.MouseEvent) => {
+      event?.stopPropagation();
       onTabSelect?.(tabId);
       handleExitSearch();
     },
@@ -99,10 +108,22 @@ const AddressBar: React.FC<AddressBarProps> = ({
       <div className="nav-buttons">
         {isInteractive && (
           <>
-            <button className="nav-btn" disabled aria-label={t('back')} title={t('back')}>
+            <button 
+              className="nav-btn" 
+              disabled={!canGoBack} 
+              onClick={onBack}
+              aria-label={t('back')} 
+              title={t('back')}
+            >
               <ChevronLeft size={16} />
             </button>
-            <button className="nav-btn" disabled aria-label={t('forward')} title={t('forward')}>
+            <button 
+              className="nav-btn" 
+              disabled={!canGoForward} 
+              onClick={onForward}
+              aria-label={t('forward')} 
+              title={t('forward')}
+            >
               <ChevronRight size={16} />
             </button>
           </>
@@ -181,7 +202,7 @@ const AddressBar: React.FC<AddressBarProps> = ({
               <div
                 key={availableTab.id}
                 className="search-result"
-                onClick={() => handleTabSelect(availableTab.id)}
+                onClick={(e) => handleTabSelect(availableTab.id, e)}
               >
                 <div className="result-icon">
                   {typeof availableTab.icon === 'string' ? (

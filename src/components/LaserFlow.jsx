@@ -275,7 +275,8 @@ export const LaserFlow = ({
   const inViewRef = useRef(true);
 
   const hexToRGB = hex => {
-    let c = hex.trim();
+    let c = typeof hex === 'string' ? hex.trim() : '';
+    if (!c) c = '#FFFFFF';
     if (c[0] === '#') c = c.slice(1);
     if (c.length === 3)
       c = c

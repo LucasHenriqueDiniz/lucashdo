@@ -1,13 +1,13 @@
 .tab {
-  background: var(--gradient-tab);
-  border: 1px solid var(--border-color);
+  background: #27272a;
+  border: none;
   border-radius: 8px 8px 0 0;
   padding: 8px 16px;
-  color: var(--text-secondary);
+  color: #a1a1aa;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   position: relative;
   min-width: 150px;
   max-width: 200px;
@@ -15,18 +15,21 @@
   align-items: center;
   gap: 8px;
   user-select: none;
+  margin-right: 2px;
+  margin-bottom: -1px;
 }
 
 .tab.active {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  border-bottom-color: var(--bg-primary);
+  background: #3f3f46;
+  color: #fafafa;
+  border-bottom: 1px solid #3f3f46;
   z-index: 10;
+  font-weight: 600;
 }
 
 .tab:hover:not(.active) {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: #323238;
+  color: #e4e4e7;
 }
 
 .tab.disabled {

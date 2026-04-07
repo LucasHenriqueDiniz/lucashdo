@@ -12,23 +12,13 @@ import {
   HiUser,
   HiOutlineMail,
   HiMail,
-  HiOutlineHome,
-  HiHome,
 } from 'react-icons/hi';
-import { Menu } from 'lucide-react';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
+import StaggeredMenu from '@/components/StaggeredMenu';
 import { LanguageSwitcher } from '../language-switcher';
 import { cn } from '@/lib/utils';
 import './header.css';
 import { logo } from '../../../public';
+import { ContactLinks } from '@/constants/contacts';
 
 export default function Header() {
   const t = useTranslations('Navigation');
@@ -37,13 +27,12 @@ export default function Header() {
   const [isHovering, setIsHovering] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const headerTranslateY = useTransform(scrollY, [0, 40], ['0px', '0px']);
-  const headerBgOpacity = useTransform(scrollY, [0, 50], [0.4, 0.85]);
+  const headerBgOpacity = useTransform(scrollY, [0, 50], [0.4, 0.9]);
   const logoScale = useTransform(scrollY, [0, 50], [1, 0.92]);
-  const headerBlur = useTransform(scrollY, [0, 50], [12, 20]);
-  const borderGlowOpacity = useTransform(scrollY, [0, 30], [0, 0.8]);
+  const headerBlur = useTransform(scrollY, [0, 50], [16, 24]);
+  const borderGlowOpacity = useTransform(scrollY, [0, 30], [0, 1]);
 
   useEffect(() => {
     const checkActiveSection = () => {
@@ -87,7 +76,7 @@ export default function Header() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 w-full z-50 will-change-transform"
+      className="fixed top-0 left-0 w-full z-50 will-change-transform hidden md:block"
       style={{ y: headerTranslateY }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -225,7 +214,12 @@ export default function Header() {
             className="hidden md:flex flex-1 justify-center overflow-x-auto hide-scrollbar"
             aria-label="Main"
           >
-            <ul className="flex gap-2 md:gap-4 lg:gap-6">
+            <motion.ul 
+              className="flex gap-2 md:gap-4 lg:gap-6 relative"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <NavItem
                 href="/projects"
                 label={t('projects') || 'Projetos'}
@@ -247,7 +241,7 @@ export default function Header() {
                 icon={<HiOutlineMail className="icon" />}
                 activeIcon={<HiMail className="icon" />}
               />
-            </ul>
+            </motion.ul>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -267,361 +261,6 @@ export default function Header() {
               />
               <LanguageSwitcher />
             </motion.div>
-            {/* Mobile Drawer */}
-            <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-              <DrawerTrigger asChild>
-                <button
-                  className="md:hidden p-2 rounded-md hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
-                  aria-label="Open menu"
-                  type="button"
-                  aria-expanded={drawerOpen}
-                >
-                  <Menu className="h-6 w-6" />
-                </button>
-              </DrawerTrigger>
-              <DrawerContent>
-                <DrawerHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                        className="relative"
-                      >
-                        <Image
-                          src={logo}
-                          alt="LHDO Logo"
-                          width={40}
-                          height={40}
-                          className="rounded-lg shadow-lg border-2 border-[var(--border)]"
-                        />
-                        <motion.div
-                          className="absolute -inset-1 rounded-lg bg-gradient-to-r from-[var(--primary)]/30 to-[var(--cyan)]/30 blur-md -z-10"
-                          animate={{
-                            opacity: [0.5, 0.8, 0.5],
-                            scale: [1, 1.1, 1],
-                          }}
-                          transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                          }}
-                        />
-                      </motion.div>
-                      <div>
-                        <DrawerTitle>Menu</DrawerTitle>
-                        <DrawerDescription className="text-sm text-[var(--muted-foreground)] mt-1">
-                          Navegação
-                        </DrawerDescription>
-                      </div>
-                    </div>
-                    <DrawerClose asChild>
-                      <motion.button
-                        className="p-2 rounded-lg hover:bg-[var(--primary)]/10 transition-colors"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        aria-label="Close menu"
-                      >
-                        <svg
-                          className="w-6 h-6 text-[var(--foreground)]"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </motion.button>
-                    </DrawerClose>
-                  </div>
-                </DrawerHeader>
-                
-                <div className="flex flex-col gap-3 px-6 py-6">
-                  {/* Home Link */}
-                  <DrawerClose asChild>
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 }}
-                      onClick={() => setDrawerOpen(false)}
-                    >
-                      <Link
-                        href="/"
-                        className={cn(
-                          'group flex items-center gap-4 p-4 rounded-xl transition-all duration-300',
-                          'border border-[var(--border)]',
-                          !activeSection || activeSection === 'home'
-                            ? 'bg-gradient-to-r from-[var(--primary)]/20 to-[var(--primary)]/10 text-[var(--primary)] shadow-lg shadow-[var(--primary)]/20'
-                            : 'hover:bg-[var(--primary)]/10 hover:border-[var(--primary)]/30 hover:shadow-md'
-                        )}
-                        aria-current={!activeSection || activeSection === 'home' ? 'page' : undefined}
-                      >
-                        <motion.div
-                          className={cn(
-                            'p-3 rounded-lg',
-                            !activeSection || activeSection === 'home'
-                              ? 'bg-[var(--primary)]/20'
-                              : 'bg-[var(--primary)]/10 group-hover:bg-[var(--primary)]/20'
-                          )}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ type: 'spring', stiffness: 400 }}
-                        >
-                          {!activeSection || activeSection === 'home' ? (
-                            <HiHome className="h-6 w-6 text-[var(--primary)]" />
-                          ) : (
-                            <HiOutlineHome className="h-6 w-6 text-[var(--muted-foreground)] group-hover:text-[var(--primary)]" />
-                          )}
-                        </motion.div>
-                        <div className="flex-1">
-                          <span className="font-semibold text-lg block">
-                            {t('home') || 'Home'}
-                          </span>
-                          <span className="text-sm text-[var(--muted-foreground)]">
-                            Voltar ao início
-                          </span>
-                        </div>
-                        <motion.div
-                          initial={{ x: -10, opacity: 0 }}
-                          whileHover={{ x: 0, opacity: 1 }}
-                          className="text-[var(--primary)]"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </motion.div>
-                      </Link>
-                    </motion.div>
-                  </DrawerClose>
-
-                  {/* Projects Link */}
-                  <DrawerClose asChild>
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 }}
-                      onClick={() => setDrawerOpen(false)}
-                    >
-                      <Link
-                        href="/projects"
-                        className={cn(
-                          'group flex items-center gap-4 p-4 rounded-xl transition-all duration-300',
-                          'border border-[var(--border)]',
-                          activeSection === 'projects'
-                            ? 'bg-gradient-to-r from-[var(--primary)]/20 to-[var(--primary)]/10 text-[var(--primary)] shadow-lg shadow-[var(--primary)]/20'
-                            : 'hover:bg-[var(--primary)]/10 hover:border-[var(--primary)]/30 hover:shadow-md'
-                        )}
-                        aria-current={activeSection === 'projects' ? 'page' : undefined}
-                      >
-                        <motion.div
-                          className={cn(
-                            'p-3 rounded-lg',
-                            activeSection === 'projects'
-                              ? 'bg-[var(--primary)]/20'
-                              : 'bg-[var(--primary)]/10 group-hover:bg-[var(--primary)]/20'
-                          )}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ type: 'spring', stiffness: 400 }}
-                        >
-                          {activeSection === 'projects' ? (
-                            <HiFolder className="h-6 w-6 text-[var(--primary)]" />
-                          ) : (
-                            <HiOutlineFolder className="h-6 w-6 text-[var(--muted-foreground)] group-hover:text-[var(--primary)]" />
-                          )}
-                        </motion.div>
-                        <div className="flex-1">
-                          <span className="font-semibold text-lg block">
-                            {t('projects') || 'Projetos'}
-                          </span>
-                          <span className="text-sm text-[var(--muted-foreground)]">
-                            Veja meus projetos
-                          </span>
-                        </div>
-                        <motion.div
-                          initial={{ x: -10, opacity: 0 }}
-                          whileHover={{ x: 0, opacity: 1 }}
-                          className="text-[var(--primary)]"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </motion.div>
-                      </Link>
-                    </motion.div>
-                  </DrawerClose>
-
-                  <DrawerClose asChild>
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.15 }}
-                      onClick={() => setDrawerOpen(false)}
-                    >
-                      <Link
-                        href="/about"
-                        className={cn(
-                          'group flex items-center gap-4 p-4 rounded-xl transition-all duration-300',
-                          'border border-[var(--border)]',
-                          activeSection === 'about'
-                            ? 'bg-gradient-to-r from-[var(--primary)]/20 to-[var(--primary)]/10 text-[var(--primary)] shadow-lg shadow-[var(--primary)]/20'
-                            : 'hover:bg-[var(--primary)]/10 hover:border-[var(--primary)]/30 hover:shadow-md'
-                        )}
-                        aria-current={activeSection === 'about' ? 'page' : undefined}
-                      >
-                        <motion.div
-                          className={cn(
-                            'p-3 rounded-lg',
-                            activeSection === 'about'
-                              ? 'bg-[var(--primary)]/20'
-                              : 'bg-[var(--primary)]/10 group-hover:bg-[var(--primary)]/20'
-                          )}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ type: 'spring', stiffness: 400 }}
-                        >
-                          {activeSection === 'about' ? (
-                            <HiUser className="h-6 w-6 text-[var(--primary)]" />
-                          ) : (
-                            <HiOutlineUser className="h-6 w-6 text-[var(--muted-foreground)] group-hover:text-[var(--primary)]" />
-                          )}
-                        </motion.div>
-                        <div className="flex-1">
-                          <span className="font-semibold text-lg block">
-                            {t('about') || 'Sobre'}
-                          </span>
-                          <span className="text-sm text-[var(--muted-foreground)]">
-                            Conheça minha história
-                          </span>
-                        </div>
-                        <motion.div
-                          initial={{ x: -10, opacity: 0 }}
-                          whileHover={{ x: 0, opacity: 1 }}
-                          className="text-[var(--primary)]"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </motion.div>
-                      </Link>
-                    </motion.div>
-                  </DrawerClose>
-
-                  <DrawerClose asChild>
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 }}
-                      onClick={() => setDrawerOpen(false)}
-                    >
-                      <Link
-                        href="/contact"
-                        className={cn(
-                          'group flex items-center gap-4 p-4 rounded-xl transition-all duration-300',
-                          'border border-[var(--border)]',
-                          activeSection === 'contact'
-                            ? 'bg-gradient-to-r from-[var(--primary)]/20 to-[var(--primary)]/10 text-[var(--primary)] shadow-lg shadow-[var(--primary)]/20'
-                            : 'hover:bg-[var(--primary)]/10 hover:border-[var(--primary)]/30 hover:shadow-md'
-                        )}
-                        aria-current={activeSection === 'contact' ? 'page' : undefined}
-                      >
-                        <motion.div
-                          className={cn(
-                            'p-3 rounded-lg',
-                            activeSection === 'contact'
-                              ? 'bg-[var(--primary)]/20'
-                              : 'bg-[var(--primary)]/10 group-hover:bg-[var(--primary)]/20'
-                          )}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ type: 'spring', stiffness: 400 }}
-                        >
-                          {activeSection === 'contact' ? (
-                            <HiMail className="h-6 w-6 text-[var(--primary)]" />
-                          ) : (
-                            <HiOutlineMail className="h-6 w-6 text-[var(--muted-foreground)] group-hover:text-[var(--primary)]" />
-                          )}
-                        </motion.div>
-                        <div className="flex-1">
-                          <span className="font-semibold text-lg block">
-                            {t('contact') || 'Contato'}
-                          </span>
-                          <span className="text-sm text-[var(--muted-foreground)]">
-                            Entre em contato
-                          </span>
-                        </div>
-                        <motion.div
-                          initial={{ x: -10, opacity: 0 }}
-                          whileHover={{ x: 0, opacity: 1 }}
-                          className="text-[var(--primary)]"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </motion.div>
-                      </Link>
-                    </motion.div>
-                  </DrawerClose>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="mt-6 pt-6 border-t border-[var(--border)]"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent" />
-                      <span className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wider">
-                        Idioma
-                      </span>
-                      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent" />
-                    </div>
-                    <LanguageSwitcher />
-                  </motion.div>
-                </div>
-              </DrawerContent>
-            </Drawer>
           </div>
         </div>
 
@@ -648,6 +287,41 @@ export default function Header() {
         </motion.div>
       </motion.header>
     </motion.div>
+  );
+}
+
+// StaggeredMenu para mobile - renderizado fora do header principal
+export function MobileMenu() {
+  const t = useTranslations('Navigation');
+  
+  return (
+    <div className="md:hidden">
+      <StaggeredMenu
+        position="right"
+        items={[
+          { label: t('home') || 'Home', ariaLabel: 'Go to home page', link: '/' },
+          { label: t('projects') || 'Projetos', ariaLabel: 'View projects', link: '/projects' },
+          { label: t('about') || 'Sobre', ariaLabel: 'Learn about me', link: '/about' },
+          { label: t('contact') || 'Contato', ariaLabel: 'Get in touch', link: '/contact' },
+        ]}
+        socialItems={[
+          { label: 'GitHub', link: ContactLinks.github },
+          { label: 'LinkedIn', link: ContactLinks.linkedin },
+          { label: 'Discord', link: `https://discord.com/users/${ContactLinks.discord}` },
+        ]}
+        displaySocials
+        displayItemNumbering={true}
+        menuButtonColor="#ffffff"
+        openMenuButtonColor="#000000"
+        changeMenuColorOnOpen={true}
+        colors={['#1a1a24', '#0a0a12']}
+        logoUrl={logo.src}
+        accentColor="#0184fc"
+        isFixed={true}
+        closeOnClickAway={true}
+        languageSwitcher={<LanguageSwitcher />}
+      />
+    </div>
   );
 }
 

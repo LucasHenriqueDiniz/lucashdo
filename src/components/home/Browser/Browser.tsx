@@ -222,11 +222,16 @@ const Browser = function Browser({
       if (tabIndex === activeTabIndex) return;
       setActiveTab(tabIndex);
       setHomeScreen(false);
+      
+      // Adicionar ao histórico
+      setHistory(prev => [...prev.slice(0, historyIndex + 1), tabIndex]);
+      setHistoryIndex(prev => prev + 1);
+      
       if (onTabChange) {
         onTabChange(internalTabs[tabIndex]?.id || '');
       }
     },
-    [activeTabIndex, setActiveTab, setHomeScreen, onTabChange, internalTabs]
+    [activeTabIndex, setActiveTab, setHomeScreen, onTabChange, internalTabs, historyIndex]
   );
 
   // Lógica simplificada: se a aba ativa é new/home, transforma ela
@@ -255,15 +260,42 @@ const Browser = function Browser({
       const newTabIndex = internalTabs.findIndex(tab => tab.id === tabId);
       if (newTabIndex >= 0) {
         setActiveTab(newTabIndex);
+        // Adicionar ao histórico
+        setHistory(prev => [...prev.slice(0, historyIndex + 1), newTabIndex]);
+        setHistoryIndex(prev => prev + 1);
       } else {
         // Se a aba não foi encontrada, adicionar e ativar
         addTab(tabToOpen);
-        setActiveTab(internalTabs.length);
+        const newIndex = internalTabs.length;
+        setActiveTab(newIndex);
+        // Adicionar ao histórico
+        setHistory(prev => [...prev.slice(0, historyIndex + 1), newIndex]);
+        setHistoryIndex(prev => prev + 1);
       }
       if (onTabChange) onTabChange(tabId);
     },
-    [tabs, internalTabs, activeTabIndex, transformTab, addTab, setActiveTab, onTabChange]
+    [tabs, internalTabs, activeTabIndex, transformTab, addTab, setActiveTab, onTabChange, historyIndex]
   );
+  
+  // Navegação: Voltar
+  const handleBack = useCallback(() => {
+    if (historyIndex > 0) {
+      const newIndex = historyIndex - 1;
+      setHistoryIndex(newIndex);
+      setActiveTab(history[newIndex]);
+      setHomeScreen(history[newIndex] === 0);
+    }
+  }, [historyIndex, history, setActiveTab, setHomeScreen]);
+  
+  // Navegação: Avançar
+  const handleForward = useCallback(() => {
+    if (historyIndex < history.length - 1) {
+      const newIndex = historyIndex + 1;
+      setHistoryIndex(newIndex);
+      setActiveTab(history[newIndex]);
+      setHomeScreen(history[newIndex] === 0);
+    }
+  }, [historyIndex, history, setActiveTab, setHomeScreen]);
 
   // handleNewTabClick: cria new tab
   const handleNewTabClick = useCallback((): void => {
@@ -386,6 +418,10 @@ const Browser = function Browser({
         onTransformToHome={handleTransformToHome}
         currentTabIndex={activeTabIndex || 0}
         isInteractive={isInteractive}
+        onBack={handleBack}
+        onForward={handleForward}
+        canGoBack={historyIndex > 0}
+        canGoForward={historyIndex < history.length - 1}
       />
       {/* Browser content area */}
       <div className="browser-content">

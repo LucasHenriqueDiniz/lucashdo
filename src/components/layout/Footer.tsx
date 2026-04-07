@@ -178,6 +178,7 @@ const Footer = memo(() => {
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null);
 
   useEffect(() => {
     const featured = projects.filter(project => project.featured).slice(0, 4);
@@ -189,7 +190,7 @@ const Footer = memo(() => {
     offset: ['0 1', '1 1'],
   });
 
-  const patternOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 0.05]);
+  const patternOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 0.08]);
 
   const handleSetHoveredIcon = useCallback((name: string | null) => {
     setHoveredIcon(name);
@@ -271,19 +272,25 @@ const Footer = memo(() => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
+            onMouseEnter={() => setHoveredSection('projects')}
+            onMouseLeave={() => setHoveredSection(null)}
+            className="backdrop-blur-sm bg-[rgba(25,25,30,0.4)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.08)] hover:border-[rgba(1,132,252,0.3)] transition-all duration-300 relative overflow-hidden group"
           >
-            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block">
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              initial={false}
+            />
+            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block z-10">
               {t('projectsTitle') || 'Projetos em destaque'}
               <motion.span
-                className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)]"
+                className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] rounded-full"
                 initial={{ scaleX: 0, transformOrigin: 'left' }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               />
             </h3>
-            <ul className="space-y-2 md:space-y-3">
+            <ul className="space-y-2 md:space-y-3 relative z-10">
               {featuredProjects.map(project => (
                 <FooterLink
                   key={project.id}
@@ -300,19 +307,25 @@ const Footer = memo(() => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
-            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
+            onMouseEnter={() => setHoveredSection('links')}
+            onMouseLeave={() => setHoveredSection(null)}
+            className="backdrop-blur-sm bg-[rgba(25,25,30,0.4)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.08)] hover:border-[rgba(1,132,252,0.3)] transition-all duration-300 relative overflow-hidden group"
           >
-            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block">
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-[var(--cyan)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              initial={false}
+            />
+            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block z-10">
               {t('links')}
               <motion.span
-                className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)]"
+                className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] rounded-full"
                 initial={{ scaleX: 0, transformOrigin: 'left' }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
               />
             </h3>
-            <ul className="space-y-2 md:space-y-4">
+            <ul className="space-y-2 md:space-y-4 relative z-10">
               <FooterLink href="/" label={t('home')} />
               <FooterLink href="/about" label={t('about')} />
               <FooterLink href="/projects" label={t('projects')} />
@@ -326,19 +339,25 @@ const Footer = memo(() => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
-            className="backdrop-blur-sm bg-[rgba(25,25,30,0.3)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.06)]"
+            onMouseEnter={() => setHoveredSection('connect')}
+            onMouseLeave={() => setHoveredSection(null)}
+            className="backdrop-blur-sm bg-[rgba(25,25,30,0.4)] p-4 md:p-6 rounded-xl border border-[rgba(255,255,255,0.08)] hover:border-[rgba(1,132,252,0.3)] transition-all duration-300 relative overflow-hidden group"
           >
-            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block">
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              initial={false}
+            />
+            <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 relative inline-block z-10">
               {t('connect')}
               <motion.span
-                className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)]"
+                className="absolute -bottom-1 left-0 h-[3px] bg-gradient-to-r from-[var(--primary)] to-[var(--cyan)] rounded-full"
                 initial={{ scaleX: 0, transformOrigin: 'left' }}
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
               />
             </h3>
-            <div className="flex flex-col space-y-2 md:space-y-4">
+            <div className="flex flex-col space-y-2 md:space-y-4 relative z-10">
               {socialLinks.map(link => (
                 <SocialLink
                   key={link.label}
@@ -355,14 +374,15 @@ const Footer = memo(() => {
         </div>
 
         <motion.div
-          className="mt-8 md:mt-12 relative backdrop-blur-sm bg-[rgba(30,30,40,0.4)] p-4 md:p-8 rounded-2xl border border-[rgba(255,255,255,0.08)] overflow-hidden"
+          className="mt-8 md:mt-12 relative backdrop-blur-sm bg-[rgba(30,30,40,0.5)] p-4 md:p-8 rounded-2xl border border-[rgba(255,255,255,0.1)] overflow-hidden group"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
+          whileHover={{ scale: 1.01 }}
         >
           <motion.div
-            className="absolute -inset-[1px] -z-10 rounded-2xl opacity-20"
+            className="absolute -inset-[2px] -z-10 rounded-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"
             style={{
               background:
                 'linear-gradient(120deg, var(--primary), var(--cyan), var(--accent), var(--primary))',
@@ -377,9 +397,26 @@ const Footer = memo(() => {
             }}
           />
 
+          <motion.div
+            className="absolute top-0 left-0 w-full h-full opacity-10"
+            style={{
+              backgroundImage: 'radial-gradient(circle, var(--primary) 1px, transparent 1px)',
+              backgroundSize: '20px 20px',
+            }}
+          />
+
           <div className="flex flex-col md:flex-row items-center md:justify-between gap-4 md:gap-8 relative">
             <div className="flex items-center gap-4 md:gap-6 z-10">
               <div className="relative flex items-center justify-center w-10 h-10 md:w-14 md:h-14">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-br from-[var(--primary)] to-[var(--cyan)] rounded-full opacity-20 blur-xl"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
                 <motion.div
                   className="relative z-20"
                   animate={{ rotate: [0, 2, -2, 0] }}
@@ -393,9 +430,14 @@ const Footer = memo(() => {
                 </motion.div>
               </div>
 
-              <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-center md:text-left">
-                {t('contactTitle')}
-              </h3>
+              <div>
+                <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-center md:text-left">
+                  {t('contactTitle')}
+                </h3>
+                <p className="text-sm text-[var(--muted-foreground)] mt-1 hidden md:block">
+                  Vamos criar algo incrível juntos
+                </p>
+              </div>
             </div>
 
             <div className="relative w-full md:w-auto">

@@ -6,12 +6,10 @@ import { useCallback, useMemo, useState, type CSSProperties } from 'react';
 import { LuExternalLink, LuMail, LuFileText } from 'react-icons/lu';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { TypingText } from '@/components/animate-ui/text/typing';
 import { StaticGradient } from '@/components/effects/StaticGradient';
+import RotatingText from '@/components/RotatingText';
 import { Button } from '@/components/ui/button';
-import { skillsData } from '@/constants/skillsData';
 import { useLanguageStore } from '@/store/languageStore';
-import AnimatedRole from './AnimatedRole';
 
 const HeroLaserFlow = dynamic(
   () =>
@@ -36,37 +34,57 @@ const INITIAL_POINTER: PointerPosition = {
 
 export default function HeroMobile() {
   const t = useTranslations();
-  const mobile = useTranslations('Home.mobile');
   const router = useRouter();
   const lang = useLanguageStore((state) => state.lang);
   const [pointerPosition, setPointerPosition] = useState(INITIAL_POINTER);
   const [isRevealActive, setIsRevealActive] = useState(false);
 
-  const featuredSkills = useMemo(
+  const rotatingRoles = useMemo(
     () =>
-      skillsData
-        .filter((skill) => skill.featured)
-        .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
-        .map((skill) => skill.name),
-    []
+      lang === 'pt'
+        ? [
+            'front-end pleno',
+            'f\u00e3 de back-end',
+            'entusiasta de UI/UX',
+            'full-stack',
+            'gamer nas horas vagas',
+            'eterno aprendiz',
+            'cat\u00f3lico',
+            'estudante de \u65e5\u672c\u8a9e',
+            'que ama m\u00fasica',
+            'rato de academia',
+            'que j\u00e1 chorou vendo Shigatsu wa Kimi no Uso',
+          ]
+        : [
+            'mid-level front-end developer',
+            'back-end enthusiast',
+            'full-stack developer',
+            'UI/UX enthusiast',
+            'gamer in their free time',
+            'eternal learner',
+            'Catholic',
+            '\u65e5\u672c\u8a9e language student',
+            'who loves music',
+            'gym rat',
+            'who cried watching Shigatsu wa Kimi no Uso',
+          ],
+    [lang]
   );
-
-  const highlightedSkills = useMemo(() => featuredSkills.slice(0, 3), [featuredSkills]);
 
   const stats = useMemo(
     () => [
       {
-        value: mobile('stats.experience.value'),
-        label: mobile('stats.experience.label'),
-        caption: mobile('stats.experience.caption'),
+        value: t('Home.mobile.stats.experience.value'),
+        label: t('Home.mobile.stats.experience.label'),
+        caption: t('Home.mobile.stats.experience.caption'),
       },
       {
-        value: mobile('stats.projects.value'),
-        label: mobile('stats.projects.label'),
-        caption: mobile('stats.projects.caption'),
+        value: t('Home.mobile.stats.projects.value'),
+        label: t('Home.mobile.stats.projects.label'),
+        caption: t('Home.mobile.stats.projects.caption'),
       },
     ],
-    [mobile]
+    [t]
   );
 
   const revealStyles = {
@@ -106,7 +124,7 @@ export default function HeroMobile() {
   return (
     <section
       aria-label="Mobile hero section with interactive background"
-      className="hero-shell relative w-full overflow-hidden rounded-[1.75rem] border border-white/10 px-4 py-6 md:hidden"
+      className="relative w-full overflow-hidden px-4 py-6 md:hidden"
       onTouchMove={handleTouchMove}
       onTouchStart={() => setIsRevealActive(true)}
       onTouchEnd={() => setIsRevealActive(false)}
@@ -125,20 +143,6 @@ export default function HeroMobile() {
 
       <div className="relative z-10 mx-auto flex max-w-md flex-col items-center gap-6">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="hero-availability"
-        >
-          <motion.span
-            className="hero-availability-dot"
-            animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          {mobile('availability')}
-        </motion.div>
-
-        <motion.div
           className="space-y-3 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -152,36 +156,20 @@ export default function HeroMobile() {
             </span>
           </h1>
 
-          <div className="flex flex-col items-center gap-2">
-            <TypingText
-              className="hero-skill-loop text-xs"
-              text={featuredSkills}
-              cursor
-              cursorClassName="hero-skill-cursor"
-              holdDelay={1200}
-              loop
-            />
-            <AnimatedRole lang={lang} />
+          <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-medium text-[rgba(237,248,255,0.92)]">
+              <span className="text-[rgba(222,236,248,0.92)]">{t('Hero.developerPrefix')}</span>
+              <RotatingText
+                texts={rotatingRoles}
+                rotationInterval={2800}
+                staggerDuration={0.012}
+                splitBy="characters"
+                mainClassName="inline-flex w-fit justify-center overflow-hidden whitespace-nowrap rounded-lg border border-[#6bbcff]/25 bg-[#0184FC] px-2.5 py-1 text-white shadow-[0_10px_30px_rgba(1,132,252,0.28)]"
+                splitLevelClassName="justify-center whitespace-nowrap"
+                elementLevelClassName="font-bold text-white"
+              />
+            </div>
           </div>
-        </motion.div>
-
-        <motion.div
-          className="flex flex-wrap justify-center gap-2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          {highlightedSkills.map((skill, index) => (
-            <motion.span
-              key={skill}
-              className="rounded-full border border-[var(--primary)]/25 bg-[var(--primary)]/12 px-3 py-1.5 text-xs font-medium text-[var(--primary)]"
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 + index * 0.1 }}
-            >
-              {skill}
-            </motion.span>
-          ))}
         </motion.div>
 
         <motion.div
@@ -212,17 +200,17 @@ export default function HeroMobile() {
         >
           <Button
             onClick={handleProjectsClick}
-            className="hero-primary-cta min-h-12 w-full"
+            className="min-h-12 w-full border border-sky-300/30 bg-[linear-gradient(135deg,#0d7ff2_0%,#0867cb_100%)] text-white shadow-[0_0_32px_rgba(8,103,203,0.28)] hover:brightness-110"
             size="lg"
           >
             <LuExternalLink className="mr-1 h-4 w-4" aria-hidden="true" />
-            {t('Navigation.projects')}
+            {t('Home.browseProjects')}
           </Button>
 
           <Button
             onClick={handleContactClick}
             variant="outline"
-            className="hero-secondary-cta min-h-12 w-full"
+            className="min-h-12 w-full border-slate-200/10 bg-slate-950/45 text-slate-100 shadow-[0_10px_26px_rgba(2,8,20,0.18)] backdrop-blur-md hover:border-sky-300/25 hover:bg-slate-900/72"
             size="lg"
           >
             <LuMail className="mr-1 h-4 w-4" aria-hidden="true" />
@@ -232,7 +220,7 @@ export default function HeroMobile() {
           <Button
             onClick={handleCVClick}
             variant="outline"
-            className="hero-secondary-cta hero-secondary-cyan min-h-12 w-full"
+            className="min-h-12 w-full border-slate-200/10 bg-slate-950/45 text-slate-100 shadow-[0_10px_26px_rgba(2,8,20,0.18)] backdrop-blur-md hover:border-sky-300/25 hover:bg-slate-900/72"
             size="lg"
           >
             <LuFileText className="mr-1 h-4 w-4" aria-hidden="true" />
