@@ -14,7 +14,11 @@
     "test": "vitest run --config vitest.config.mjs --configLoader native",
     "test:watch": "vitest --config vitest.config.mjs --configLoader native",
     "type-check": "tsc --noEmit",
-    "i18n:unused": "tsx scripts/check-i18n.ts"
+    "i18n:unused": "tsx scripts/check-i18n.ts",
+    "pages:build": "npx @opennextjs/cloudflare build",
+    "pages:dev": "wrangler pages dev .open-next/worker --compatibility-flag=nodejs_compat",
+    "pages:deploy": "pnpm pages:build && wrangler pages deploy .open-next/worker",
+    "cf:login": "wrangler login"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.13",
@@ -68,6 +72,7 @@
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.28.0",
     "@next/eslint-plugin-next": "^15.3.3",
+    "@opennextjs/cloudflare": "^1.18.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -89,7 +94,8 @@
     "tsx": "^4.20.3",
     "typescript": "^5",
     "typescript-eslint": "^8.33.1",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.2",
+    "wrangler": "^4.80.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [

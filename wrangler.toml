@@ -1,0 +1,17 @@
+name = "portifolio-website"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = ".open-next/worker"
+
+# Node.js compatibility
+compatibility_flags = ["nodejs_compat"]
+
+# Build configuration
+[build]
+command = "npx @opennextjs/cloudflare build"
+
+# Environment configurations
+[env.production]
+compatibility_flags = ["nodejs_compat"]
+
+[env.preview]
+compatibility_flags = ["nodejs_compat"]
