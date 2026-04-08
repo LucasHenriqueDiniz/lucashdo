@@ -1075,7 +1075,7 @@ const InterestsCards = () => {
                                   width={96}
                                   height={54}
                                   className="h-14 w-auto max-w-[96px] rounded-lg object-cover"
-                                  style={{ width: 'auto' }}
+                                  style={{ width: 'auto', height: 'auto' }}
                                 />
                               ) : (
                                 <div className="h-14 w-24 rounded-lg bg-gradient-to-br from-gray-300/30 to-gray-400/30 dark:from-gray-600/30 dark:to-gray-700/30 flex items-center justify-center flex-shrink-0">
