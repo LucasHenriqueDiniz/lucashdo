@@ -5,7 +5,7 @@ import { logger } from '@/lib/logger';
 import { rateLimiter, getClientIP } from '@/utils/rateLimiter';
 import { containsBlockedTerms, getFoundBlockedTerms } from '@/constants/guestbookBlockedTerms';
 import { GuestbookEntry } from '@/types/guestbook.types';
-import { kv, KV_KEYS } from '@/lib/kv';
+import { guestbook } from '@/lib/cloudflare-kv';
 
 function normalizeUsername(raw: string | null | undefined, isDeveloper: boolean): string | null {
   if (!raw) return null;
@@ -153,8 +153,7 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString(),
     };
 
-    await kv.lpush<GuestbookEntry>(KV_KEYS.guestbook, entry);
-    await kv.ltrim(KV_KEYS.guestbook, 0, 49);
+    await guestbook.add(entry);
 
     return NextResponse.json(entry, { status: 201 });
   } catch (error) {
@@ -165,7 +164,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const entries = (await kv.lrange<GuestbookEntry>(KV_KEYS.guestbook, 0, 49)) ?? [];
+    const entries = await guestbook.getAll();
 
     return NextResponse.json(entries, {
       headers: {

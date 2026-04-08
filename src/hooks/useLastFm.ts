@@ -20,10 +20,10 @@ export function useLastFmUser() {
 export function useLastFmTracks() {
   const { data, error, isLoading, mutate } = useSWR<LastFmTrack[]>('/api/lastfm/tracks', fetcher, {
     revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    dedupingInterval: 30000, // alinhado ao refresco manual
+    revalidateOnReconnect: false,
+    dedupingInterval: 30000, // 30s - alinhado ao countdown
     errorRetryCount: 3,
-    refreshInterval: 0,
+    refreshInterval: 0, // Não revalida automaticamente, apenas via mutate manual
   });
 
   return { tracks: data, isLoading, error, refresh: mutate };

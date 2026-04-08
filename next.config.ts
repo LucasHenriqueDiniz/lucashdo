@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/lib/i18n/server.ts');
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true, // Desabilita otimização de imagem no Cloudflare Workers
     remotePatterns: [
       {
         protocol: 'https',

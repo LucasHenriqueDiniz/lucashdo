@@ -4,6 +4,7 @@ import { MusicalBar } from '@/components/MusicalBar';
 import { useLastFmArtists, useLastFmTracks, useLastFmUser } from '@/hooks/useLastFm';
 import { useLyftaStats } from '@/hooks/useLyfta';
 import { useSteamStats } from '@/hooks/useSteamStats';
+import { useMALUserStats, useMALAnimeList, useMALFavorites } from '@/hooks/useMyAnimeList';
 import type { LyftaExercise, LyftaWorkout } from '@/services/lyfta';
 import type { SteamGame } from '@/services/steam';
 import { motion } from 'framer-motion';
@@ -16,14 +17,124 @@ import {
   Gamepad2,
   Medal,
   Music,
-  TrendingUp
+  TrendingUp,
+  MessageCircle,
+  Activity,
+  Tv,
+  BookOpen,
+  Star,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { vinylDisk } from '../../../public';
+import DiscordCard from '@/components/DiscordCard/DiscordCard';
 
-type TabId = 'music' | 'fitness' | 'gaming';
+type TabId = 'music' | 'fitness' | 'gaming' | 'discord' | 'anime';
+
+// Variantes de animação para transições suaves
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      type: 'spring',
+      stiffness: 100,
+      damping: 15,
+      staggerChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    transition: { duration: 0.3, ease: 'easeIn' },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      type: 'spring',
+      stiffness: 150,
+      damping: 12,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.4,
+      type: 'spring',
+      stiffness: 200,
+      damping: 15,
+    },
+  },
+};
+
+// Componente de Loading State
+const LoadingState = ({ color }: { color: string }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="flex items-center justify-center h-full min-h-[400px]"
+  >
+    <div className="text-center space-y-4">
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        className={`mx-auto h-12 w-12 rounded-full border-4 border-t-transparent ${color}`}
+      />
+      <p className="text-sm text-gray-500 dark:text-gray-400">Carregando...</p>
+    </div>
+  </motion.div>
+);
+
+// Componente de Error State
+const ErrorState = ({ message, color }: { message: string; color: string }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    className="flex items-center justify-center h-full min-h-[400px]"
+  >
+    <div className="text-center space-y-4 max-w-md">
+      <div className={`mx-auto h-16 w-16 rounded-full ${color} bg-opacity-10 flex items-center justify-center`}>
+        <Activity className={`h-8 w-8 ${color}`} />
+      </div>
+      <p className={`text-sm ${color}`}>{message}</p>
+    </div>
+  </motion.div>
+);
+
+// Componente de Service Badge
+const ServiceBadge = ({ 
+  name, 
+  icon: Icon, 
+  color 
+}: { 
+  name: string; 
+  icon: LucideIcon; 
+  color: string;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.8 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ delay: 0.1, type: 'spring', stiffness: 200, damping: 15 }}
+    className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${color} backdrop-blur-sm`}
+  >
+    <Icon className="h-3.5 w-3.5" />
+    <span className="uppercase tracking-[0.15em]">{name}</span>
+  </motion.div>
+);
 
 const colorPalette: Record<
   TabId,
@@ -75,6 +186,30 @@ const colorPalette: Record<
     surfaceGradient: 'from-cyan-500/20 via-cyan-500/5 to-transparent',
     progressGradient: 'from-cyan-400 to-sky-500',
     glow: 'shadow-[0_0_45px_-15px_rgba(6,182,212,0.6)]',
+  },
+  discord: {
+    accent: 'text-indigo-400',
+    accentSoft: 'bg-indigo-500/10',
+    border: 'border-indigo-500/20',
+    ring: 'ring-indigo-500/20',
+    iconBg: 'bg-indigo-500/15',
+    chipBg: 'bg-indigo-500/15',
+    chipText: 'text-indigo-200',
+    surfaceGradient: 'from-indigo-500/20 via-indigo-500/5 to-transparent',
+    progressGradient: 'from-indigo-400 to-purple-500',
+    glow: 'shadow-[0_0_45px_-15px_rgba(99,102,241,0.6)]',
+  },
+  anime: {
+    accent: 'text-pink-400',
+    accentSoft: 'bg-pink-500/10',
+    border: 'border-pink-500/20',
+    ring: 'ring-pink-500/20',
+    iconBg: 'bg-pink-500/15',
+    chipBg: 'bg-pink-500/15',
+    chipText: 'text-pink-200',
+    surfaceGradient: 'from-pink-500/20 via-pink-500/5 to-transparent',
+    progressGradient: 'from-pink-400 to-rose-500',
+    glow: 'shadow-[0_0_45px_-15px_rgba(236,72,153,0.6)]',
   },
 };
 
@@ -236,6 +371,8 @@ const InterestsCards = () => {
   const { artists: lastfmArtists } = useLastFmArtists();
   const { stats: steamStats } = useSteamStats();
   const { stats: lyftaStats } = useLyftaStats();
+  const { stats: malStats, loading: malLoading, error: malError } = useMALUserStats();
+  const { favorites: malFavorites, loading: malFavoritesLoading } = useMALFavorites();
 
   const tabs: Array<{
     id: TabId;
@@ -246,12 +383,16 @@ const InterestsCards = () => {
       { id: 'music', label: t('music.tab'), icon: Music },
       { id: 'fitness', label: t('fitness.tab'), icon: Dumbbell },
       { id: 'gaming', label: t('games.tab'), icon: Gamepad2 },
+      { id: 'discord', label: 'Discord', icon: MessageCircle },
+      { id: 'anime', label: 'Anime', icon: Tv },
     ],
     [t]
   );
 
-  const nowPlaying =
-    lastfmTracks?.find(track => track['@attr']?.nowplaying === 'true') || lastfmTracks?.[0];
+  const nowPlaying = lastfmTracks?.find(track => track['@attr']?.nowplaying === 'true');
+  const lastTrack = lastfmTracks?.[0];
+  const displayTrack = nowPlaying || lastTrack;
+  const isActuallyPlaying = !!nowPlaying;
   const featuredGame =
     steamStats?.recentGames?.[0] ||
     steamStats?.mostPlayedGames?.[0] ||
@@ -335,7 +476,8 @@ const InterestsCards = () => {
     }, 1000);
 
     return () => window.clearTimeout(timeout);
-  }, [activeTab, tracksCountdown, refreshTracks, isFirstUpdate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, tracksCountdown, isFirstUpdate]);
 
   return (
     <div className="relative flex w-full flex-col md:h-full">
@@ -439,8 +581,15 @@ const InterestsCards = () => {
             <div className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-gradient-to-br from-white/50 to-transparent blur-3xl opacity-30 dark:from-white/10" />
             <div className="relative flex flex-1 flex-col gap-8 md:h-full">
               {activeTab === 'music' && (
-                <div className="flex flex-col gap-8 md:h-full md:gap-10 md:justify-between">
-                  <div className="flex flex-col gap-8 lg:flex-row">
+                <motion.div
+                  key="music"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex flex-col gap-8 md:h-full md:gap-10 md:justify-between"
+                >
+                  <motion.div variants={itemVariants} className="flex flex-col gap-8 lg:flex-row">
                     <div className="relative mx-auto flex h-48 w-48 items-center justify-center">
                       <motion.div
                         animate={{ rotate: 360 }}
@@ -455,14 +604,14 @@ const InterestsCards = () => {
                           className="h-full w-full object-contain"
                         />
                       </motion.div>
-                      {nowPlaying && (() => {
-                        const imageUrl = getSafeImageUrl(nowPlaying.image);
+                      {displayTrack && (() => {
+                        const imageUrl = getSafeImageUrl(displayTrack.image);
                         return (
                           <div className="absolute h-24 w-24 overflow-hidden rounded-xl border border-white/20 shadow-xl">
                             {imageUrl ? (
                               <Image
                                 src={imageUrl}
-                                alt={nowPlaying.name}
+                                alt={displayTrack.name}
                                 width={96}
                                 height={96}
                                 className="h-full w-full object-cover"
@@ -477,25 +626,30 @@ const InterestsCards = () => {
                       })()}
                     </div>
                     <div className="flex-1">
-                      <div
-                        className={`mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${activeColors.chipBg} ${activeColors.chipText}`}
-                      >
-                        <div className="h-2 w-2 animate-pulse rounded-full bg-green-400" />
-                        <span className="uppercase tracking-[0.2em]">{t('music.nowPlaying')}</span>
+                      <ServiceBadge 
+                        name="Last.fm" 
+                        icon={Music} 
+                        color={`${activeColors.chipBg} ${activeColors.chipText}`}
+                      />
+                      <div className="mt-2 flex items-center gap-2">
+                        <div className={`h-2 w-2 rounded-full ${isActuallyPlaying ? 'animate-pulse bg-green-400' : 'bg-gray-400'}`} />
+                        <span className="text-xs uppercase tracking-[0.2em] text-gray-500">
+                          {isActuallyPlaying ? t('music.nowPlaying') : 'Última música'}
+                        </span>
                       </div>
                       <h3 className="text-3xl font-bold text-gray-900 dark:text-white">
-                        {nowPlaying?.name ?? t('noData')}
+                        {displayTrack?.name ?? t('noData')}
                       </h3>
                       <p className="mt-1 text-lg text-gray-600 dark:text-gray-300">
-                        {nowPlaying
-                          ? nowPlaying.artist['#text'] || nowPlaying.artist.name
+                        {displayTrack
+                          ? displayTrack.artist['#text'] || displayTrack.artist.name
                           : t('noData')}
                       </p>
                       <div className="mt-6">
                         <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200/60 dark:bg-white/5">
                           <motion.div
                             initial={{ width: '0%' }}
-                            animate={{ width: `${nowPlaying ? 68 : 38}%` }}
+                            animate={{ width: `${displayTrack ? (isActuallyPlaying ? 68 : 45) : 38}%` }}
                             transition={{ duration: 1, ease: 'easeOut' }}
                             className={`h-full rounded-full bg-gradient-to-r ${activeColors.progressGradient}`}
                           />
@@ -513,9 +667,9 @@ const InterestsCards = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  <div className="grid gap-4 sm:grid-cols-3">
+                  <motion.div variants={itemVariants} className="grid gap-4 sm:grid-cols-3">
                     {musicStats.map(stat => (
                       <div
                         key={stat.label}
@@ -529,9 +683,9 @@ const InterestsCards = () => {
                         </p>
                       </div>
                     ))}
-                  </div>
+                  </motion.div>
 
-                  <div className="grid gap-4 lg:grid-cols-2">
+                  <motion.div variants={itemVariants} className="grid gap-4 lg:grid-cols-2">
                     <div className="rounded-2xl border border-white/20 bg-white/70 p-5 shadow-sm transition-colors dark:bg-gray-900/60">
                       <div className="mb-4 flex items-center gap-2">
                         <Disc3 className={`h-5 w-5 ${activeColors.accent}`} />
@@ -619,19 +773,29 @@ const InterestsCards = () => {
                         })}
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               )}
 
               {activeTab === 'fitness' && (
-                <div className="flex flex-col gap-8 md:h-full md:gap-10 md:justify-between">
+                <motion.div
+                  key="fitness"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex flex-col gap-8 md:h-full md:gap-10 md:justify-between"
+                >
                   <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                     <div>
-                      <div
-                        className={`mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${activeColors.chipBg} ${activeColors.chipText}`}
-                      >
+                      <ServiceBadge 
+                        name="Lyfta" 
+                        icon={Dumbbell} 
+                        color={`${activeColors.chipBg} ${activeColors.chipText}`}
+                      />
+                      <div className="mt-2 flex items-center gap-2">
                         <Flame className="h-4 w-4 text-orange-400" />
-                        <span className="uppercase tracking-[0.2em]">
+                        <span className="text-xs uppercase tracking-[0.2em] text-gray-500">
                           {t('fitness.currentStreak')}
                         </span>
                       </div>
@@ -748,13 +912,20 @@ const InterestsCards = () => {
                       </div>
                     </div>
                   )}
-                </div>
+                </motion.div>
               )}
 
               {activeTab === 'gaming' && (
-                <div className="flex flex-col gap-8 md:h-full md:gap-10 md:justify-between">
+                <motion.div
+                  key="gaming"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex flex-col gap-8 md:h-full md:gap-10 md:justify-between"
+                >
                   {steamStats?.profile && (
-                    <div className="flex flex-col gap-4 rounded-2xl border border-white/20 bg-white/70 p-5 shadow-sm transition-colors dark:bg-gray-900/60 sm:flex-row sm:items-center sm:justify-between">
+                    <motion.div variants={itemVariants} className="flex flex-col gap-4 rounded-2xl border border-white/20 bg-white/70 p-5 shadow-sm transition-colors dark:bg-gray-900/60 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-4">
                         <Image
                           src={steamStats.profile.avatarfull}
@@ -801,10 +972,10 @@ const InterestsCards = () => {
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   )}
 
-                  <div className="grid gap-4 lg:grid-cols-2">
+                  <motion.div variants={itemVariants} className="grid gap-4 lg:grid-cols-2">
                     <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-gray-900/80 p-6 shadow-sm transition-colors dark:border-white/10 dark:bg-gray-900/80 lg:col-span-2">
                       {featuredGame && (() => {
                         const coverUrl = getSteamCoverImageUrl(featuredGame);
@@ -878,9 +1049,9 @@ const InterestsCards = () => {
                         })()}
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  <div className="rounded-2xl border border-white/15 bg-white/80 p-4 shadow-sm transition-colors dark:bg-gray-900/60 md:bg-white/70 md:p-5">
+                  <motion.div variants={itemVariants} className="rounded-2xl border border-white/15 bg-white/80 p-4 shadow-sm transition-colors dark:bg-gray-900/60 md:bg-white/70 md:p-5">
                     <div className="mb-4 flex items-center gap-2">
                       <Medal className={`h-5 w-5 ${activeColors.accent}`} />
                       <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -930,8 +1101,217 @@ const InterestsCards = () => {
                         );
                       })}
                     </div>
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {activeTab === 'discord' && (
+                <motion.div
+                  key="discord"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex flex-col gap-8 md:h-full md:items-center md:justify-center"
+                >
+                  <div className="text-center space-y-4">
+                    <div
+                      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${activeColors.chipBg} ${activeColors.chipText}`}
+                    >
+                      <Activity className="h-4 w-4" />
+                      <span className="uppercase tracking-[0.2em]">Status ao vivo</span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-gray-900 dark:text-white">
+                      Discord
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Veja o que estou fazendo agora mesmo
+                    </p>
                   </div>
-                </div>
+
+                  <div className="flex justify-center w-full">
+                    <DiscordCard />
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === 'anime' && (
+                <motion.div
+                  key="anime"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex flex-col gap-8 md:h-full md:gap-10 md:justify-between"
+                >
+                  {malLoading ? (
+                    <LoadingState color="border-pink-400" />
+                  ) : malError ? (
+                    <ErrorState message="Erro ao carregar dados do MyAnimeList" color="text-pink-400" />
+                  ) : (
+                    <>
+                      <motion.div variants={itemVariants} className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                        <div>
+                          <ServiceBadge 
+                            name="MyAnimeList" 
+                            icon={Star} 
+                            color={`${activeColors.chipBg} ${activeColors.chipText}`}
+                          />
+                          <h3 className="text-3xl font-bold text-gray-900 dark:text-white">
+                            Anime & Mangá
+                          </h3>
+                          <p className="mt-1 text-sm text-gray-500">
+                            Estatísticas do MyAnimeList
+                          </p>
+                        </div>
+                      </motion.div>
+
+                  <motion.div variants={itemVariants} className="grid gap-4 sm:grid-cols-3">
+                    <div
+                      className={`rounded-2xl border bg-white/70 p-4 shadow-sm transition-colors dark:bg-gray-900/70 ${activeColors.border}`}
+                    >
+                      <p className="text-xs uppercase tracking-wide text-gray-500">
+                        Dias assistidos
+                      </p>
+                      <p className={`mt-2 text-2xl font-semibold ${activeColors.accent}`}>
+                        {malStats?.anime?.days_watched?.toFixed(1) || '0'}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {formatNumber(malStats?.anime?.episodes_watched || 0)} episódios
+                      </p>
+                    </div>
+                    <div
+                      className={`rounded-2xl border bg-white/70 p-4 shadow-sm transition-colors dark:bg-gray-900/70 ${activeColors.border}`}
+                    >
+                      <p className="text-xs uppercase tracking-wide text-gray-500">
+                        Animes completos
+                      </p>
+                      <p className={`mt-2 text-2xl font-semibold ${activeColors.accent}`}>
+                        {formatNumber(malStats?.anime?.completed || 0)}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Nota média: {malStats?.anime?.mean_score?.toFixed(1) || '0'}
+                      </p>
+                    </div>
+                    <div
+                      className={`rounded-2xl border bg-white/70 p-4 shadow-sm transition-colors dark:bg-gray-900/70 ${activeColors.border}`}
+                    >
+                      <p className="text-xs uppercase tracking-wide text-gray-500">
+                        Assistindo
+                      </p>
+                      <p className={`mt-2 text-2xl font-semibold ${activeColors.accent}`}>
+                        {formatNumber(malStats?.anime?.watching || 0)}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Total: {formatNumber(malStats?.anime?.total_entries || 0)}
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div variants={itemVariants} className="grid gap-4 lg:grid-cols-2">
+                    <div className="rounded-2xl border border-white/20 bg-white/70 p-5 shadow-sm transition-colors dark:bg-gray-900/60">
+                      <div className="mb-4 flex items-center gap-2">
+                        <Tv className={`h-5 w-5 ${activeColors.accent}`} />
+                        <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+                          Animes Favoritos
+                        </h4>
+                      </div>
+                      <div className="space-y-3">
+                        {malFavoritesLoading ? (
+                          <div className="text-center py-4">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-400 mx-auto" />
+                          </div>
+                        ) : malFavorites?.anime && malFavorites.anime.length > 0 ? (
+                          malFavorites.anime.slice(0, 4).map((anime) => (
+                            <div
+                              key={anime.mal_id}
+                              className="flex items-center gap-3"
+                            >
+                              {anime.images?.webp?.image_url ? (
+                                <Image
+                                  src={anime.images.webp.image_url}
+                                  alt={anime.title}
+                                  width={40}
+                                  height={56}
+                                  className="h-14 w-10 rounded-lg object-cover"
+                                />
+                              ) : (
+                                <div className="h-14 w-10 rounded-lg bg-gradient-to-br from-gray-300/30 to-gray-400/30 dark:from-gray-600/30 dark:to-gray-700/30 flex items-center justify-center flex-shrink-0">
+                                  <Tv className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                                </div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+                                  {anime.title}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {anime.type} • {anime.start_year || 'N/A'}
+                                </p>
+                              </div>
+                              <Star className={`h-4 w-4 ${activeColors.accent} flex-shrink-0`} />
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-sm text-gray-500 text-center py-4">
+                            Nenhum anime favorito
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-white/20 bg-white/70 p-5 shadow-sm transition-colors dark:bg-gray-900/60">
+                      <div className="mb-4 flex items-center gap-2">
+                        <BookOpen className={`h-5 w-5 ${activeColors.accent}`} />
+                        <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+                          Mangás Favoritos
+                        </h4>
+                      </div>
+                      <div className="space-y-3">
+                        {malFavoritesLoading ? (
+                          <div className="text-center py-4">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-400 mx-auto" />
+                          </div>
+                        ) : malFavorites?.manga && malFavorites.manga.length > 0 ? (
+                          malFavorites.manga.slice(0, 4).map((manga) => (
+                            <div
+                              key={manga.mal_id}
+                              className="flex items-center gap-3"
+                            >
+                              {manga.images?.webp?.image_url ? (
+                                <Image
+                                  src={manga.images.webp.image_url}
+                                  alt={manga.title}
+                                  width={40}
+                                  height={56}
+                                  className="h-14 w-10 rounded-lg object-cover"
+                                />
+                              ) : (
+                                <div className="h-14 w-10 rounded-lg bg-gradient-to-br from-gray-300/30 to-gray-400/30 dark:from-gray-600/30 dark:to-gray-700/30 flex items-center justify-center flex-shrink-0">
+                                  <BookOpen className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                                </div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">
+                                  {manga.title}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {manga.type} • {manga.start_year || 'N/A'}
+                                </p>
+                              </div>
+                              <Star className={`h-4 w-4 ${activeColors.accent} flex-shrink-0`} />
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-sm text-gray-500 text-center py-4">
+                            Nenhum mangá favorito
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                    </>
+                  )}
+                </motion.div>
               )}
             </div>
           </section>
@@ -942,3 +1322,4 @@ const InterestsCards = () => {
 };
 
 export default InterestsCards;
+

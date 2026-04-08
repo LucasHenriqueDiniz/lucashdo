@@ -57,5 +57,3 @@ export const useLanguageStore = create<LanguageState>((set, get) => ({
     }
   },
 }));
-
-export { LANGUAGE_STORAGE_KEY };

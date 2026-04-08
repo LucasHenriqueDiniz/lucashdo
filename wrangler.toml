@@ -1,13 +1,32 @@
-name = "portifolio-website"
-compatibility_date = "2024-01-01"
-pages_build_output_dir = ".open-next/worker"
-
-# Node.js compatibility
+name = "lucashdo"
+main = ".open-next/worker.js"
+compatibility_date = "2026-04-07"
 compatibility_flags = ["nodejs_compat"]
 
-# Environment configurations
-[env.production]
-compatibility_flags = ["nodejs_compat"]
+[assets]
+directory = ".open-next/assets"
 
-[env.preview]
-compatibility_flags = ["nodejs_compat"]
+# KV namespace para guestbook e cache
+[[kv_namespaces]]
+binding = "KV"
+id = "d0e7895ea27843449e19a3e3d876478f"
+
+# Variáveis públicas (não sensíveis)
+[vars]
+LASTFM_USERNAME = "Amayacrab"
+LASTFM_USER_AGENT = "lucashdo-portfolio/1.0 (+https://www.lucashdo.com)"
+STEAM_ID = "76561198056590170"
+NEXT_PUBLIC_TURNSTILE_SITE_KEY = "0x4AAAAAACAXoAqyDPcwNkWq"
+NEXT_PUBLIC_DISCORD_ID = "228562465351270401"
+NEXT_PUBLIC_MAL_USERNAME = "Amayacrab"
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1  # 100% dos logs - reduza para 0.1 se tiver muito tráfego
+
+[observability.traces]
+enabled = true
+head_sampling_rate = 0.1  # 10% das traces para economizar custos

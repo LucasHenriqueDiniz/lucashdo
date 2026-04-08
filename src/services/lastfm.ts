@@ -120,31 +120,6 @@ export async function getRecentTracks(
 }
 
 /**
- * Get top tracks for a user
- * @param username Last.fm username
- * @param period Time period (overall, 7day, 1month, 3month, 6month, 12month)
- * @param limit Number of tracks to fetch (default: 10)
- * @returns List of top tracks
- */
-export async function getTopTracks(
-  username: string,
-  period: string = 'overall',
-  limit: number = 10
-): Promise<LastFmTrack[]> {
-  return requestLastFm<LastFmTrack[]>({
-    params: {
-      method: 'user.getTopTracks',
-      user: username,
-      period,
-      limit: limit.toString(),
-    },
-    cacheTag: 'lastfm-top-tracks',
-    errorContext: 'Failed to fetch top tracks',
-    transform: data => data.toptracks?.track ?? [],
-  });
-}
-
-/**
  * Get top artists for a user
  * @param username Last.fm username
  * @param period Time period (overall, 7day, 1month, 3month, 6month, 12month)

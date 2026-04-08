@@ -1,4 +1,4 @@
-import { FaAws, FaDatabase, FaHeart, FaMicrosoft, FaRobot } from 'react-icons/fa';
+import { FaAws, FaDatabase, FaHeart, FaLinkedin, FaMicrosoft, FaRobot } from 'react-icons/fa';
 import { GiSkeleton } from 'react-icons/gi';
 import { MdDesignServices, MdLanguage } from 'react-icons/md';
 import {
@@ -7,7 +7,6 @@ import {
   SiC,
   SiFigma,
   SiGooglemeet,
-  SiLinkedin,
   SiNextdotjs,
   SiOpenbadges,
   SiPython,
@@ -224,7 +223,7 @@ export const certificates = [
     issueDate: '2024-11',
     url: 'https://www.linkedin.com/learning/certificates/8e7943eeaac7618d975c75a4d14cb1db48162719150fbd0b2cc3904257c862dc?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_certifications_details%3BjbafyffeRIK7DYTpBc3v%2FA%3D%3D',
     skills: ['Programming'],
-    icon: SiLinkedin,
+    icon: FaLinkedin,
   },
   {
     title: 'The Complete 2023 Web Development Bootcamp',

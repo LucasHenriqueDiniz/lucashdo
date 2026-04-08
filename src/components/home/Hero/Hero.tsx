@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
@@ -10,43 +9,13 @@ import RotatingText from '@/components/RotatingText';
 import HeroBrowser from '@/components/home/HeroBrowser/HeroBrowser';
 import { Button } from '@/components/ui/button';
 import { useLanguageStore } from '@/store/languageStore';
+import { ROTATING_ROLES } from './roles';
 
-export function Hero() {
+function Hero() {
   const t = useTranslations();
   const router = useRouter();
   const lang = useLanguageStore((state) => state.lang);
-
-  const rotatingRoles = useMemo(
-    () =>
-      lang === 'pt'
-        ? [
-            'front-end pleno',
-            'f\u00e3 de back-end',
-            'entusiasta de UI/UX',
-            'full-stack',
-            'gamer nas horas vagas',
-            'eterno aprendiz',
-            'cat\u00f3lico',
-            'estudante de \u65e5\u672c\u8a9e',
-            'que ama m\u00fasica',
-            'rato de academia',
-            'que j\u00e1 chorou vendo Shigatsu wa Kimi no Uso',
-          ]
-        : [
-            'mid-level front-end developer',
-            'back-end enthusiast',
-            'full-stack developer',
-            'UI/UX enthusiast',
-            'gamer in their free time',
-            'eternal learner',
-            'Catholic',
-            '\u65e5\u672c\u8a9e language student',
-            'who loves music',
-            'gym rat',
-            'who cried watching Shigatsu wa Kimi no Uso',
-          ],
-    [lang]
-  );
+  const rotatingRoles = ROTATING_ROLES[lang];
 
   return (
     <section

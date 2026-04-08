@@ -31,3 +31,6 @@ export { default as vinylDisk } from './vinyl.webp';
 
 // Icons
 export { default as ZustandLogo } from './icons/zunstand.webp';
+export { default as PhotoshopIcon } from './icons/photoshop.svg';
+export { default as IllustratorIcon } from './icons/illustrator.svg';
+export { default as AfterEffectsIcon } from './icons/after-effects.svg';

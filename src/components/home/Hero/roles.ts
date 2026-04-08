@@ -1,0 +1,28 @@
+export const ROTATING_ROLES = {
+  pt: [
+    'front-end pleno',
+    'fã de back-end',
+    'entusiasta de UI/UX',
+    'full-stack',
+    'gamer nas horas vagas',
+    'eterno aprendiz',
+    'católico',
+    'estudante de 日本語',
+    'que ama música',
+    'rato de academia',
+    'que já chorou vendo Shigatsu wa Kimi no Uso',
+  ],
+  en: [
+    'mid-level front-end developer',
+    'back-end enthusiast',
+    'full-stack developer',
+    'UI/UX enthusiast',
+    'gamer in their free time',
+    'eternal learner',
+    'Catholic',
+    '日本語 language student',
+    'who loves music',
+    'gym rat',
+    'who cried watching Shigatsu wa Kimi no Uso',
+  ],
+} as const;

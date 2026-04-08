@@ -4,9 +4,6 @@ import { BiBox } from 'react-icons/bi';
 import { FaAws } from 'react-icons/fa';
 import { MdInventory } from 'react-icons/md';
 import {
-  SiAdobeaftereffects,
-  SiAdobeillustrator,
-  SiAdobephotoshop,
   SiArduino,
   SiC,
   SiNodedotjs,
@@ -18,6 +15,9 @@ import {
 } from 'react-icons/si';
 import { ExperienceProps } from '@/types/experience.types';
 import ZustandIcon from '@/components/zustandIcon/ZustandIcon';
+import PhotoshopIcon from '@/components/adobeIcons/PhotoshopIcon';
+import IllustratorIcon from '@/components/adobeIcons/IllustratorIcon';
+import AfterEffectsIcon from '@/components/adobeIcons/AfterEffectsIcon';
 
 export const jobExperiences: ExperienceProps[] = [
   {
@@ -107,9 +107,9 @@ export const jobExperiences: ExperienceProps[] = [
     endDate: '2020-12',
     showInTimeline: true,
     tags: [
-      { labels: { pt: 'Photoshop', en: 'Photoshop' }, icon: SiAdobephotoshop },
-      { labels: { pt: 'Illustrator', en: 'Illustrator' }, icon: SiAdobeillustrator },
-      { labels: { pt: 'After Effects', en: 'After Effects' }, icon: SiAdobeaftereffects },
+      { labels: { pt: 'Photoshop', en: 'Photoshop' }, icon: PhotoshopIcon },
+      { labels: { pt: 'Illustrator', en: 'Illustrator' }, icon: IllustratorIcon },
+      { labels: { pt: 'After Effects', en: 'After Effects' }, icon: AfterEffectsIcon },
       { labels: { pt: 'Design Gráfico', en: 'Graphic Design' }, icon: PenTool },
     ],
     description: {

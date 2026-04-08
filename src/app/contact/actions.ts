@@ -2,12 +2,8 @@
 
 import { headers } from 'next/headers';
 import { z } from 'zod';
-import { Resend } from 'resend';
-import { render } from '@react-email/render';
 import { logger } from '@/lib/logger';
 import { localeNames, locales, defaultLocale } from '@/lib/i18n/config';
-import { ConfirmationEmail } from '@/components/emails/ConfirmationEmail';
-import { OwnerEmail } from '@/components/emails/OwnerEmail';
 
 const isSupportedLocale = (value: string): value is (typeof locales)[number] =>
   (locales as readonly string[]).includes(value as (typeof locales)[number]);
@@ -128,6 +124,11 @@ const METHOD_LABELS: Record<LocaleCode, Record<MethodValue, string>> = {
     linkedin: 'LinkedIn',
     outro: 'Other channel',
   },
+};
+
+const SUCCESS_MESSAGES: Record<LocaleCode, string> = {
+  pt: 'Mensagem enviada com sucesso! Retornarei em breve.',
+  en: 'Message sent successfully! I will get back to you soon.',
 };
 
 const DISCORD_LABELS: Record<
@@ -363,29 +364,17 @@ function getClientIp(headerList: Headers): string | null {
   return null;
 }
 
-function ensureResendConfig() {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.SMTP_FROM;
-  const to = process.env.SMTP_TO;
-
-  if (!apiKey || !from || !to) {
+function ensureDiscordWebhook() {
+  if (!DISCORD_WEBHOOK_URL) {
     if (IS_DEV) {
-      logger.info(
-        'Resend configuration incompleta em ambiente de desenvolvimento. Emails serão ignorados.'
-      );
+      logger.info('Discord webhook não configurado em desenvolvimento. Notificações serão ignoradas.');
       return null;
     }
 
-    throw new Error(
-      'Resend configuration is incomplete. Please set RESEND_API_KEY, SMTP_FROM and SMTP_TO.'
-    );
+    throw new Error('Discord webhook is not configured. Please set DISCORD_WEBHOOK_URL.');
   }
 
-  return {
-    apiKey,
-    from,
-    to,
-  };
+  return DISCORD_WEBHOOK_URL;
 }
 
 export async function submitContact(
@@ -425,8 +414,7 @@ export async function submitContact(
 
   const data = parsed.data;
   const normalizedLanguage = normalizeToLocale(data.language);
-  const emailTemplate = EMAIL_TEMPLATES[normalizedLanguage];
-  const successMessage = emailTemplate.successMessage;
+  const successMessage = SUCCESS_MESSAGES[normalizedLanguage];
   const preferredLanguageLabel = describeLanguage(data.language);
   const intentLabel = INTENT_LABELS[normalizedLanguage][data.intent];
   const methodLabel = METHOD_LABELS[normalizedLanguage][data.preferredMethod];
@@ -498,12 +486,13 @@ export async function submitContact(
   }
 
   const discordCopy = DISCORD_LABELS[normalizedLanguage];
-  const safePreferredValue = escapeHTML(data.preferredValue);
 
-  if (DISCORD_WEBHOOK_URL) {
+  const webhookUrl = ensureDiscordWebhook();
+
+  if (webhookUrl) {
     try {
       const truncatedMessage = data.message.slice(0, 1800);
-      await fetch(DISCORD_WEBHOOK_URL, {
+      await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -533,111 +522,20 @@ export async function submitContact(
           ],
         }),
       });
+
+      logger.info('Webhook Discord enviado com sucesso', {
+        email: data.email,
+        intent: data.intent,
+      });
     } catch (error) {
       logger.error('Falha ao enviar webhook para Discord', error);
-    }
-  } else {
-    logger.error('DISCORD_WEBHOOK_URL não configurada. Pulei envio do webhook.');
-  }
-
-  const resendConfig = ensureResendConfig();
-  const ownerCopy = OWNER_COPY[normalizedLanguage];
-  const contactPreferenceText = `${methodLabel} • ${data.preferredValue}`;
-  const firstName = data.name.split(' ')[0] ?? data.name;
-
-  const subject = `${ownerCopy.subjectPrefix} (${intentLabel}) — ${data.name}`;
-  const confirmationSubject = emailTemplate.confirmationSubject;
-
-  if (resendConfig) {
-    const resend = new Resend(resendConfig.apiKey);
-
-    try {
-      const ownerEmailHtml = await render(
-        OwnerEmail({
-          name: data.name,
-          email: data.email,
-          intent: intentLabel,
-          preference: contactPreferenceText,
-          languageLabel: preferredLanguageLabel,
-          ip: ipAddress,
-          userAgent: userAgent,
-          message: data.message,
-          locale: normalizedLanguage,
-        })
-      );
-
-      const confirmationEmailHtml = await render(
-        ConfirmationEmail({
-          firstName,
-          intent: intentLabel,
-          method: methodLabel,
-          detail: data.preferredValue,
-          languageLabel: preferredLanguageLabel,
-          message: data.message,
-          locale: normalizedLanguage,
-        })
-      );
-
-      const confirmationEmailText = emailTemplate.confirmationText({
-        name: firstName,
-        intent: intentLabel,
-        method: methodLabel,
-        detail: data.preferredValue,
-        languageLabel: preferredLanguageLabel,
-        safeMessageHtml: escapeHTML(data.message).replace(/\n/g, '<br />'),
-        plainMessage: data.message,
-      });
-
-      const ownerEmailText = `${ownerCopy.heading}\n\n${ownerCopy.labels.name}: ${data.name}\n${ownerCopy.labels.email}: ${data.email}\n${ownerCopy.labels.intent}: ${intentLabel}\n${ownerCopy.labels.preference}: ${contactPreferenceText}\n${ownerCopy.labels.language}: ${preferredLanguageLabel}\n${ownerCopy.labels.ip}: ${ipAddress}\n\n${data.message}`;
-
-      const [ownerResult, confirmationResult] = await Promise.all([
-        resend.emails.send({
-          from: resendConfig.from,
-          to: resendConfig.to,
-          replyTo: data.email,
-          subject,
-          html: ownerEmailHtml,
-          text: ownerEmailText,
-          headers: {
-            'X-Contact-IP': ipAddress,
-            ...(turnstileScore !== null ? { 'X-Turnstile-Score': String(turnstileScore) } : {}),
-          },
-        }),
-        resend.emails.send({
-          from: resendConfig.from,
-          to: data.email,
-          subject: confirmationSubject,
-          html: confirmationEmailHtml,
-          text: confirmationEmailText,
-        }),
-      ]);
-
-      if (ownerResult.error) {
-        logger.error('Erro ao enviar email para o proprietário', ownerResult.error);
-        throw ownerResult.error;
-      }
-
-      if (confirmationResult.error) {
-        logger.error('Erro ao enviar email de confirmação', confirmationResult.error);
-        throw confirmationResult.error;
-      }
-
-      logger.info('Emails enviados com sucesso via Resend', {
-        ownerEmailId: ownerResult.data?.id,
-        confirmationEmailId: confirmationResult.data?.id,
-      });
-    } catch (error) {
-      logger.error('Erro ao enviar email de contato', error);
       return {
         status: 'error',
-        message:
-          normalizedLanguage === 'en'
-            ? "I received your message but couldn't send the confirmation email right now. I'll look into it as soon as possible."
-            : 'Sua mensagem foi recebida, mas não consegui enviar a confirmação agora. Vou verificar o quanto antes.',
+        message: genericErrorMessage,
       };
     }
   } else {
-    logger.info('Ignorando envio de emails (Resend não configurado).');
+    logger.info('Discord webhook não configurado. Pulando notificação.');
   }
 
   return {
