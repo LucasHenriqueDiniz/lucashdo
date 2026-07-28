@@ -1171,13 +1171,13 @@ const InterestsCards = () => {
                       className={`rounded-2xl border bg-white/70 p-4 shadow-sm transition-colors dark:bg-gray-900/70 ${activeColors.border}`}
                     >
                       <p className="text-xs uppercase tracking-wide text-gray-500">
-                        Dias assistidos
+                        Nota média
                       </p>
                       <p className={`mt-2 text-2xl font-semibold ${activeColors.accent}`}>
-                        {malStats?.anime?.days_watched?.toFixed(1) || '0'}
+                        {malStats?.anime?.meanScore?.toFixed(1) || '0'}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {formatNumber(malStats?.anime?.episodes_watched || 0)} episódios
+                        {formatNumber(malStats?.anime?.totalEntries || 0)} animes na lista
                       </p>
                     </div>
                     <div
@@ -1190,7 +1190,7 @@ const InterestsCards = () => {
                         {formatNumber(malStats?.anime?.completed || 0)}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Nota média: {malStats?.anime?.mean_score?.toFixed(1) || '0'}
+                        Planejados: {formatNumber(malStats?.anime?.planToWatch || 0)}
                       </p>
                     </div>
                     <div
@@ -1203,7 +1203,7 @@ const InterestsCards = () => {
                         {formatNumber(malStats?.anime?.watching || 0)}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Total: {formatNumber(malStats?.anime?.total_entries || 0)}
+                        Em pausa: {formatNumber(malStats?.anime?.onHold || 0)}
                       </p>
                     </div>
                   </motion.div>
@@ -1224,12 +1224,12 @@ const InterestsCards = () => {
                         ) : malFavorites?.anime && malFavorites.anime.length > 0 ? (
                           malFavorites.anime.slice(0, 4).map((anime) => (
                             <div
-                              key={anime.mal_id}
+                              key={anime.malId}
                               className="flex items-center gap-3"
                             >
-                              {anime.images?.webp?.image_url ? (
+                              {anime.imageUrl ? (
                                 <Image
-                                  src={anime.images.webp.image_url}
+                                  src={anime.imageUrl}
                                   alt={anime.title}
                                   width={40}
                                   height={56}
@@ -1245,7 +1245,7 @@ const InterestsCards = () => {
                                   {anime.title}
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                  {anime.type} • {anime.start_year || 'N/A'}
+                                  {anime.type || 'Anime'}
                                 </p>
                               </div>
                               <Star className={`h-4 w-4 ${activeColors.accent} flex-shrink-0`} />
@@ -1274,12 +1274,12 @@ const InterestsCards = () => {
                         ) : malFavorites?.manga && malFavorites.manga.length > 0 ? (
                           malFavorites.manga.slice(0, 4).map((manga) => (
                             <div
-                              key={manga.mal_id}
+                              key={manga.malId}
                               className="flex items-center gap-3"
                             >
-                              {manga.images?.webp?.image_url ? (
+                              {manga.imageUrl ? (
                                 <Image
-                                  src={manga.images.webp.image_url}
+                                  src={manga.imageUrl}
                                   alt={manga.title}
                                   width={40}
                                   height={56}
@@ -1295,7 +1295,7 @@ const InterestsCards = () => {
                                   {manga.title}
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                  {manga.type} • {manga.start_year || 'N/A'}
+                                  {manga.type || 'Mangá'}
                                 </p>
                               </div>
                               <Star className={`h-4 w-4 ${activeColors.accent} flex-shrink-0`} />

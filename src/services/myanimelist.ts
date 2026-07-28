@@ -1,325 +1,195 @@
-// MyAnimeList API via Jikan (unofficial MAL API)
-// Docs: https://docs.api.jikan.moe/
+// MyAnimeList data via jikan-edge (edge-cached Jikan mirror)
+// Docs: https://jikan-edge.lucas-hdo.workers.dev/docs
 
 export type MALAnimeStatus = 'watching' | 'completed' | 'on_hold' | 'dropped' | 'plan_to_watch';
 export type MALMangaStatus = 'reading' | 'completed' | 'on_hold' | 'dropped' | 'plan_to_read';
 
 export interface MALUserStats {
   anime: {
-    days_watched: number;
-    mean_score: number;
     watching: number;
     completed: number;
-    on_hold: number;
+    onHold: number;
     dropped: number;
-    plan_to_watch: number;
-    total_entries: number;
-    rewatched: number;
-    episodes_watched: number;
+    planToWatch: number;
+    totalEntries: number;
+    episodesWatched: number | null;
+    meanScore: number;
   };
   manga: {
-    days_read: number;
-    mean_score: number;
     reading: number;
     completed: number;
-    on_hold: number;
+    onHold: number;
     dropped: number;
-    plan_to_read: number;
-    total_entries: number;
-    reread: number;
-    chapters_read: number;
-    volumes_read: number;
+    planToRead: number;
+    totalEntries: number;
+    chaptersRead: number | null;
+    volumesRead: number | null;
+    meanScore: number;
   };
+}
+
+export interface MALFavoriteMedia {
+  malId: number;
+  title: string;
+  url: string;
+  type: string;
+  imageUrl: string | null;
+}
+
+export interface MALFavoritePerson {
+  malId: number;
+  name: string;
+  url: string;
+  imageUrl: string | null;
 }
 
 export interface MALFavorites {
-  anime: Array<{
-    mal_id: number;
-    url: string;
-    images: {
-      jpg: {
-        image_url: string;
-        small_image_url: string;
-        large_image_url: string;
-      };
-      webp: {
-        image_url: string;
-        small_image_url: string;
-        large_image_url: string;
-      };
-    };
-    title: string;
-    type: string;
-    start_year: number;
-  }>;
-  manga: Array<{
-    mal_id: number;
-    url: string;
-    images: {
-      jpg: {
-        image_url: string;
-        small_image_url: string;
-        large_image_url: string;
-      };
-      webp: {
-        image_url: string;
-        small_image_url: string;
-        large_image_url: string;
-      };
-    };
-    title: string;
-    type: string;
-    start_year: number;
-  }>;
-  characters: Array<{
-    mal_id: number;
-    url: string;
-    images: {
-      jpg: {
-        image_url: string;
-      };
-      webp: {
-        image_url: string;
-        small_image_url: string;
-      };
-    };
-    name: string;
-  }>;
-  people: Array<{
-    mal_id: number;
-    url: string;
-    images: {
-      jpg: {
-        image_url: string;
-      };
-    };
-    name: string;
-  }>;
+  anime: MALFavoriteMedia[];
+  manga: MALFavoriteMedia[];
+  characters: MALFavoritePerson[];
+  people: MALFavoritePerson[];
 }
 
-export interface MALAnimeEntry {
-  mal_id: number;
+export interface MALListEntry {
+  malId: number;
   title: string;
-  images: {
-    jpg: {
-      image_url: string;
-      small_image_url: string;
-      large_image_url: string;
-    };
-    webp: {
-      image_url: string;
-      small_image_url: string;
-      large_image_url: string;
-    };
-  };
-  score: number;
-  status: string;
-  episodes_watched: number;
-  episodes_total: number;
-  anime?: {
-    mal_id: number;
-    title: string;
-    images: {
-      jpg: {
-        image_url: string;
-        small_image_url: string;
-        large_image_url: string;
-      };
-      webp: {
-        image_url: string;
-        small_image_url: string;
-        large_image_url: string;
-      };
-    };
-  };
+  imageUrl: string | null;
+  status: string | null;
+  score: number | null;
+  progress: number;
+  total: number | null;
+  mediaType: 'anime' | 'manga';
 }
 
-export interface MALMangaEntry {
-  mal_id: number;
-  title: string;
-  images: {
-    jpg: {
-      image_url: string;
-      small_image_url: string;
-      large_image_url: string;
-    };
-    webp: {
-      image_url: string;
-      small_image_url: string;
-      large_image_url: string;
-    };
-  };
-  score: number;
-  status: string;
-  chapters_read: number;
-  chapters_total: number;
-  volumes_read: number;
-  volumes_total: number;
-}
+export type MALAnimeEntry = MALListEntry;
+export type MALMangaEntry = MALListEntry;
 
 export interface MALUserProfile {
   username: string;
-  url: string;
-  images: {
-    jpg: {
-      image_url: string;
-    };
-    webp: {
-      image_url: string;
-    };
-  };
-  last_online: string;
-  gender: string;
-  birthday: string;
-  location: string;
-  joined: string;
+  canonicalUsername: string;
+  profileUrl: string;
+  avatarUrl: string | null;
+  about: string | null;
+  gender: string | null;
+  location: string | null;
+  birthday: string | null;
+  joinedAt: string | null;
+  lastOnlineAt: string | null;
 }
 
-const JIKAN_API_BASE = 'https://api.jikan.moe/v4';
+const JIKAN_EDGE_API_BASE = 'https://jikan-edge.lucas-hdo.workers.dev/v1';
 
-export async function getUserStats(username: string): Promise<MALUserStats | null> {
+interface JikanEdgeMeta {
+  cached: boolean;
+  stale: boolean;
+  refreshFailed: boolean;
+  fetchedAt: string;
+}
+
+interface JikanEdgeEnvelope<T> {
+  data: T;
+  meta: JikanEdgeMeta;
+}
+
+// Fetches a jikan-edge endpoint, unwraps the { data, meta } envelope and
+// retries once on 429 honoring Retry-After (limits: 30 req/10s, 60 req/min).
+// meta.stale === true is a cache fallback after a failed refresh — still valid data.
+async function jikanEdgeFetch<T>(path: string, revalidate: number, retried = false): Promise<T | null> {
+  const url = `${JIKAN_EDGE_API_BASE}${path}`;
   try {
-    const url = `${JIKAN_API_BASE}/users/${username}/statistics`;
-    
-    const response = await fetch(url, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
+    const response = await fetch(url, { next: { revalidate } });
+
+    if (response.status === 429 && !retried) {
+      const retryAfter = Number(response.headers.get('Retry-After')) || 2;
+      await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+      return jikanEdgeFetch<T>(path, revalidate, true);
+    }
 
     if (!response.ok) {
-      console.error('[MAL Service] Failed to fetch stats:', response.status, response.statusText);
+      let message = response.statusText;
+      try {
+        const body = await response.json();
+        message = body?.error?.message || message;
+      } catch {
+        // non-JSON error body
+      }
+      console.error('[MAL Service] Request failed:', response.status, message, url);
       return null;
     }
 
-    const data = await response.json();
-    return data.data;
+    const envelope: JikanEdgeEnvelope<T> = await response.json();
+    return envelope.data;
   } catch (error) {
-    console.error('[MAL Service] Error fetching stats:', error);
+    console.error('[MAL Service] Error fetching:', url, error);
     return null;
   }
+}
+
+export async function getUserStats(username: string): Promise<MALUserStats | null> {
+  return jikanEdgeFetch<MALUserStats>(`/users/${username}/statistics`, 3600);
 }
 
 export async function getUserProfile(username: string): Promise<MALUserProfile | null> {
-  try {
-    const response = await fetch(`${JIKAN_API_BASE}/users/${username}`, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
-
-    if (!response.ok) {
-      console.error('Failed to fetch MAL user profile:', response.statusText);
-      return null;
-    }
-
-    const data = await response.json();
-    return data.data;
-  } catch (error) {
-    console.error('Error fetching MAL user profile:', error);
-    return null;
-  }
+  return jikanEdgeFetch<MALUserProfile>(`/users/${username}`, 3600);
 }
 
 export async function getUserAnimeList(
   username: string,
   status?: MALAnimeStatus
 ): Promise<MALAnimeEntry[] | null> {
-  try {
-    // Jikan API v4 não suporta filtro de status na URL
-    // Precisamos buscar tudo e filtrar no cliente
-    const url = `${JIKAN_API_BASE}/users/${username}/animelist`;
-
-    console.log('[MAL Service] Fetching anime list from:', url);
-    const response = await fetch(url, {
-      next: { revalidate: 1800 }, // Cache for 30 minutes
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('[MAL Service] Failed to fetch MAL anime list:', {
-        status: response.status,
-        statusText: response.statusText,
-        url,
-        error: errorText
-      });
-      return null;
-    }
-
-    const data = await response.json();
-    console.log('[MAL Service] Raw anime list response:', {
-      hasData: !!data.data,
-      dataLength: data.data?.length || 0,
-      firstEntry: data.data?.[0] ? JSON.stringify(data.data[0]).substring(0, 200) : 'none'
-    });
-    
-    // Jikan API retorna os dados em data.data, e cada entrada tem um campo "anime"
-    let entries = data.data || [];
-    
-    // Filtrar por status se fornecido
-    if (status) {
-      entries = entries.filter((entry: any) => entry.status === status);
-      console.log('[MAL Service] Filtered by status:', status, 'count:', entries.length);
-    }
-    
-    // Mapear os dados para o formato esperado
-    const mapped = entries.map((entry: any) => ({
-      mal_id: entry.anime?.mal_id || entry.mal_id,
-      title: entry.anime?.title || entry.title,
-      images: entry.anime?.images || entry.images,
-      score: entry.score || 0,
-      status: entry.status || '',
-      episodes_watched: entry.episodes_watched || 0,
-      episodes_total: entry.anime?.episodes || entry.episodes || 0,
-    }));
-    
-    console.log('[MAL Service] Mapped anime entries:', mapped.length);
-    return mapped;
-  } catch (error) {
-    console.error('[MAL Service] Error fetching MAL anime list:', error);
-    return null;
-  }
+  const entries = await jikanEdgeFetch<MALListEntry[]>(`/users/${username}/animelist?limit=300`, 1800);
+  if (!entries) return null;
+  // status pode vir null da fonte; só filtra quando a entrada tem status
+  return status ? entries.filter(entry => entry.status === status) : entries;
 }
 
 export async function getUserMangaList(
   username: string,
   status?: MALMangaStatus
 ): Promise<MALMangaEntry[] | null> {
-  try {
-    const url = status
-      ? `${JIKAN_API_BASE}/users/${username}/mangalist?status=${status}`
-      : `${JIKAN_API_BASE}/users/${username}/mangalist`;
-
-    const response = await fetch(url, {
-      next: { revalidate: 1800 }, // Cache for 30 minutes
-    });
-
-    if (!response.ok) {
-      console.error('Failed to fetch MAL manga list:', response.statusText);
-      return null;
-    }
-
-    const data = await response.json();
-    return data.data || [];
-  } catch (error) {
-    console.error('Error fetching MAL manga list:', error);
-    return null;
-  }
+  const entries = await jikanEdgeFetch<MALListEntry[]>(`/users/${username}/mangalist?limit=300`, 1800);
+  if (!entries) return null;
+  return status ? entries.filter(entry => entry.status === status) : entries;
 }
 
 export async function getUserFavorites(username: string): Promise<MALFavorites | null> {
-  try {
-    const url = `${JIKAN_API_BASE}/users/${username}/favorites`;
-    
-    const response = await fetch(url, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
-
-    if (!response.ok) {
-      console.error('[MAL Service] Failed to fetch favorites:', response.status, response.statusText);
-      return null;
-    }
-
-    const data = await response.json();
-    return data.data;
-  } catch (error) {
-    console.error('[MAL Service] Error fetching favorites:', error);
-    return null;
+  interface RawFavorite {
+    malId?: number;
+    mal_id?: number;
+    title?: string;
+    name?: string;
+    url: string;
+    type?: string;
+    imageUrl: string | null;
   }
+
+  const data = await jikanEdgeFetch<Record<keyof MALFavorites, RawFavorite[]>>(
+    `/users/${username}/favorites`,
+    3600
+  );
+  if (!data) return null;
+
+  const mapMedia = (items: RawFavorite[] = []): MALFavoriteMedia[] =>
+    items.map(item => ({
+      malId: item.malId ?? item.mal_id ?? 0,
+      title: item.title ?? item.name ?? '',
+      url: item.url,
+      type: item.type ?? '',
+      imageUrl: item.imageUrl ?? null,
+    }));
+
+  const mapPerson = (items: RawFavorite[] = []): MALFavoritePerson[] =>
+    items.map(item => ({
+      malId: item.malId ?? item.mal_id ?? 0,
+      name: item.name ?? item.title ?? '',
+      url: item.url,
+      imageUrl: item.imageUrl ?? null,
+    }));
+
+  return {
+    anime: mapMedia(data.anime),
+    manga: mapMedia(data.manga),
+    characters: mapPerson(data.characters),
+    people: mapPerson(data.people),
+  };
 }
