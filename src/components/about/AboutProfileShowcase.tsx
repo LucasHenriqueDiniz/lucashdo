@@ -14,6 +14,7 @@ import {
   LuRocket,
   LuZap,
 } from 'react-icons/lu';
+import { SiInstagram } from 'react-icons/si';
 import { ContactLinks } from '@/constants/contacts';
 import { projects } from '@/constants/projects';
 import { academicExperiences } from '@/constants/academicExperiences';
@@ -213,7 +214,15 @@ export default function AboutProfileShowcase() {
             <p className="text-sm leading-relaxed text-gray-300 md:text-base">
               {t('bio.summary', { course, skills })}
             </p>
-            <div className="grid grid-cols-3 gap-3 md:flex md:flex-wrap md:gap-3">
+            <div className="grid grid-cols-4 gap-3 md:flex md:flex-wrap md:gap-3">
+              <Link
+                href={ContactLinks.instagram}
+                target="_blank"
+                className="flex items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 p-3 text-white transition-all hover:shadow-lg hover:shadow-pink-500/50 md:px-4 md:py-3"
+                aria-label={tSocial('instagram')}
+              >
+                <SiInstagram className="h-5 w-5" />
+              </Link>
               <Link
                 href={ContactLinks.github}
                 target="_blank"

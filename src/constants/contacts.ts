@@ -1,4 +1,5 @@
 export const ContactLinks = {
+  instagram: 'https://www.instagram.com/lucasdinizostroski/',
   linkedin: 'https://www.linkedin.com/in/lucas-diniz-ostroski/',
   discord: 'amayacrab',
   website: 'https://www.lucashdo.com/',
@@ -13,6 +14,7 @@ export type ContactLinkType = keyof typeof ContactLinks;
 
 // Social media display names
 export const ContactNames = {
+  instagram: 'Instagram',
   linkedin: 'LinkedIn',
   discord: 'Discord',
   website: 'Website',
